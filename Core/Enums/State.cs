@@ -1,6 +1,4 @@
-﻿// Ensure these enums or classes are defined in your project
-
-namespace Core.Enums;
+﻿namespace Core.Enums;
 
 public enum State
 {
