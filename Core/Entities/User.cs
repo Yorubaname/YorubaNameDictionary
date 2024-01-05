@@ -1,6 +1,6 @@
 ﻿namespace Core.Entities
 {
-    public class User : Entity
+    public class User : BaseEntity
     {
         public string? Email { get; set; }
         public string? Username { get; set; }

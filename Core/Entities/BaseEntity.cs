@@ -2,9 +2,9 @@
 
 namespace Core.Entities
 {
-    public abstract class Entity
+    public abstract class BaseEntity
     {
-        public Entity() 
+        public BaseEntity() 
         { 
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;

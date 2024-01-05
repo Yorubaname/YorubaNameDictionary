@@ -1,6 +1,6 @@
 ﻿namespace Core.Entities
 {
-    public class GeoLocation : Entity
+    public class GeoLocation : BaseEntity
     {
         public string? Place { get; set; }
 

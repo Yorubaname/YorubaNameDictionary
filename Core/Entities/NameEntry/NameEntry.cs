@@ -3,7 +3,7 @@ using Core.Enums;
 
 namespace Core.Entities.NameEntry;
 
-public class NameEntry : Entity, IComparable<NameEntry>
+public class NameEntry : BaseEntity, IComparable<NameEntry>
 {
     public string? Name { get; set; }
 

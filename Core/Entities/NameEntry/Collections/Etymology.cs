@@ -1,6 +1,6 @@
 ﻿namespace Core.Entities.NameEntry.Collections;
 
-public class Etymology : Entity
+public class Etymology : BaseEntity
 {
     public string Part { get; set; }
     public string Meaning { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Core.Entities
 {
-    public class SuggestedName : Entity
+    public class SuggestedName : BaseEntity
     {
         public string? Name { get; set; }
         public string? Details { get; set; }
