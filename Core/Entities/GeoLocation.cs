@@ -11,7 +11,7 @@
 
         public GeoLocation() { }
 
-        public GeoLocation(string place, string region) 
+        public GeoLocation(string place, string region)
         {
             Place = place;
             Region = region;

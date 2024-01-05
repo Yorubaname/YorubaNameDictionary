@@ -1,8 +1,9 @@
-﻿using Core.Enums;
+﻿using Core.Entities.NameEntry.Collections;
+using Core.Enums;
 
-namespace Core.Entities;
+namespace Core.Entities.NameEntry;
 
-public class NameEntry : Entity , IComparable<NameEntry>
+public class NameEntry : Entity, IComparable<NameEntry>
 {
     public string? Name { get; set; }
 
@@ -19,13 +20,13 @@ public class NameEntry : Entity , IComparable<NameEntry>
     public List<Etymology> Etymology { get; set; }
     public List<EmbeddedVideo> Videos { get; set; }
     public List<GeoLocation> GeoLocation { get; set; }
-    
+
     // TODO: Previously comma separated
     public List<string> FamousPeople { get; set; }
 
     // TODO: Previously hyphen separated
     public List<string> Syllables { get; set; }
-    
+
     // TODO: Previously comma separated 
     public List<string> Variants { get; set; }
 
