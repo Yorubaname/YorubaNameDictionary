@@ -5,7 +5,7 @@ namespace Core.Entities.NameEntry;
 
 public class NameEntry : BaseEntity, IComparable<NameEntry>
 {
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     public string? Pronunciation { get; set; }
     // TODO: Clarify need to retain this field; Only 5 records exist in database at the moment
