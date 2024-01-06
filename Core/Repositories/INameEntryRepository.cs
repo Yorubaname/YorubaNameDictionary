@@ -1,11 +1,17 @@
 ﻿using Core.Entities.NameEntry;
 using Core.Enums;
+using System.Linq.Expressions;
 
 namespace Core.Repositories
 {
     public interface INameEntryRepository
     {
-        Task<NameEntry> FindByName(string name);
+        Task Create(NameEntry newName);
+
+        // TODO: This method should not be accessible. Too heavy on the DB
+        Task<HashSet<NameEntry>> ListAll();
+
+        Task<NameEntry?> FindByName(string name);
 
         Task<List<NameEntry>> FindByState(State state);
 
@@ -19,10 +25,15 @@ namespace Core.Repositories
 
         Task<HashSet<NameEntry>> FindNameEntryByExtendedMeaningContainingAndState(string name, State state);
 
-        Task<NameEntry> FindByNameAndState(string name, State state);
+        Task<NameEntry?> FindByNameAndState(string name, State state);
 
         Task<int> CountByState(State state);
 
         Task<bool> DeleteByNameAndState(string name, State state);
+
+        Task<NameEntry?> Update(string originalName, NameEntry newEntry);
+
+        Task<int> CountWhere(Expression<Func<NameEntry, bool>> filter);
+        Task<List<NameEntry>> List(int pageNumber, int pageSize, Expression<Func<NameEntry, bool>>? filter = null);
     }
 }

@@ -10,8 +10,7 @@ namespace Core.Entities
             UpdatedAt = CreatedAt;
         }
 
-        [Key]
-        public long Id { get; set; }
+        public string Id { get; set; }
         public DateTime CreatedAt { get; set; }
         // TODO: This used to be SubmittedBy in name. Ensure that API does not break
         public DateTime CreatedBy { get; set; }
