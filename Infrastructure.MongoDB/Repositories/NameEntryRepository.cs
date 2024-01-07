@@ -1,4 +1,5 @@
-﻿using Core.Entities.NameEntry;
+﻿using Core.Dto;
+using Core.Entities.NameEntry;
 using Core.Enums;
 using Core.Repositories;
 using MongoDB.Bson;
@@ -134,6 +135,17 @@ public class NameEntryRepository : INameEntryRepository
             .ToListAsync();
 
         return pagedEntries;
+    }
+
+    public async Task<NamesMetadataDto> GetMetadata()
+    {
+        return new NamesMetadataDto
+        {
+            TotalNames = await _nameEntryCollection.CountDocumentsAsync(FilterDefinition<NameEntry>.Empty),
+            TotalNewNames = await _nameEntryCollection.CountDocumentsAsync(Builders<NameEntry>.Filter.Eq(x => x.State, State.NEW)),
+            TotalModifiedNames = await _nameEntryCollection.CountDocumentsAsync(Builders<NameEntry>.Filter.Eq(x => x.State, State.MODIFIED)),
+            TotalPublishedNames = await _nameEntryCollection.CountDocumentsAsync(Builders<NameEntry>.Filter.Eq(x => x.State, State.PUBLISHED))
+        };
     }
 
     private static UpdateDefinition<NameEntry> GenerateUpdateStatement(NameEntry newEntry)

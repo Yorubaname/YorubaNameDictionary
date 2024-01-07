@@ -12,9 +12,9 @@ public class NameEntry : BaseEntity, IComparable<NameEntry>
     public string? IpaNotation { get; set; }
     public string Meaning { get; set; }
     public string? ExtendedMeaning { get; set; }
-    public string? Morphology { get; set; }
-    public string? Media { get; set; }
-    public State? State { get; set; }
+    public List<string> Morphology { get; set; }
+    public List<string> Media { get; set; }
+    public State State { get; set; }
 
     // Note: Did not migrate TonalMark, Tags, InOtherLanguages intentionally since all values are null in the database (no admin boxes for them)
     public List<Etymology> Etymology { get; set; }
@@ -49,11 +49,14 @@ public class NameEntry : BaseEntity, IComparable<NameEntry>
     {
         Etymology = new List<Etymology>();
         Videos = new List<EmbeddedVideo>();
+        Duplicates = new List<NameEntry>();
+        Feedbacks = new List<Feedback>();
+
         Syllables = new List<string>();
         FamousPeople = new List<string>();
         Variants = new List<string>();
-        Duplicates = new List<NameEntry>();
-        Feedbacks = new List<Feedback>();
+        Morphology = new List<string>();
+        Media = new List<string>();
     }
 
     public NameEntry(string name, string meaning)

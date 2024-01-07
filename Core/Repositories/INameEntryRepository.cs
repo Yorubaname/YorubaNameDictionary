@@ -1,4 +1,5 @@
-﻿using Core.Entities.NameEntry;
+﻿using Core.Dto;
+using Core.Entities.NameEntry;
 using Core.Enums;
 using System.Linq.Expressions;
 
@@ -34,6 +35,9 @@ namespace Core.Repositories
         Task<NameEntry?> Update(string originalName, NameEntry newEntry);
 
         Task<int> CountWhere(Expression<Func<NameEntry, bool>> filter);
+
         Task<List<NameEntry>> List(int pageNumber, int pageSize, Expression<Func<NameEntry, bool>>? filter = null);
+
+        Task<NamesMetadataDto> GetMetadata();
     }
 }
