@@ -20,7 +20,7 @@ namespace Api.Model.In
 
         public CommaSeparatedString FamousPeople { get; set; }
 
-        public CommaSeparatedString Syllables { get; set; }
+        public HyphenSeparatedString Syllables { get; set; }
 
         public CommaSeparatedString Variants { get; set; }
 

@@ -1,4 +1,5 @@
 using Api;
+using Api.Utilities;
 using Application.Domain;
 using Infrastructure.MongoDB;
 using System.Text.Json.Serialization;
@@ -12,6 +13,7 @@ var services = builder.Services;
 services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new CommaSeparatedStringConverter());
+    options.JsonSerializerOptions.Converters.Add(new HyphenSeparatedStringConverter());
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
