@@ -19,7 +19,7 @@ public class NameEntryRepository : INameEntryRepository
 
     public async Task Create(NameEntry entry)
     {
-        entry.Id = new ObjectId().ToString();
+        entry.Id = ObjectId.GenerateNewId().ToString();
         await _nameEntryCollection.InsertOneAsync(entry);
     }
 

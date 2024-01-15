@@ -56,10 +56,10 @@ namespace Api.Controllers
         [FromQuery] int? page,
         [FromQuery] int? count,
         [FromQuery] bool? all,
-        [FromQuery] string submittedBy,
+        [FromQuery] string? submittedBy,
         [FromQuery] State? state)
         {
-            List<NameEntry> names;
+            List<NameEntry>? names = null;
 
             // TODO: Move logic into application layer
             if (all.HasValue && all.Value)
@@ -73,14 +73,13 @@ namespace Api.Controllers
                     names = await _nameEntryService.ListNames();
                 }
             }
-            else
+            else if(state != null)
             {
-                names = await _nameEntryService.FindBy(state, page, count);
-
+                names = await _nameEntryService.FindBy(state.Value, page, count);
             }
 
             // TODO: Do this filtering at database level to reduce waste of I/O
-            names = names
+            names = names == null ?  new List<NameEntry>() : names
                 .Where(n => string.IsNullOrWhiteSpace(submittedBy) || n.CreatedBy.Equals(submittedBy.Trim(), StringComparison.OrdinalIgnoreCase))
                 .ToList();
 

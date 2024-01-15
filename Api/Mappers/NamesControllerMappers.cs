@@ -1,7 +1,10 @@
 ﻿using Api.Model.In;
 using Api.Model.Out;
+using Core.Entities;
 using Core.Entities.NameEntry;
+using Core.Entities.NameEntry.Collections;
 using Core.Enums;
+using System.Linq;
 
 namespace Api.Mappers
 {
@@ -18,11 +21,11 @@ namespace Api.Mappers
                 Meaning = nameEntry.Meaning,
                 ExtendedMeaning = nameEntry.ExtendedMeaning,
                 Morphology = nameEntry.Morphology,
-                GeoLocation = nameEntry.GeoLocation,
+                GeoLocation = nameEntry.GeoLocation.Select(ge => new GeoLocationDto(ge.Place, ge.Region)).ToList(),
                 FamousPeople = nameEntry.FamousPeople,
                 Media = nameEntry.Media,
                 SubmittedBy = nameEntry.CreatedBy,
-                Etymology = nameEntry.Etymology,
+                Etymology = nameEntry.Etymology.Select(et => new EtymologyDto(et.Part, et.Meaning)).ToList(),
                 State = nameEntry.State,
                 CreatedAt = nameEntry.CreatedAt,
                 UpdatedAt = nameEntry.UpdatedAt,
@@ -41,9 +44,10 @@ namespace Api.Mappers
                 Morphology = request.Morphology ?? new List<string>(),
                 Media = request.Media ?? new List<string>(),
                 State = request.State ?? State.NEW,
-                Etymology = request.Etymology,
-                Videos = request.Videos,
-                GeoLocation = request.GeoLocation,
+                Etymology = request.Etymology.Select(et => new Etymology(et.Part, et.Meaning)).ToList(),
+                Videos = request.Videos.Select(ev => new EmbeddedVideo(ev.VideoId, ev.Caption)).ToList(),
+                // TODO: Add validation for these values to ensure illegal values are not entered
+                GeoLocation = request.GeoLocation.Select(ge => new GeoLocation(ge.Place, ge.Region)).ToList(),
                 FamousPeople = request.FamousPeople ?? new List<string>(),
                 Syllables = request.Syllables ?? new List<string>(),
                 Variants = request.Variants ?? new List<string>(),

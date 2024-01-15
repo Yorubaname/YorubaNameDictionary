@@ -4,9 +4,9 @@
     {
         private readonly string value;
 
-        public CommaSeparatedString(string value)
+        public CommaSeparatedString(string? value)
         {
-            this.value = value;
+            this.value = value ?? string.Empty;
         }
 
         public override string ToString()

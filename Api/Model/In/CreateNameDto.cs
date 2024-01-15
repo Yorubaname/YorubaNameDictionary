@@ -2,6 +2,7 @@
 using Core.Entities;
 using Core.Enums;
 using System.ComponentModel.DataAnnotations;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Api.Model.In
 {
@@ -15,20 +16,21 @@ namespace Api.Model.In
         public string Meaning { get; set; }
         public string? ExtendedMeaning { get; set; }
 
-        public CommaSeparatedString? Morphology { get; set; }
-
-        public CommaSeparatedString? Media { get; set; }
-
         public State? State { get; set; }
-        public List<Etymology> Etymology { get; set; }
-        public List<EmbeddedVideo> Videos { get; set; }
-        public List<GeoLocation> GeoLocation { get; set; }
+        public List<EtymologyDto> Etymology { get; set; }
+        public List<EmbeddedVideoDto> Videos { get; set; }
+        public List<GeoLocationDto> GeoLocation { get; set; }
 
         public CommaSeparatedString FamousPeople { get; set; }
 
         public CommaSeparatedString Syllables { get; set; }
 
         public CommaSeparatedString Variants { get; set; }
+
+        public CommaSeparatedString? Morphology { get; set; }
+
+        public CommaSeparatedString? Media { get; set; }
+
 
         [Required]
         public string SubmittedBy { get; set; }
@@ -37,16 +39,16 @@ namespace Api.Model.In
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Meaning = meaning ?? throw new ArgumentNullException(nameof(meaning));
-            Etymology = new List<Etymology>();
-            Videos = new List<EmbeddedVideo>();
-            GeoLocation = new List<GeoLocation>();
+            Etymology = new List<EtymologyDto>();
+            Videos = new List<EmbeddedVideoDto>();
+            GeoLocation = new List<GeoLocationDto>();
         }
 
         public CreateNameDto()
         {
-            Etymology = new List<Etymology>();
-            Videos = new List<EmbeddedVideo>();
-            GeoLocation = new List<GeoLocation>();
+            Etymology = new List<EtymologyDto>();
+            Videos = new List<EmbeddedVideoDto>();
+            GeoLocation = new List<GeoLocationDto>();
         }
     }
 

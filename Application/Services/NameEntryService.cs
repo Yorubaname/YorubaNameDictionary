@@ -130,7 +130,7 @@ namespace Application.Domain
             return variantCount > 0;
         }
 
-        public async Task<List<NameEntry>> FindBy(State? state, int? pageNumber, int? count)
+        public async Task<List<NameEntry>> FindBy(State state, int? pageNumber, int? count)
         {
             pageNumber ??= DefaultPage;
             count = Math.Min(count ?? DefaultListCount, MaxListCount);
