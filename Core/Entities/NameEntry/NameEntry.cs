@@ -8,7 +8,7 @@ public class NameEntry : BaseEntity, IComparable<NameEntry>
     public string Name { get; set; }
 
     public string? Pronunciation { get; set; }
-    // TODO: Clarify need to retain this field; Only 5 records exist in database at the moment
+    // TODO: Clarify from Kola of the need to retain this field; Only 3 records exist in database with a value at the moment
     public string? IpaNotation { get; set; }
     public string Meaning { get; set; }
     public string? ExtendedMeaning { get; set; }

@@ -4,7 +4,6 @@ using Core.Entities;
 using Core.Entities.NameEntry;
 using Core.Entities.NameEntry.Collections;
 using Core.Enums;
-using System.Linq;
 
 namespace Api.Mappers
 {

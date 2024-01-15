@@ -1,13 +1,10 @@
-﻿using Core.Entities.NameEntry.Collections;
-using Core.Entities;
-using Core.Enums;
+﻿using Core.Enums;
 using System.ComponentModel.DataAnnotations;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace Api.Model.In
 {
     /// <summary>
-    /// Add field validations
+    /// TODO: Add field validations
     /// </summary>
     public class CreateNameDto
     {
