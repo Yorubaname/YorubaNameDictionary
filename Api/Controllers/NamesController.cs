@@ -15,7 +15,6 @@ namespace Api.Controllers
     public class NamesController : ControllerBase
     {
         private readonly NameEntryService _nameEntryService;
-        private object entryService;
 
         public NamesController(NameEntryService entryService)
         {
@@ -120,10 +119,37 @@ namespace Api.Controllers
             if (nameEntry == null)
             {
                 string errorMsg = $"{name} not found in the database";
-                return BadRequest(errorMsg);
+                return NotFound(errorMsg);
             }
 
             return Ok(nameEntry.MapToDto());
+        }
+
+        /// <summary>
+        /// Updates a name entry.
+        /// </summary>
+        /// <param name="name">The name path variable</param>
+        /// <param name="updated">The NameEntry object</param>
+        /// <returns></returns>
+        [HttpPut("{name}")]
+        public async Task<IActionResult> UpdateName(string name, [FromBody] UpdateNameDto updated)
+        {
+            // TODO: Ensure that before connecting the dashboard to this endpoint, it follows the new update paradigm of only one active edit at a time
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var oldNameEntry = await _nameEntryService.LoadName(name);
+
+            if (oldNameEntry == null)
+            {
+                return NotFound($"{name} not in database");
+            }
+
+            // TODO: Ensure possible errors from calling UpdateName are handled in the global exception handling middleware
+            _ = await _nameEntryService.UpdateName(oldNameEntry, updated.MapToEntity());
+            return Ok(new { Message = "Name successfully updated" });
         }
     }
 }
