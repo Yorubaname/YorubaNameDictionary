@@ -3,18 +3,19 @@
     /// <summary>
     /// TODO: This should be a 400 Bad Request exception
     /// </summary>
-    public class RepositoryAccessException : Exception
+    public abstract class ClientException : Exception
     {
-        public RepositoryAccessException()
+        protected virtual string ClientMessage { get; init; }
+        public ClientException()
         {
         }
 
-        public RepositoryAccessException(string message)
+        public ClientException(string message)
             : base(message)
         {
         }
 
-        public RepositoryAccessException(string message, Exception inner)
+        public ClientException(string message, Exception inner)
             : base(message, inner)
         {
         }

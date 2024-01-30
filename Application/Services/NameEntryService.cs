@@ -29,7 +29,7 @@ namespace Application.Domain
                 if (existingName != null)
                 {
                     existingName.Duplicates.Add(entry);
-                    await CreateOrUpdateName(existingName);
+                    await UpdateName(existingName);
                 }
                 else
                 {
@@ -38,7 +38,7 @@ namespace Application.Domain
             }
             else
             {
-                throw new RepositoryAccessException("Given name already exists as a variant entry");
+                throw new DuplicateException("Given name already exists as a variant entry");
             }
         }
 
@@ -51,10 +51,9 @@ namespace Application.Domain
             }
         }
 
-        // TODO: Confirm where this method is used. It seems a little unhealthy
         public async Task<NameEntry> CreateOrUpdateName(NameEntry entry)
         {
-            var updated = await UpdateName(entry.Name, entry);
+            var updated = await UpdateName(entry);
 
             if (updated == null)
             {
@@ -75,9 +74,33 @@ namespace Application.Domain
             return savedNames;
         }
 
-        public async Task<NameEntry?> UpdateName(string originalName, NameEntry newEntry)
+        public async Task<NameEntry?> UpdateName(NameEntry nameEntry)
         {
-            return await _nameEntryRepository.Update(originalName, newEntry);
+            if (nameEntry.State == State.PUBLISHED)
+            {
+                // Unpublish name if it is currently published since it is awaiting some changes.
+                nameEntry.State = State.MODIFIED;
+            }
+
+            return await _nameEntryRepository.Update(nameEntry.Name, nameEntry);
+        }
+
+        /// <summary>
+        /// Update an existing NameEntry with a new version.
+        /// </summary>
+        /// <param name="originalEntry"></param>
+        /// <param name="newEntry"></param>
+        /// <returns></returns>
+        public async Task<NameEntry?> UpdateName(NameEntry originalEntry, NameEntry newEntry)
+        {
+            if (originalEntry.Modified != null)
+            {
+                // This is to ensure that each name has a maximum of one pending update
+                throw new UnpublishedNameUpdateException();
+            }
+
+            originalEntry.Modified = newEntry;
+            return await UpdateName(originalEntry);
         }
 
         public async Task<List<NameEntry>> BulkUpdateNames(List<NameEntry> nameEntries)
@@ -85,7 +108,8 @@ namespace Application.Domain
             var updatedNames = new List<NameEntry>();
             foreach (var nameEntry in nameEntries)
             {
-                var updated = await UpdateName(nameEntry.Name, nameEntry);
+                // TODO: Cater for possible exception
+                var updated = await UpdateName(nameEntry);
 
                 if (updated != null)
                 {
