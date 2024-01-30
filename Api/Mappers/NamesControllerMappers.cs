@@ -11,25 +11,7 @@ namespace Api.Mappers
     {
         public static NameEntryDto[] MapToDtoCollection(this List<NameEntry> names)
         {
-            return names.Select(nameEntry => new NameEntryDto
-            {
-                Pronunciation = nameEntry.Pronunciation,
-                IpaNotation = nameEntry.IpaNotation,
-                Variants = nameEntry.Variants,
-                Syllables = nameEntry.Syllables,
-                Meaning = nameEntry.Meaning,
-                ExtendedMeaning = nameEntry.ExtendedMeaning,
-                Morphology = nameEntry.Morphology,
-                GeoLocation = nameEntry.GeoLocation.Select(ge => new GeoLocationDto(ge.Place, ge.Region)).ToList(),
-                FamousPeople = nameEntry.FamousPeople,
-                Media = nameEntry.Media,
-                SubmittedBy = nameEntry.CreatedBy,
-                Etymology = nameEntry.Etymology.Select(et => new EtymologyDto(et.Part, et.Meaning)).ToList(),
-                State = nameEntry.State,
-                CreatedAt = nameEntry.CreatedAt,
-                UpdatedAt = nameEntry.UpdatedAt,
-                Name = nameEntry.Name
-            }).ToArray();
+            return names.Select(nameEntry => MapToDto(nameEntry)).ToArray();
         }
 
         public static NameEntry MapToEntity(this CreateNameDto request)
@@ -51,6 +33,29 @@ namespace Api.Mappers
                 Syllables = request.Syllables ?? new List<string>(),
                 Variants = request.Variants ?? new List<string>(),
                 CreatedBy = request.SubmittedBy
+            };
+        }
+
+        public static NameEntryDto MapToDto(this NameEntry nameEntry)
+        {
+            return new NameEntryDto
+            {
+                Pronunciation = nameEntry.Pronunciation,
+                IpaNotation = nameEntry.IpaNotation,
+                Variants = nameEntry.Variants,
+                Syllables = nameEntry.Syllables,
+                Meaning = nameEntry.Meaning,
+                ExtendedMeaning = nameEntry.ExtendedMeaning,
+                Morphology = nameEntry.Morphology,
+                GeoLocation = nameEntry.GeoLocation.Select(ge => new GeoLocationDto(ge.Place, ge.Region)).ToList(),
+                FamousPeople = nameEntry.FamousPeople,
+                Media = nameEntry.Media,
+                SubmittedBy = nameEntry.CreatedBy,
+                Etymology = nameEntry.Etymology.Select(et => new EtymologyDto(et.Part, et.Meaning)).ToList(),
+                State = nameEntry.State,
+                CreatedAt = nameEntry.CreatedAt,
+                UpdatedAt = nameEntry.UpdatedAt,
+                Name = nameEntry.Name
             };
         }
     }

@@ -15,11 +15,18 @@ namespace Api.Controllers
     public class NamesController : ControllerBase
     {
         private readonly NameEntryService _nameEntryService;
+        private object entryService;
+
         public NamesController(NameEntryService entryService)
         {
             _nameEntryService = entryService;
         }
 
+        /// <summary>
+        /// Create a new Name entries. Updates are not possible through this endpoint.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -41,6 +48,10 @@ namespace Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Fetch metadata about all names in the system.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("meta")]
         [ProducesResponseType(typeof(NamesMetadataDto[]), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetMetaData()
@@ -50,6 +61,15 @@ namespace Api.Controllers
             return Ok(metaData);
         }
 
+        /// <summary>
+        /// List all names based on different filtering parameters.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="count"></param>
+        /// <param name="all"></param>
+        /// <param name="submittedBy"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(NameEntryDto[]), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllNames(
@@ -73,17 +93,37 @@ namespace Api.Controllers
                     names = await _nameEntryService.ListNames();
                 }
             }
-            else if(state != null)
+            else if (state != null)
             {
                 names = await _nameEntryService.FindBy(state.Value, page, count);
             }
 
             // TODO: Do this filtering at database level to reduce waste of I/O
-            names = names == null ?  new List<NameEntry>() : names
+            names = names == null ? new List<NameEntry>() : names
                 .Where(n => string.IsNullOrWhiteSpace(submittedBy) || n.CreatedBy.Equals(submittedBy.Trim(), StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             return Ok(names.MapToDtoCollection());
+        }
+
+        /// <summary>
+        /// Fetch a single name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [HttpGet("{name}")]
+        [ProducesResponseType(typeof(NameEntryDto), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetName([FromRoute] string name)
+        {
+            var nameEntry = await _nameEntryService.LoadName(name);
+
+            if (nameEntry == null)
+            {
+                string errorMsg = $"{name} not found in the database";
+                return BadRequest(errorMsg);
+            }
+
+            return Ok(nameEntry.MapToDto());
         }
     }
 }
