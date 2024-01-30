@@ -136,5 +136,10 @@ namespace Application.Domain
             count = Math.Min(count ?? DefaultListCount, MaxListCount);
             return await _nameEntryRepository.List(pageNumber.Value, count.Value, ne => ne.State == state);
         }
+
+        public async Task<NameEntry?> LoadName(string name)
+        {
+            return await _nameEntryRepository.FindByName(name);
+        }
     }
 }
