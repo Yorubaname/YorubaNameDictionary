@@ -17,6 +17,11 @@ public class NameEntryRepository : INameEntryRepository
         _nameEntryCollection = database.GetCollection<NameEntry>("NameEntries");
     }
 
+    public async Task<NameEntry> FindById(string id)
+    {
+        return await _nameEntryCollection.Find(x => x.Id == id).SingleOrDefaultAsync();
+    }
+    
     public async Task Create(NameEntry entry)
     {
         entry.Id = ObjectId.GenerateNewId().ToString();

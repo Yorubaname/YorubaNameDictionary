@@ -7,6 +7,7 @@ namespace Core.Repositories
 {
     public interface INameEntryRepository
     {
+        Task<NameEntry> FindById(string id);
         Task Create(NameEntry newName);
 
         // TODO: This method should not be accessible. Too heavy on the DB

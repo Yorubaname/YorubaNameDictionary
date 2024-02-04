@@ -12,7 +12,7 @@ namespace Api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class NamesController : ControllerBase
+    public class NamesController :  ControllerBase
     {
         private readonly NameEntryService _nameEntryService;
         public NamesController(NameEntryService entryService)
