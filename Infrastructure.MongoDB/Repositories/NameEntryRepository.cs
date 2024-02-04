@@ -21,11 +21,24 @@ public class NameEntryRepository : INameEntryRepository
     {
         return await _nameEntryCollection.Find(x => x.Id == id).SingleOrDefaultAsync();
     }
+
+    public async Task<bool> DeleteAll()
+    {
+        var deleteResult = await _nameEntryCollection.DeleteManyAsync(FilterDefinition<NameEntry>.Empty);
+        return deleteResult.DeletedCount > 0;
+    }
+    
     
     public async Task Create(NameEntry entry)
     {
         entry.Id = ObjectId.GenerateNewId().ToString();
         await _nameEntryCollection.InsertOneAsync(entry);
+    }
+
+    public async Task Create(List<NameEntry> entries)
+    {
+        entries.ForEach(entry =>  entry.Id = ObjectId.GenerateNewId().ToString()!);
+        await _nameEntryCollection.InsertManyAsync(entries);
     }
 
     public async Task<int> CountByState(State state)

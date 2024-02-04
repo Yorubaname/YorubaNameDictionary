@@ -15,6 +15,11 @@
             string commaSeparatedValue = string.Join(CommaSpace, list);
             return new CommaSeparatedString(commaSeparatedValue);
         }
+        
+        public static implicit operator CommaSeparatedString(string commaSeperatedString)
+        {
+            return new CommaSeparatedString(commaSeperatedString);
+        }
 
         public static implicit operator List<string>(CommaSeparatedString commaSeparatedString)
         {
