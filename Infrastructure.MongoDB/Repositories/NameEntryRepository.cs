@@ -60,7 +60,13 @@ public class NameEntryRepository : INameEntryRepository
 
     public async Task<NameEntry?> FindByName(string name)
     {
-        return await _nameEntryCollection.Find(ne => ne.Name == name).SingleOrDefaultAsync();
+        var filter = Builders<NameEntry>.Filter.Eq("Name", name);
+        var options = new FindOptions
+        {
+            Collation = new Collation("en", strength: CollationStrength.Primary)
+        };
+
+        return await _nameEntryCollection.Find(filter, options).SingleOrDefaultAsync();
     }
 
     public async Task<NameEntry?> FindByNameAndState(string name, State state)
