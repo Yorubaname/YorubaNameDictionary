@@ -27,8 +27,8 @@ public class NameEntryRepository : INameEntryRepository
         var deleteResult = await _nameEntryCollection.DeleteManyAsync(FilterDefinition<NameEntry>.Empty);
         return deleteResult.DeletedCount > 0;
     }
-    
-    
+
+
     public async Task Create(NameEntry entry)
     {
         entry.Id = ObjectId.GenerateNewId().ToString();
@@ -37,21 +37,45 @@ public class NameEntryRepository : INameEntryRepository
 
     public async Task Create(List<NameEntry> entries)
     {
-        entries.ForEach(entry =>  entry.Id = ObjectId.GenerateNewId().ToString()!);
+        entries.ForEach(entry => entry.Id = ObjectId.GenerateNewId().ToString()!);
         await _nameEntryCollection.InsertManyAsync(entries);
     }
 
     public async Task<int> CountByState(State state)
     {
-        return (int)await CountWhere(ne => ne.State == state);
+        return await CountWhere(ne => ne.State == state);
+    }
+
+    public async Task Delete(string name)
+    {
+        var filter = Builders<NameEntry>.Filter.Eq("Name", name);
+        var options = SetCollationPrimary<DeleteOptions>(new DeleteOptions());
+
+        await _nameEntryCollection.DeleteOneAsync(filter, options);
     }
 
     public async Task<bool> DeleteByNameAndState(string name, State state)
     {
-        var deleteResult = await _nameEntryCollection.DeleteOneAsync(ne => ne.Name == name && ne.State == state);
+        var filter = Builders<NameEntry>
+            .Filter
+            .And(Builders<NameEntry>.Filter.Eq("Name", name), Builders<NameEntry>.Filter.Eq("State", state));
+
+        var options = SetCollationPrimary<DeleteOptions>(new DeleteOptions());
+
+        // Perform the delete operation with the filter and options
+        var deleteResult = await _nameEntryCollection.DeleteOneAsync(filter, options);
+
+        // Return true if a document was deleted
         return deleteResult.DeletedCount > 0;
     }
 
+    private T SetCollationPrimary<T>(dynamic dbCommandOption)
+    {
+        dbCommandOption.Collation = new Collation("en", strength: CollationStrength.Primary);
+        return (T)dbCommandOption;
+    }
+
+    // TODO Hafiz: This is pulling too much data. We should eventually get rid of it.
     public async Task<HashSet<NameEntry>> ListAll()
     {
         var allEntries = await _nameEntryCollection.Find(_ => true).ToListAsync();
@@ -61,10 +85,7 @@ public class NameEntryRepository : INameEntryRepository
     public async Task<NameEntry?> FindByName(string name)
     {
         var filter = Builders<NameEntry>.Filter.Eq("Name", name);
-        var options = new FindOptions
-        {
-            Collation = new Collation("en", strength: CollationStrength.Primary)
-        };
+        var options = SetCollationPrimary<FindOptions>(new FindOptions());
 
         return await _nameEntryCollection.Find(filter, options).SingleOrDefaultAsync();
     }
@@ -74,6 +95,7 @@ public class NameEntryRepository : INameEntryRepository
         return await _nameEntryCollection.Find(ne => ne.Name == name && ne.State == state).SingleOrDefaultAsync();
     }
 
+    // TODO Hafiz: Test to confirm that whatever code uses this is not affected by case sensitivity.
     public async Task<HashSet<NameEntry>> FindByNameStartingWithAndState(string alphabet, State state)
     {
         var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Name, new BsonRegularExpression($"^{alphabet}"));

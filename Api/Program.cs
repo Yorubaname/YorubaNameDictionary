@@ -1,6 +1,7 @@
 using Api;
 using Api.Utilities;
 using Application.Domain;
+using Application.Services;
 using Infrastructure.MongoDB;
 using System.Text.Json.Serialization;
 
@@ -27,6 +28,7 @@ var mongoDbSettings = Configuration.GetSection("MongoDB");
 services.InitializeDatabase(mongoDbSettings.GetValue<string>("ConnectionString"), mongoDbSettings.GetValue<string>("DatabaseName"));
 
 services.AddScoped<NameEntryService>();
+services.AddScoped<IEventPubService, EventPubService>();
 
 
 var app = builder.Build();

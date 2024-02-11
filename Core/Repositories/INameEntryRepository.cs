@@ -33,6 +33,8 @@ namespace Core.Repositories
 
         Task<int> CountByState(State state);
 
+        Task Delete(string name);
+
         Task<bool> DeleteByNameAndState(string name, State state);
 
         Task<NameEntry?> Update(string originalName, NameEntry newEntry);

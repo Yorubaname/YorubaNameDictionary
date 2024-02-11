@@ -2,6 +2,8 @@
 using Api.Model.In;
 using Api.Model.Out;
 using Application.Domain;
+using Application.Events;
+using Application.Services;
 using Core.Dto;
 using Core.Entities.NameEntry;
 using Core.Enums;
@@ -12,7 +14,7 @@ namespace Api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class NamesController :  ControllerBase
+    public class NamesController : ControllerBase
     {
         private readonly NameEntryService _nameEntryService;
 
@@ -150,6 +152,19 @@ namespace Api.Controllers
             // TODO: Ensure possible errors from calling UpdateName are handled in the global exception handling middleware
             _ = await _nameEntryService.UpdateName(oldNameEntry, updated.MapToEntity());
             return Ok(new { Message = "Name successfully updated" });
+        }
+
+        [HttpDelete("{name}")]
+        public async Task<IActionResult> DeleteName(string name)
+        {
+            var nameEntry = await _nameEntryService.LoadName(name);
+            if (nameEntry == null)
+            {
+                return NotFound($"{name} not found in the system so cannot be deleted");
+            }
+
+            await _nameEntryService.Delete(name);
+            return Ok(new { Message = $"{name} Deleted" });
         }
     }
 }
