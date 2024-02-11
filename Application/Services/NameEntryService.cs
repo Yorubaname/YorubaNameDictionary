@@ -1,4 +1,6 @@
-﻿using Application.Exceptions;
+﻿using Application.Events;
+using Application.Exceptions;
+using Application.Services;
 using Core.Dto;
 using Core.Entities.NameEntry;
 using Core.Enums;
@@ -13,10 +15,14 @@ namespace Application.Domain
         private const int MaxListCount = 100; //TODO: Make configurable
 
         private readonly INameEntryRepository _nameEntryRepository;
+        private readonly IEventPubService _eventPubService;
 
-        public NameEntryService(INameEntryRepository nameEntryRepository)
+        public NameEntryService(
+            INameEntryRepository nameEntryRepository,
+            IEventPubService eventPubService)
         {
             _nameEntryRepository = nameEntryRepository;
+            _eventPubService = eventPubService;
         }
 
         public async Task Create(NameEntry entry)
@@ -164,6 +170,17 @@ namespace Application.Domain
         public async Task<NameEntry?> LoadName(string name)
         {
             return await _nameEntryRepository.FindByName(name);
+        }
+
+        public async Task Delete(string name)
+        {
+            await _nameEntryRepository.Delete(name);
+            await PublishNameDeletedEvent(name);
+        }
+
+        private async Task PublishNameDeletedEvent(string name)
+        {
+            await _eventPubService.PublishEvent(new NameDeletedEvent(name));
         }
     }
 }
