@@ -1,9 +1,8 @@
-﻿using Application.Events;
-using Application.Exceptions;
-using Application.Services;
+﻿using Application.Exceptions;
 using Core.Dto;
 using Core.Entities.NameEntry;
 using Core.Enums;
+using Core.Events;
 using Core.Repositories;
 
 namespace Application.Domain
@@ -123,7 +122,7 @@ namespace Application.Domain
                 }
                 else
                 {
-                    // TODO: Create a "TriedToUpdateANonExistentName" event
+                    await _eventPubService.PublishEvent(new NonExistingNameUpdateAttempted(nameEntry.Name));
                 }
                 // TODO: Ensure that removing batched writes to database here will not cause problems
             }
@@ -180,7 +179,7 @@ namespace Application.Domain
 
         private async Task PublishNameDeletedEvent(string name)
         {
-            await _eventPubService.PublishEvent(new NameDeletedEvent(name));
+            await _eventPubService.PublishEvent(new NameDeleted(name));
         }
     }
 }

@@ -8,7 +8,7 @@ public class NameEntry : BaseEntity, IComparable<NameEntry>
     public string Name { get; set; }
 
     public string? Pronunciation { get; set; }
-    // TODO: Clarify from Kola of the need to retain this field; Only 3 records exist in database with a value at the moment
+    // Only 3 values exist in the DB for this field at the moment. However, Kola would like to retain it.
     public string? IpaNotation { get; set; }
     public string Meaning { get; set; }
     public string? ExtendedMeaning { get; set; }
@@ -21,18 +21,14 @@ public class NameEntry : BaseEntity, IComparable<NameEntry>
     public List<EmbeddedVideo> Videos { get; set; }
     public List<GeoLocation> GeoLocation { get; set; }
 
-    // TODO: Previously comma separated
     public List<string> FamousPeople { get; set; }
 
-    // TODO: Previously hyphen separated
     public List<string> Syllables { get; set; }
 
-    // TODO: Previously comma separated 
     public List<string> Variants { get; set; }
 
     /// <summary>
     /// When the current entry is edited, the edited version will be stored here until it is published
-    /// TODO: Application rule: A name with a pending publish cannot be edited
     /// </summary>
     public NameEntry? Modified { get; set; }
 

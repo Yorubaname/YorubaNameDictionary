@@ -2,6 +2,7 @@ using Api;
 using Api.Utilities;
 using Application.Domain;
 using Application.Services;
+using Core.Events;
 using Infrastructure.MongoDB;
 using System.Text.Json.Serialization;
 
