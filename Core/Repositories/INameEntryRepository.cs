@@ -7,7 +7,10 @@ namespace Core.Repositories
 {
     public interface INameEntryRepository
     {
+        Task<NameEntry> FindById(string id);
         Task Create(NameEntry newName);
+        Task Create(List<NameEntry> newName);
+        Task<bool> DeleteAll();
 
         // TODO: This method should not be accessible. Too heavy on the DB
         Task<HashSet<NameEntry>> ListAll();
