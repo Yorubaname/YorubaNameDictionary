@@ -1,6 +1,7 @@
 ﻿using Core.Dto;
 using Core.Entities.NameEntry;
 using Core.Enums;
+using Core.Events;
 using Core.Repositories;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -11,10 +12,14 @@ namespace Infrastructure.MongoDB.Repositories;
 public class NameEntryRepository : INameEntryRepository
 {
     private readonly IMongoCollection<NameEntry> _nameEntryCollection;
+    private readonly IEventPubService _eventPubService;
 
-    public NameEntryRepository(IMongoDatabase database)
+    public NameEntryRepository(
+        IMongoDatabase database,
+        IEventPubService eventPubService)
     {
         _nameEntryCollection = database.GetCollection<NameEntry>("NameEntries");
+        _eventPubService = eventPubService;
     }
 
     public async Task<NameEntry> FindById(string id)
@@ -62,10 +67,8 @@ public class NameEntryRepository : INameEntryRepository
 
         var options = SetCollationPrimary<DeleteOptions>(new DeleteOptions());
 
-        // Perform the delete operation with the filter and options
         var deleteResult = await _nameEntryCollection.DeleteOneAsync(filter, options);
 
-        // Return true if a document was deleted
         return deleteResult.DeletedCount > 0;
     }
 
@@ -139,11 +142,6 @@ public class NameEntryRepository : INameEntryRepository
 
     public async Task<NameEntry?> Update(string originalName, NameEntry newEntry)
     {
-        if (originalName != newEntry.Name)
-        {
-            // TODO: Fire an event that the name has changed
-        }
-
         var filter = Builders<NameEntry>.Filter.Eq(ne => ne.Name, originalName);
         var updateStatement = GenerateUpdateStatement(newEntry);
 
@@ -156,7 +154,11 @@ public class NameEntryRepository : INameEntryRepository
 
         if (updated == null)
         {
-            // TODO: Fire an event that an attempt was made to update a non-existing name.
+            await _eventPubService.PublishEvent(new NonExistingNameUpdateAttempted(originalName));
+        }
+        else if (originalName != newEntry.Name)
+        {
+            await _eventPubService.PublishEvent(new NameEntryNameUpdated(originalName, newEntry.Name));
         }
 
         return updated;

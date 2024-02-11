@@ -1,5 +1,4 @@
-﻿
-namespace Application.Services
+﻿namespace Core.Events
 {
     public interface IEventPubService
     {

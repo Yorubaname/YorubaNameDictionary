@@ -14,7 +14,6 @@ namespace Core.Entities
         public DateTime CreatedAt { get; set; }
 
         [Required]
-        // TODO: This used to be SubmittedBy in name. Ensure that API does not break
         public string CreatedBy { get; set; }
         public DateTime UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }

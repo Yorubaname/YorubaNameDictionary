@@ -2,8 +2,6 @@
 using Api.Model.In;
 using Api.Model.Out;
 using Application.Domain;
-using Application.Events;
-using Application.Services;
 using Core.Dto;
 using Core.Entities.NameEntry;
 using Core.Enums;
@@ -99,7 +97,7 @@ namespace Api.Controllers
                 names = await _nameEntryService.FindBy(state.Value, page, count);
             }
 
-            // TODO: Do this filtering at database level to reduce waste of I/O
+            // TODO Minor: Do this filtering at database level to reduce waste of I/O
             names = names == null ? new List<NameEntry>() : names
                 .Where(n => string.IsNullOrWhiteSpace(submittedBy) || n.CreatedBy.Equals(submittedBy.Trim(), StringComparison.OrdinalIgnoreCase))
                 .ToList();
