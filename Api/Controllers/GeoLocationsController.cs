@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Domain;
+using Application.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -7,11 +9,18 @@ namespace Api.Controllers
     [ApiController]
     public class GeoLocationsController : ControllerBase
     {
+        private readonly GeoLocationsService _geoLocationsService;
+        public GeoLocationsController(GeoLocationsService geoLocationsService)
+        {
+            _geoLocationsService = geoLocationsService;
+        }
+
         [Route("/geolocations")]
         [HttpGet]
-        public IActionResult ListGeoLocations()
+        public async Task<IActionResult> ListGeoLocations()
         {
-            return Ok();
+            var result = await _geoLocationsService.GetAll();
+            return Ok(result);
         }
     }
 }
