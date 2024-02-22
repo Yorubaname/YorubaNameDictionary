@@ -15,7 +15,6 @@ namespace Api.Controllers
             _geoLocationsService = geoLocationsService;
         }
 
-        [Route("/geolocations")]
         [HttpGet]
         public async Task<IActionResult> ListGeoLocations()
         {
