@@ -1,5 +1,7 @@
 ﻿using Application.Services;
+using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Api.Controllers
 {
@@ -14,6 +16,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(GeoLocation[]), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ListGeoLocations()
         {
             var result = await _geoLocationsService.GetAll();
