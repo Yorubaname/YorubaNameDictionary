@@ -1,12 +1,7 @@
 ﻿using Core.Entities;
-using Core.Entities.NameEntry;
 using Core.Repositories;
+using MongoDB.Bson;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.MongoDB.Repositories
 {
@@ -17,16 +12,17 @@ namespace Infrastructure.MongoDB.Repositories
         public GeoLocationsRepository(IMongoDatabase database)
         {
             _geoLocationsCollection = database.GetCollection<GeoLocation>("GeoLocations");
-
             // Check if data exists, if not, initialize with default data
             if (_geoLocationsCollection.CountDocuments(FilterDefinition<GeoLocation>.Empty) == 0)
             {
                 InitGeoLocation();
             }
         }
+        
         public async Task<GeoLocation> FindByPlace(string place)
         {
-            throw new NotImplementedException();
+            var filter = Builders<GeoLocation>.Filter.Eq("Place", place);
+            return await _geoLocationsCollection.Find(filter).SingleOrDefaultAsync();
         }
 
         public async Task<List<GeoLocation>> GetAll()
@@ -41,29 +37,144 @@ namespace Infrastructure.MongoDB.Repositories
             // South-East Yoruba (SEY): Okitipupa, Ilaje, Ondo, Ọwọ, Ikarẹ, Ṣagamu, and parts of Ijẹbu.
             _geoLocationsCollection.InsertMany(new List<GeoLocation>
             {
-                new ("ABEOKUTA", "NWY"),
-                new ("IBADAN", "NWY"),
-                new ("OYO", "OYO"),
-                new ("OGUN", "OGN"),
-                new ("EKO", "EKO"),
-                new ("IGBOMINA", "CY"),
-                new ("YAGBA", "CY"),
-                new ("ILESHA", "CY"),
-                new ("IFE", "CY"),
-                new ("EKITI", "CY"),
-                new ("AKURE", "CY"),
-                new ("EFON", "CY"),
-                new ("IJEBU", "CY"),
-                new ("OKITIPUPA", "SEY"),
-                new ("IJALE", "SEY"),
-                new ("ONDO", "SEY"),
-                new ("OWO", "SEY"),
-                new ("IKARE", "SEY"),
-                new ("SAGAMU", "SEY"),
-                new ("GENERAL/NOT LOCATION SPECIFIC", "GENERAL"),
-                new ("I DO NOT KNOW", "UNDEFINED"),
-                new ("FOREIGN: ARABIC", "FOREIGN_ARABIC"),
-                new ("FOREIGN: GENERAL", "FOREIGN_GENERAL"),
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "ABEOKUTA",
+                    Region = "NWY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "IBADAN",
+                    Region = "NWY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "OYO",
+                    Region = "OYO"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "OGUN",
+                    Region = "OGN"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "EKO",
+                    Region = "EKO"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "IGBOMINA",
+                    Region = "CY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "YAGBA",
+                    Region = "CY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "ILESHA",
+                    Region = "CY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "IFE",
+                    Region = "CY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "EKITI",
+                    Region = "CY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "AKURE",
+                    Region = "CY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "EFON",
+                    Region = "CY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "IJEBU",
+                    Region = "CY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "OKITIPUPA",
+                    Region = "SEY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "IJALE",
+                    Region = "SEY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "ONDO",
+                    Region = "SEY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "OWO",
+                    Region = "SEY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "IKARE",
+                    Region = "SEY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "SAGAMU",
+                    Region = "SEY"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "GENERAL/NOT LOCATION SPECIFIC",
+                    Region = "GENERAL"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "I DO NOT KNOW",
+                    Region = "UNDEFINED"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "FOREIGN: ARABIC",
+                    Region = "FOREIGN_ARABIC"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "FOREIGN: GENERAL",
+                    Region = "FOREIGN_GENERAL"
+                }
             });
         }
     }

@@ -1,6 +1,4 @@
-﻿using Application.Domain;
-using Application.Services;
-using Microsoft.AspNetCore.Http;
+﻿using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
