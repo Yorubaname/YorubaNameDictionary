@@ -15,6 +15,12 @@ namespace Api.Controllers
             _geoLocationsService = geoLocationsService;
         }
 
+        /// <summary>
+        /// End point for returning the locations a name entry could be from
+        /// </summary>        
+        /// <returns>
+        /// An <see cref="GeoLocation[]"/> representing the response containing the list of <see cref="GeoLocation"/> objects.
+        /// </returns>
         [HttpGet]
         [ProducesResponseType(typeof(GeoLocation[]), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ListGeoLocations()
