@@ -14,7 +14,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
         _nameEntryCollection = database.GetCollection<NameEntry>("NameEntries");
     }
 
-    public async Task<List<Feedback>> FindAll(string sortOrder)
+    public async Task<List<Feedback>> FindAllAsync(string sortOrder)
     {
         var sortDefinition = sortOrder.Equals("desc", System.StringComparison.OrdinalIgnoreCase)
             ? Builders<NameEntry>.Sort.Descending("Feedbacks.CreatedAt")
@@ -29,7 +29,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
             .ToListAsync();
     }
 
-    public async Task<List<Feedback>> FindByName(string name, string sortOrder)
+    public async Task<List<Feedback>> FindByNameAsync(string name, string sortOrder)
     {
         var sortDefinition = sortOrder.Equals("desc", System.StringComparison.OrdinalIgnoreCase)
             ? Builders<NameEntry>.Sort.Descending("Feedbacks.CreatedAt")
@@ -42,5 +42,18 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
             .Sort(sortDefinition)
             .Project<Feedback>(projectionDefinition)
             .ToListAsync();
+    }
+
+    public async Task<bool> AddFeedbackByNameAsync(string name, string feedbackContent)
+    {
+        var filter = Builders<NameEntry>.Filter
+            .Eq(entry => entry.Name, name);
+
+        var update = Builders<NameEntry>.Update
+            .Push(entry => entry.Feedbacks, new Feedback { Content = feedbackContent });
+
+        var updateResult = await _nameEntryCollection.UpdateOneAsync(filter, update);
+
+        return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
     }
 }
