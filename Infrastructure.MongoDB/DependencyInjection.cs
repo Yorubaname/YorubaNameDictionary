@@ -13,6 +13,7 @@ namespace Infrastructure.MongoDB
             services.AddScoped(s => s.GetRequiredService<IMongoClient>().GetDatabase(databaseName));
 
             services.AddScoped<INameEntryRepository, NameEntryRepository>();
+            services.AddScoped<INameEntryFeedbackRepository, NameEntryFeedbackRepository>();
         }
     }
 }
