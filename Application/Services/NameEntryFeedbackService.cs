@@ -1,5 +1,4 @@
 ﻿using Core.Entities.NameEntry.Collections;
-using Core.Entities.NameEntry;
 using Core.Repositories;
 
 namespace Application.Services
