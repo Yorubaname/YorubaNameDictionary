@@ -9,7 +9,7 @@ namespace Api.Mappers
 {
     public static class NamesControllerMappers
     {
-        public static NameEntryDto[] MapToDtoCollection(this List<NameEntry> names)
+        public static NameEntryDto[] MapToDtoCollection(this IEnumerable<NameEntry> names)
         {
             return names.Select(nameEntry => MapToDto(nameEntry)).ToArray();
         }

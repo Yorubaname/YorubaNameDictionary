@@ -1,5 +1,7 @@
-﻿using Application.Services;
+﻿using Api.Mappers;
+using Application.Services;
 using Core.Dto.Response;
+using Core.Events;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -11,10 +13,14 @@ namespace Api.Controllers
     public class SearchController : ControllerBase
     {
         private readonly SearchService _searchService;
+        private readonly IEventPubService _eventPubService;
 
-        public SearchController(SearchService searchService) 
+        public SearchController(
+            SearchService searchService,
+            IEventPubService eventPubService) 
         {
             _searchService = searchService;
+            _eventPubService = eventPubService;
         }
 
         [HttpGet("meta")]
@@ -26,12 +32,17 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(SearchMetadataDto[]), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetMetadata([FromQuery(Name ="q"), Required] string searchTerm)
+        [ProducesResponseType(typeof(NameEntryDto[]), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetMetadata([FromQuery(Name = "q"), Required] string searchTerm)
         {
-            IEnumerable<NameEntryDto> matches = await _searchService.Search(searchTerm);
-            // TODO Hafiz: Publish event if exact match
-            return Ok(matches);
+            var matches = await _searchService.Search(searchTerm);
+
+            if (matches.Count() == 1 && matches.First().Name.ToLower() == searchTerm.ToLower())
+            {
+                await _eventPubService.PublishEvent(new ExactNameSearched(searchTerm));
+            }
+
+            return Ok(matches.MapToDtoCollection());
         }
     }
 }

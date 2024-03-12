@@ -1,4 +1,6 @@
 ﻿using Core.Dto.Response;
+using Core.Entities.NameEntry;
+using Core.Enums;
 using Core.Repositories;
 
 namespace Application.Services
@@ -7,7 +9,7 @@ namespace Application.Services
     {
         private readonly INameEntryRepository _namesRepository;
 
-        public SearchService(INameEntryRepository namesRepository) 
+        public SearchService(INameEntryRepository namesRepository)
         {
             _namesRepository = namesRepository;
         }
@@ -19,9 +21,28 @@ namespace Application.Services
             return new SearchMetadataDto { TotalPublishedNames = totalPublishedNames };
         }
 
-        public async Task<IEnumerable<NameEntryDto>> Search(string searchTerm)
+        public async Task<IEnumerable<NameEntry>> Search(string searchTerm)
         {
-            throw new NotImplementedException();
+            var exactFound = await _namesRepository.FindByNameAndState(searchTerm, State.PUBLISHED);
+            if (exactFound != null)
+            {
+                return new NameEntry[] { exactFound };
+            }
+
+            var startingWithSearchTerm = await _namesRepository.FindByNameStartingWithAndState(searchTerm, State.PUBLISHED);
+            if (startingWithSearchTerm.Any())
+            {
+                return startingWithSearchTerm;
+            }
+
+            var possibleFound = new HashSet<NameEntry>();
+            possibleFound.UnionWith(await _namesRepository.FindNameEntryByNameContainingAndState(searchTerm, State.PUBLISHED));
+            possibleFound.UnionWith(await _namesRepository.FindNameEntryByVariantsContainingAndState(searchTerm, State.PUBLISHED));
+            possibleFound.UnionWith(await _namesRepository.FindNameEntryByMeaningContainingAndState(searchTerm, State.PUBLISHED));
+            possibleFound.UnionWith(await _namesRepository.FindNameEntryByExtendedMeaningContainingAndState(searchTerm, State.PUBLISHED));
+
+            return possibleFound;
+
         }
     }
 }
