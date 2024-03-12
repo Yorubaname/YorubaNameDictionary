@@ -1,8 +1,8 @@
 ﻿using Api.Mappers;
 using Api.Model.In;
-using Api.Model.Out;
 using Application.Domain;
-using Core.Dto;
+using Core.Dto.Request;
+using Core.Dto.Response;
 using Core.Entities.NameEntry;
 using Core.Enums;
 using Microsoft.AspNetCore.Mvc;

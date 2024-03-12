@@ -1,4 +1,4 @@
-﻿using Core.Dto;
+﻿using Core.Dto.Response;
 using Core.Entities.NameEntry;
 using Core.Enums;
 using Core.Events;

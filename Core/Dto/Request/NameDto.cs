@@ -1,8 +1,7 @@
-﻿using Api.Model.In;
-using Core.Enums;
+﻿using Core.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace Api.Model.Request
+namespace Core.Dto.Request
 {
     public abstract class NameDto
     {

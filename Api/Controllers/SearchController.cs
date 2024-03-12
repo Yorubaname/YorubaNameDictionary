@@ -1,6 +1,7 @@
 ﻿using Application.Services;
-using Core.Dto;
+using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace Api.Controllers
@@ -22,6 +23,15 @@ namespace Api.Controllers
         {
             var metadata = await _searchService.GetNamesMetadata();
             return Ok(metadata);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(SearchMetadataDto[]), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetMetadata([FromQuery(Name ="q"), Required] string searchTerm)
+        {
+            IEnumerable<NameEntryDto> matches = await _searchService.Search(searchTerm);
+            // TODO Hafiz: Publish event if exact match
+            return Ok(matches);
         }
     }
 }

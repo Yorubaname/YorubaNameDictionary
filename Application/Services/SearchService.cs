@@ -1,4 +1,4 @@
-﻿using Core.Dto;
+﻿using Core.Dto.Response;
 using Core.Repositories;
 
 namespace Application.Services
@@ -17,6 +17,11 @@ namespace Application.Services
             // Return number of published names
             var totalPublishedNames = await _namesRepository.CountByState(Core.Enums.State.PUBLISHED);
             return new SearchMetadataDto { TotalPublishedNames = totalPublishedNames };
+        }
+
+        public async Task<IEnumerable<NameEntryDto>> Search(string searchTerm)
+        {
+            throw new NotImplementedException();
         }
     }
 }

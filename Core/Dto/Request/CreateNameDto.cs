@@ -1,4 +1,4 @@
-﻿using Api.Model.Request;
+﻿using Core.Dto.Request;
 
 namespace Api.Model.In
 {

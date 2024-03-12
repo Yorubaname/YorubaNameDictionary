@@ -1,6 +1,5 @@
-﻿using Api.Model.In;
-using Api.Model.Out;
-using Api.Model.Request;
+﻿using Core.Dto.Request;
+using Core.Dto.Response;
 using Core.Entities;
 using Core.Entities.NameEntry;
 using Core.Entities.NameEntry.Collections;
