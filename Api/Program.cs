@@ -30,6 +30,7 @@ services.InitializeDatabase(mongoDbSettings.GetValue<string>("ConnectionString")
 
 services.AddScoped<NameEntryService>();
 services.AddScoped<IEventPubService, EventPubService>();
+services.AddScoped<SearchService>();
 
 
 var app = builder.Build();
