@@ -73,4 +73,22 @@ public class NameEntry : BaseEntity, IComparable<NameEntry>
     {
         return Name.CompareTo(other?.Name);
     }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Name);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        // Standard equality checks
+        if (obj is not NameEntry)
+        {
+            return false;
+        }
+
+        NameEntry other = (NameEntry)obj;
+
+        return Name == other.Name;
+    }
 }
