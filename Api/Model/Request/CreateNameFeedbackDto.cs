@@ -2,5 +2,5 @@
 
 namespace Api.Model.Request
 {
-    public record CreateNameFeedbackDto([Required] string Name, [Required] string FeedbackContent);
+    public record CreateNameFeedbackDto([Required] string Name, [Required(ErrorMessage = "Cannot give an empty feedback")] string FeedbackContent);
 }
