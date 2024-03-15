@@ -1,4 +1,4 @@
-﻿namespace Api.Model
+﻿namespace Core.Dto
 {
     public class CommaSeparatedString : CharacterSeparatedString
     {
@@ -15,7 +15,7 @@
             string commaSeparatedValue = string.Join(CommaSpace, list);
             return new CommaSeparatedString(commaSeparatedValue);
         }
-        
+
         public static implicit operator CommaSeparatedString(string commaSeperatedString)
         {
             return new CommaSeparatedString(commaSeperatedString);

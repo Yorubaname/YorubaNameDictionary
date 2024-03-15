@@ -1,7 +1,7 @@
-﻿using Api.Model.In;
+﻿using Core.Dto.Request;
 using Core.Enums;
 
-namespace Api.Model.Out
+namespace Core.Dto.Response
 {
     public record NameEntryDto
     {

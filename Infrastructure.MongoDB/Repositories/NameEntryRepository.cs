@@ -1,4 +1,4 @@
-﻿using Core.Dto;
+﻿using Core.Dto.Response;
 using Core.Entities.NameEntry;
 using Core.Enums;
 using Core.Events;
@@ -95,14 +95,19 @@ public class NameEntryRepository : INameEntryRepository
 
     public async Task<NameEntry?> FindByNameAndState(string name, State state)
     {
-        return await _nameEntryCollection.Find(ne => ne.Name == name && ne.State == state).SingleOrDefaultAsync();
+        var options = SetCollationPrimary<FindOptions>(new FindOptions());
+        return await _nameEntryCollection
+                            .Find(ne => ne.Name == name && ne.State == state, options)
+                            .SingleOrDefaultAsync();
     }
 
     // TODO Hafiz: Test to confirm that whatever code uses this is not affected by case sensitivity.
     public async Task<HashSet<NameEntry>> FindByNameStartingWithAndState(string alphabet, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Name, new BsonRegularExpression($"^{alphabet}"));
-        var result = await _nameEntryCollection.Find(filter & Builders<NameEntry>.Filter.Eq(ne => ne.State, state)).ToListAsync();
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Name, new BsonRegularExpression($"^{alphabet}", "i"));
+        var result = await _nameEntryCollection
+                                .Find(filter & Builders<NameEntry>.Filter.Eq(ne => ne.State, state))
+                                .ToListAsync();
         return new HashSet<NameEntry>(result);
     }
 
@@ -113,30 +118,35 @@ public class NameEntryRepository : INameEntryRepository
 
     public async Task<HashSet<NameEntry>> FindNameEntryByExtendedMeaningContainingAndState(string name, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Where(ne =>
-        ne.ExtendedMeaning != null && ne.ExtendedMeaning.Contains(name) && ne.State == state);
-        var result = await _nameEntryCollection.Find(filter).ToListAsync();
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.ExtendedMeaning, new BsonRegularExpression(name, "i")) & 
+            Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
+        var options = SetCollationPrimary<FindOptions>(new FindOptions());
+        var result = await _nameEntryCollection.Find(filter, options).ToListAsync();
         return new HashSet<NameEntry>(result);
     }
 
     public async Task<HashSet<NameEntry>> FindNameEntryByMeaningContainingAndState(string name, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Where(ne => ne.Meaning.Contains(name) && ne.State == state);
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Name, new BsonRegularExpression(name, "i"))
+                                    & Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var result = await _nameEntryCollection.Find(filter).ToListAsync();
         return new HashSet<NameEntry>(result);
     }
 
     public async Task<HashSet<NameEntry>> FindNameEntryByNameContainingAndState(string name, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Where(ne => ne.Name.Contains(name) && ne.State == state);
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Name, new BsonRegularExpression(name, "i")) &
+             Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var result = await _nameEntryCollection.Find(filter).ToListAsync();
         return new HashSet<NameEntry>(result);
     }
 
     public async Task<HashSet<NameEntry>> FindNameEntryByVariantsContainingAndState(string name, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Where(ne => ne.Variants.Contains(name) && ne.State == state);
-        var result = await _nameEntryCollection.Find(filter).ToListAsync();
+        var regex = new BsonRegularExpression(name, "i");
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Variants , regex) & Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
+        var options = SetCollationPrimary<FindOptions>(new FindOptions());
+        var result = await _nameEntryCollection.Find(filter, options).ToListAsync();
         return new HashSet<NameEntry>(result);
     }
 

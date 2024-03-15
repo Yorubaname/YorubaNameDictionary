@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Api.Model.Out;
+using Core.Dto.Response;
 using Core.Entities.NameEntry;
 using Core.Enums;
 using Core.Repositories;

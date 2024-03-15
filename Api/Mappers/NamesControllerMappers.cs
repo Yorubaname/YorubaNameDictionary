@@ -1,6 +1,5 @@
-﻿using Api.Model.In;
-using Api.Model.Out;
-using Api.Model.Request;
+﻿using Core.Dto.Request;
+using Core.Dto.Response;
 using Core.Entities;
 using Core.Entities.NameEntry;
 using Core.Entities.NameEntry.Collections;
@@ -10,7 +9,7 @@ namespace Api.Mappers
 {
     public static class NamesControllerMappers
     {
-        public static NameEntryDto[] MapToDtoCollection(this List<NameEntry> names)
+        public static NameEntryDto[] MapToDtoCollection(this IEnumerable<NameEntry> names)
         {
             return names.Select(nameEntry => MapToDto(nameEntry)).ToArray();
         }
