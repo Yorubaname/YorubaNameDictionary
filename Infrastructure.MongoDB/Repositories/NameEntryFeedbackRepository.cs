@@ -74,12 +74,11 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
         return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
     }
 
-    public async Task<bool> DeleteFeedbackAsync(string name, string content)
+    public async Task<bool> DeleteFeedbackAsync(string name, string feedbackId)
     {
-        var filter = Builders<NameEntry>.Filter.Eq(entry => entry.Name, name) &
-                     Builders<NameEntry>.Filter.ElemMatch(entry => entry.Feedbacks, feedback => feedback.Content == content);
 
-        var update = Builders<NameEntry>.Update.PullFilter(entry => entry.Feedbacks, feedback => feedback.Content == content);
+        var filter = Builders<NameEntry>.Filter.Eq(entry => entry.Name, name);
+        var update = Builders<NameEntry>.Update.PullFilter(entry => entry.Feedbacks, feedback => feedback.Id == feedbackId);
 
         var updateResult = await _nameEntryCollection.UpdateOneAsync(filter, update);
 
@@ -98,20 +97,4 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
         return nameEntry?.Feedbacks?.FirstOrDefault(feedback => feedback.Id == feedbackId);
     }
 
-    public async Task<bool> DeleteFeedbackByIdAsync(string feedbackId)
-    {
-        var filter = Builders<NameEntry>.Filter.ElemMatch(entry => entry.Feedbacks, feedback => feedback.Id == feedbackId);
-        var update = Builders<NameEntry>.Update.PullFilter(entry => entry.Feedbacks, feedback => feedback.Id == feedbackId);
-
-        var existingEntry = await _nameEntryCollection.Find(filter).FirstOrDefaultAsync();
-        if (existingEntry == null || existingEntry.Feedbacks == null || !existingEntry.Feedbacks.Any())
-        {
-            // If the entry or its Feedbacks collection is null or empty, the feedback with the specified ID does not exist.
-            return false;
-        }
-
-        var updateResult = await _nameEntryCollection.UpdateOneAsync(filter, update);
-
-        return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
-    }
 }

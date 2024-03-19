@@ -116,5 +116,32 @@ namespace Api.Controllers
             return Ok(feedback);
         }
 
+        /// <summary>
+        /// Endpoint for deleting a feedback for a name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns> A string containing outcome of action</returns>
+        [HttpDelete]
+        [Route("{name}/{feedbackId}")]
+        public async Task<IActionResult> DeleteAFeedback(string name, string feedbackId)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest("Name parameter is required.");
+            }
+
+            var nameEntry = await _nameEntryService.LoadName(name);
+
+            if (nameEntry == null)
+            {
+                string errorMsg = $"No feedback found with supplied name. None deleted";
+                return NotFound(errorMsg);
+            }
+
+            var result = await _nameEntryFeedbackService.DeleteFeedbackAsync(name, feedbackId);
+
+            return Ok(result ? $"Feedback message deleted" : "Something went wrong!...");
+        }
+
     }
 }

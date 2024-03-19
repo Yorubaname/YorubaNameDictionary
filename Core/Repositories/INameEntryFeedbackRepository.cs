@@ -8,5 +8,7 @@ namespace Core.Repositories
         Task<bool> AddFeedbackByNameAsync(string name, string feedbackContent);
         Task<bool> DeleteAllFeedbackForNameAsync(string name);
         Task<Feedback> GetFeedbackByIdAsync(string feedbackId);
+
+        Task<bool> DeleteFeedbackAsync(string name, string id);
     }
 }
