@@ -1,4 +1,4 @@
-﻿namespace Api.Model
+﻿namespace Core.Dto
 {
     public class HyphenSeparatedString : CharacterSeparatedString
     {

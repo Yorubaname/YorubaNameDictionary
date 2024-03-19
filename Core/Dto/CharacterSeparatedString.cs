@@ -1,4 +1,4 @@
-﻿namespace Api.Model
+﻿namespace Core.Dto
 {
     public abstract class CharacterSeparatedString
     {

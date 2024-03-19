@@ -1,4 +1,4 @@
-﻿using Api.Model;
+﻿using Core.Dto;
 
 namespace Api.Utilities
 {

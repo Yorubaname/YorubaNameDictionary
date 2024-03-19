@@ -1,7 +1,6 @@
-﻿using Api.Model;
-using Api.Utilities;
+﻿using Core.Dto;
 
-namespace Api
+namespace Api.Utilities
 {
     public class HyphenSeparatedStringConverter : CharacterSeparatedStringConverter<HyphenSeparatedString>
     {

@@ -29,8 +29,10 @@ var mongoDbSettings = Configuration.GetSection("MongoDB");
 services.InitializeDatabase(mongoDbSettings.GetValue<string>("ConnectionString"), mongoDbSettings.GetValue<string>("DatabaseName"));
 
 services.AddScoped<NameEntryService>();
+services.AddScoped<GeoLocationsService>();
 services.AddScoped<NameEntryFeedbackService>();
 services.AddScoped<IEventPubService, EventPubService>();
+services.AddScoped<SearchService>();
 
 
 var app = builder.Build();
