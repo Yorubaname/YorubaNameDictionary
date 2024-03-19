@@ -38,7 +38,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
             : Builders<NameEntry>.Sort.Ascending("Feedbacks.CreatedAt");
 
         var data = await _nameEntryCollection
-            .Find(entry => entry.Name == name)
+            .Find(entry => entry.Name.ToLower() == name.ToLower())
             .Sort(sortDefinition)
             .ToListAsync();
 
@@ -47,8 +47,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
 
     public async Task<bool> AddFeedbackByNameAsync(string name, string feedbackContent)
     {
-        var filter = Builders<NameEntry>.Filter
-            .Eq(entry => entry.Name, name);
+        var filter = Builders<NameEntry>.Filter.Where(x => x.Name.ToLower() == name.ToLower());
 
         var nameFeedback = new Feedback
         {
@@ -66,7 +65,8 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
 
     public async Task<bool> DeleteAllFeedbackForNameAsync(string name)
     {
-        var filter = Builders<NameEntry>.Filter.Eq(entry => entry.Name, name);
+        var filter = Builders<NameEntry>.Filter.Where(x => x.Name.ToLower() == name.ToLower());
+
         var update = Builders<NameEntry>.Update.Set(entry => entry.Feedbacks, new List<Feedback>());
 
         var updateResult = await _nameEntryCollection.UpdateOneAsync(filter, update);
@@ -77,7 +77,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
     public async Task<bool> DeleteFeedbackAsync(string name, string feedbackId)
     {
 
-        var filter = Builders<NameEntry>.Filter.Eq(entry => entry.Name, name);
+        var filter = Builders<NameEntry>.Filter.Where(x => x.Name.ToLower() == name.ToLower());
         var update = Builders<NameEntry>.Update.PullFilter(entry => entry.Feedbacks, feedback => feedback.Id == feedbackId);
 
         var updateResult = await _nameEntryCollection.UpdateOneAsync(filter, update);

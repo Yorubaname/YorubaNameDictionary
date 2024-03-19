@@ -140,7 +140,7 @@ namespace Api.Controllers
 
             var result = await _nameEntryFeedbackService.DeleteFeedbackAsync(name, feedbackId);
 
-            return Ok(result ? $"Feedback message deleted" : "Something went wrong!...");
+            return Ok(result ? $"Feedback message deleted" : "No feedback found with supplied name or id");
         }
 
     }
