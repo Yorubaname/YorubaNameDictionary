@@ -61,5 +61,10 @@ namespace Application.Services
             return possibleFound;
 
         }
+
+        public async Task<IEnumerable<NameEntry>> SearchByStartsWith(string searchTerm)
+        {
+            return await _namesRepository.FindByNameStartingWithAndState(searchTerm, State.PUBLISHED);
+        }
     }
 }
