@@ -21,6 +21,8 @@ namespace Core.Repositories
 
         Task<HashSet<NameEntry>> FindByNameStartingWithAndState(string alphabet, State state);
 
+        Task<HashSet<NameEntry>> FindByNameStartingWithAnyAndState(IEnumerable<string> searchTerms, State state);
+
         Task<HashSet<NameEntry>> FindNameEntryByNameContainingAndState(string name, State state);
 
         Task<HashSet<NameEntry>> FindNameEntryByVariantsContainingAndState(string name, State state);
