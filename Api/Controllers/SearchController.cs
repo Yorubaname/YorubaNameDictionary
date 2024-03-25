@@ -56,5 +56,17 @@ namespace Api.Controllers
 
             return Ok(await _searchService.AutoComplete(searchTerm));
         }
+
+        [HttpGet("alphabet/{searchTerm}")]
+        [ProducesResponseType(typeof(IEnumerable<NameEntryDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> SearchByStartsWith(string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return Ok(Enumerable.Empty<NameEntryDto>());
+            }
+
+            return Ok(await _searchService.SearchByStartsWith(searchTerm));
+        }
     }
 }
