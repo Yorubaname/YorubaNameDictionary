@@ -17,7 +17,7 @@ namespace Api.Controllers
 
         public SearchController(
             SearchService searchService,
-            IEventPubService eventPubService) 
+            IEventPubService eventPubService)
         {
             _searchService = searchService;
             _eventPubService = eventPubService;
@@ -33,7 +33,7 @@ namespace Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(NameEntryDto[]), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetMetadata([FromQuery(Name = "q"), Required] string searchTerm)
+        public async Task<IActionResult> Search([FromQuery(Name = "q"), Required] string searchTerm)
         {
             var matches = await _searchService.Search(searchTerm);
 
@@ -43,6 +43,18 @@ namespace Api.Controllers
             }
 
             return Ok(matches.MapToDtoCollection());
+        }
+
+        [HttpGet("autocomplete")]
+        [ProducesResponseType(typeof(string[]), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Autocomplete([FromQuery(Name = "q")] string? searchTerm = null)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm) || searchTerm.Length < 2)
+            {
+                return Ok(Enumerable.Empty<string>());
+            }
+
+            return Ok(await _searchService.AutoComplete(searchTerm));
         }
     }
 }

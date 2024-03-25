@@ -14,6 +14,23 @@ namespace Application.Services
             _namesRepository = namesRepository;
         }
 
+        public async Task<HashSet<string>> AutoComplete(string query)
+        {
+            var searchTerms = new List<string>();
+
+            // TODO: Calling the db in a for loop might not be a terribly good idea. Revisit
+            for (int i = 2; i <= query.Length; i++)
+            {
+                searchTerms.Add(query.Substring(0, i));
+            }
+
+            var namesResult = await _namesRepository.FindByNameStartingWithAnyAndState(searchTerms, State.PUBLISHED);
+            var namesContainingQuery = await _namesRepository.FindNameEntryByNameContainingAndState(query, State.PUBLISHED);
+            namesResult.UnionWith(namesContainingQuery);
+
+            return new HashSet<string>(namesResult.Select(n => n.Name));
+        }
+
         public async Task<SearchMetadataDto> GetNamesMetadata()
         {
             // Return number of published names
