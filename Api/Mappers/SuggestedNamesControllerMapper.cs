@@ -1,28 +1,31 @@
 ﻿using Core.Dto.Request;
 using Core.Dto.Response;
 using Core.Entities;
+using Core.Entities.NameEntry;
 using MongoDB.Bson;
 
 namespace Api.Mappers;
 
 public static class SuggestedNamesControllerMapper
 {
+    public static SuggestedNameDto[] MapToDtoCollection(this IEnumerable<SuggestedName> names)
+    {
+        return names.Select(nameEntry => MapToDto(nameEntry)).ToArray();
+    }
     public static SuggestedName MapToEntity(this CreateSuggestedNameDto request)
     {
         return new SuggestedName
         {
-            //Id = ObjectId.GenerateNewId().ToString(),
+            Id = ObjectId.GenerateNewId().ToString(),
             Name = request.Name,
             Email = request.Email,
             Details = request.Details,
-            //GeoLocation = request.GeoLocation.Select(x => new GeoLocation
-            //{
-            //    Id = ObjectId.GenerateNewId().ToString(),
-            //    Place = x.Place,
-            //    Region = x.Region
-            //}).ToList()
-
-            GeoLocation = request.GeoLocation.Select(ge => new GeoLocation(ge.Place, ge.Region)).ToList(),
+            GeoLocation = request.GeoLocation.Select(x => new GeoLocation
+            {
+                Place = x.Place,
+                Region = x.Region,
+                Id = ObjectId.GenerateNewId().ToString()
+            }).ToList(),
         };
     }
 

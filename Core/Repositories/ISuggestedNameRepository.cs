@@ -6,4 +6,5 @@ public interface ISuggestedNameRepository
 {
     Task<Dictionary<string, int>> CountAsync();
     Task<SuggestedName> SuggestedNameAsync(SuggestedName suggestedName);
+    Task<List<SuggestedName>> GetAllAsync();
 }

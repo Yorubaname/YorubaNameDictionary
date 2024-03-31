@@ -3,7 +3,6 @@ using Application.Services;
 using Core.Dto.Request;
 using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace Api.Controllers;
 
@@ -19,6 +18,8 @@ public class SuggestedNamesController : ControllerBase
     }
 
     [HttpGet]
+    [Route("meta")]
+    [ProducesResponseType(typeof(Dictionary<string, int>), 200)]
     public async Task<IActionResult> GetSuggestedMetaData()
     {
         var suggestname = await _suggestedNameService.CountAsync();
@@ -27,10 +28,29 @@ public class SuggestedNamesController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(SuggestedNameDto[]), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(SuggestedNameDto), 200)]
     public async Task<IActionResult> SuggestName([FromBody] CreateSuggestedNameDto request)
     {
-        var data = await _suggestedNameService.SuggestedNameAsync(request.MapToEntity());
-        return Ok(data.MapToDto());
+        try
+        {
+            var data = await _suggestedNameService
+                .SuggestedNameAsync(request.MapToEntity());
+
+            return Ok(data.MapToDto());
+        }
+        catch (Exception ex)
+        {
+            // Handle exception if save operation fails
+            return StatusCode(500, $"Failed to save suggested name: {ex.Message}");
+        }
+    }
+    
+    [HttpGet]
+    [ProducesResponseType(typeof(SuggestedNameDto[]), 200)]
+    public async Task<IActionResult> GetAllSuggestedNames()
+    {
+        var data = await _suggestedNameService.GetAllAsync();
+
+        return Ok(data.MapToDtoCollection());
     }
 }

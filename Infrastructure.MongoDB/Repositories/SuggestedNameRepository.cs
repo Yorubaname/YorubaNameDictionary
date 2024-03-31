@@ -1,8 +1,5 @@
-﻿using Core.Dto.Request;
-using Core.Dto.Response;
-using Core.Entities;
+﻿using Core.Entities;
 using Core.Repositories;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastructure.MongoDB.Repositories;
@@ -39,11 +36,14 @@ public class SuggestedNameRepository : ISuggestedNameRepository
 
     public async Task<SuggestedName> SuggestedNameAsync(SuggestedName suggestedName)
     {
-        // Todo use automapper
-        //SuggestedName.Id = ObjectId.GenerateNewId().ToString()
-
         await _suggestedNameCollection.InsertOneAsync(suggestedName);
-
+        // todo: retun the name only if saved
         return suggestedName;
+    }
+
+    public async Task<List<SuggestedName>> GetAllAsync()
+    {
+        return await _suggestedNameCollection.Find(FilterDefinition<SuggestedName>.Empty)
+            .ToListAsync();
     }
 }
