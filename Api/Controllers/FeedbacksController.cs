@@ -29,7 +29,7 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(List<Feedback>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetFeedbacks()
         {
-            var feedbacks = await _nameEntryFeedbackService.FindAllAsync("CreatedAt");
+            var feedbacks = await _nameEntryFeedbackService.FindAllAsync();
 
             return Ok(feedbacks);
         }
@@ -72,7 +72,7 @@ namespace Api.Controllers
                 return BadRequest("Name parameter is required.");
             }
 
-            var feedbacks = await _nameEntryFeedbackService.FindByNameAsync(name, "CreatedAt");
+            var feedbacks = await _nameEntryFeedbackService.FindByNameAsync(name);
             return Ok(feedbacks);
         }
 

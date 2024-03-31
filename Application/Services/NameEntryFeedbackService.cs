@@ -12,14 +12,14 @@ namespace Application.Services
             _nameEntryFeedbackRepository = nameEntryFeedbackRepository;
         }
 
-        public async Task<List<Feedback>> FindAllAsync(string sort)
+        public async Task<List<Feedback>> FindAllAsync()
         {
-            return await _nameEntryFeedbackRepository.FindAllAsync(sort);
+            return await _nameEntryFeedbackRepository.FindAllAsync();
         }
 
-        public async Task<List<Feedback>> FindByNameAsync(string name, string sortOrder)
+        public async Task<List<Feedback>> FindByNameAsync(string name)
         {
-            return await _nameEntryFeedbackRepository.FindByNameAsync(name, sortOrder);
+            return await _nameEntryFeedbackRepository.FindByNameAsync(name);
         }
 
         public async Task<bool> AddFeedbackByNameAsync(string name, string feedbackContent)

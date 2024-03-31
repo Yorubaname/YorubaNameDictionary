@@ -15,34 +15,30 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
         _nameEntryCollection = database.GetCollection<NameEntry>("NameEntries");
     }
 
-    public async Task<List<Feedback>> FindAllAsync(string sortOrder)
-    {
-        var sortDefinition = sortOrder.Equals("desc", System.StringComparison.OrdinalIgnoreCase)
-            ? Builders<NameEntry>.Sort.Descending("Feedbacks.CreatedAt")
-            : Builders<NameEntry>.Sort.Ascending("Feedbacks.CreatedAt");
-                   
+    public async Task<List<Feedback>> FindAllAsync()
+    {     
         var nameEntryAndFeedbacks = await _nameEntryCollection
             .Find(_ => true)
-            .Sort(sortDefinition)
             .ToListAsync();
 
-        var feedbacks = nameEntryAndFeedbacks.SelectMany(x => x.Feedbacks).ToList();
+        var feedbacks = nameEntryAndFeedbacks.SelectMany(x => x.Feedbacks)
+            .OrderByDescending(x => x.CreatedAt)
+            .ToList();
         
         return feedbacks;
     }
 
-    public async Task<List<Feedback>> FindByNameAsync(string name, string sortOrder)
+    public async Task<List<Feedback>> FindByNameAsync(string name)
     {
-        var sortDefinition = sortOrder.Equals("desc", System.StringComparison.OrdinalIgnoreCase)
-            ? Builders<NameEntry>.Sort.Descending("Feedbacks.CreatedAt")
-            : Builders<NameEntry>.Sort.Ascending("Feedbacks.CreatedAt");
-
         var data = await _nameEntryCollection
-            .Find(entry => entry.Name.ToLower() == name.ToLower())
-            .Sort(sortDefinition)
+            .Find(entry => entry.Name.ToLower() == name.ToLower())            
             .ToListAsync();
 
-        return data.SelectMany(x => x.Feedbacks).ToList();
+        var feedbacksForName = data.SelectMany(x => x.Feedbacks)
+            .OrderByDescending(x => x.CreatedAt)
+            .ToList();
+
+        return feedbacksForName;
     }
 
     public async Task<bool> AddFeedbackByNameAsync(string name, string feedbackContent)
