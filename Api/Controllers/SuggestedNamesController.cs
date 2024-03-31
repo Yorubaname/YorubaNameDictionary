@@ -1,5 +1,9 @@
-﻿using Application.Services;
+﻿using Api.Mappers;
+using Application.Services;
+using Core.Dto.Request;
+using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Api.Controllers;
 
@@ -20,5 +24,13 @@ public class SuggestedNamesController : ControllerBase
         var suggestname = await _suggestedNameService.CountAsync();
 
         return Ok(suggestname);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(SuggestedNameDto[]), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> SuggestName([FromBody] CreateSuggestedNameDto request)
+    {
+        var data = await _suggestedNameService.SuggestedNameAsync(request.MapToEntity());
+        return Ok(data.MapToDto());
     }
 }
