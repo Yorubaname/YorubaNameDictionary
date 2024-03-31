@@ -32,6 +32,7 @@ services.AddScoped<NameEntryService>();
 services.AddScoped<GeoLocationsService>();
 services.AddScoped<IEventPubService, EventPubService>();
 services.AddScoped<SearchService>();
+services.AddScoped<SuggestedNameService>();
 
 
 var app = builder.Build();
