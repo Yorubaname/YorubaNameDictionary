@@ -1,5 +1,8 @@
-﻿using Core.Entities;
+﻿using Core.Dto.Request;
+using Core.Dto.Response;
+using Core.Entities;
 using Core.Repositories;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastructure.MongoDB.Repositories;
@@ -32,5 +35,15 @@ public class SuggestedNameRepository : ISuggestedNameRepository
         metaData.Add("uniqueSuggestedNames", uniqueNames.Count);
 
         return metaData;
+    }
+
+    public async Task<SuggestedName> SuggestedNameAsync(SuggestedName suggestedName)
+    {
+        // Todo use automapper
+        //SuggestedName.Id = ObjectId.GenerateNewId().ToString()
+
+        await _suggestedNameCollection.InsertOneAsync(suggestedName);
+
+        return suggestedName;
     }
 }

@@ -1,4 +1,5 @@
-﻿using Core.Repositories;
+﻿using Core.Entities;
+using Core.Repositories;
 
 namespace Application.Services;
 
@@ -15,4 +16,9 @@ public class SuggestedNameService
     {
         return await _suggestedNameRepository.CountAsync();
     }
+    public async Task<SuggestedName> SuggestedNameAsync(SuggestedName suggestedName)
+    {
+        return await _suggestedNameRepository.SuggestedNameAsync(suggestedName);
+    }
+
 }
