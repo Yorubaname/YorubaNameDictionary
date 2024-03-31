@@ -2,6 +2,6 @@
 
 public interface ISuggestedNameRepository
 {
-    Task<Dictionary<string, int>> Count();
+    Task<Dictionary<string, int>> CountAsync();
 
 }

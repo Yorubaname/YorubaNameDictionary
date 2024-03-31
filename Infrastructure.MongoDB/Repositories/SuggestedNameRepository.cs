@@ -13,7 +13,7 @@ public class SuggestedNameRepository : ISuggestedNameRepository
         _suggestedNameCollection = database.GetCollection<SuggestedName>("SuggestedNames");
     }
 
-    public async Task<Dictionary<string, int>> Count()
+    public async Task<Dictionary<string, int>> CountAsync()
     {
         var metaData = new Dictionary<string, int>();
 

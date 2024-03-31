@@ -11,8 +11,8 @@ public class SuggestedNameService
         _suggestedNameRepository = suggestedNameRepository;
     }
 
-    public async Task<Dictionary<string, int>> Count()
+    public async Task<Dictionary<string, int>> CountAsync()
     {
-        return await _suggestedNameRepository.Count();
+        return await _suggestedNameRepository.CountAsync();
     }
 }
