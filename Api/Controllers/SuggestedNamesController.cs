@@ -68,4 +68,19 @@ public class SuggestedNamesController : ControllerBase
 
         return BadRequest($"Suggested name with {id} not found as a suggested name");
     }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteAllSuggestions()
+    {
+        bool deletionResult = await _suggestedNameService.DeleteAllSuggestionsAsync();
+
+        if (deletionResult)
+        {
+            return Ok("All suggested names has been deleted");
+        }
+        else
+        {
+            return StatusCode(500, "Failed to delete all suggested names");
+        }
+    }
 }
