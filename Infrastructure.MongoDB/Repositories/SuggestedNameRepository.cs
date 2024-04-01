@@ -46,4 +46,11 @@ public class SuggestedNameRepository : ISuggestedNameRepository
         return await _suggestedNameCollection.Find(FilterDefinition<SuggestedName>.Empty)
             .ToListAsync();
     }
+
+    public async Task<SuggestedName> DeleteSuggestedNameAsync(string id)
+    {
+        var suggestedName = await _suggestedNameCollection.FindOneAndDeleteAsync(s => s.Id == id);
+
+        return suggestedName;
+    }
 }
