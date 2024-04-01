@@ -53,4 +53,11 @@ public class SuggestedNameRepository : ISuggestedNameRepository
 
         return suggestedName;
     }
+
+    public async Task<bool> DeleteAllSuggestionsAsync()
+    {
+        var result = await _suggestedNameCollection.DeleteManyAsync(_ => true);
+
+        return result.DeletedCount > 0;
+    }
 }
