@@ -26,4 +26,9 @@ public class SuggestedNameService
     {
         return await _suggestedNameRepository.GetAllAsync();
     }
+
+    public async Task<SuggestedName> DeleteSuggestedNameAsync(string id)
+    {
+        return await _suggestedNameRepository.DeleteSuggestedNameAsync(id);
+    }
 }

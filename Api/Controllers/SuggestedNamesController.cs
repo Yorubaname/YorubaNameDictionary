@@ -2,11 +2,12 @@
 using Application.Services;
 using Core.Dto.Request;
 using Core.Dto.Response;
+using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 [ApiController]
 public class SuggestedNamesController : ControllerBase
 {
@@ -52,5 +53,19 @@ public class SuggestedNamesController : ControllerBase
         var data = await _suggestedNameService.GetAllAsync();
 
         return Ok(data.MapToDtoCollection());
+    }
+
+    [HttpDelete]
+    [Route("id")]
+    public async Task<IActionResult> DeleteSuggestedName(string id)
+    {
+        var suggestedName = await _suggestedNameService.DeleteSuggestedNameAsync(id);
+
+        if(suggestedName == null)
+        {
+            return NoContent();
+        }
+
+        return BadRequest($"Suggested name with {id} not found as a suggested name");
     }
 }
