@@ -27,7 +27,12 @@ public class SuggestedNameService
         return await _suggestedNameRepository.GetAllAsync();
     }
 
-    public async Task<SuggestedName> DeleteSuggestedNameAsync(string id)
+    public async Task<SuggestedName> GetAsync(string id)
+    {
+        return await _suggestedNameRepository.GetAsync(id);
+    }
+
+    public async Task<bool> DeleteSuggestedNameAsync(string id)
     {
         return await _suggestedNameRepository.DeleteSuggestedNameAsync(id);
     }
