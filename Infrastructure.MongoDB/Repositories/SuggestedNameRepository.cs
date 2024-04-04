@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Core.Repositories;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastructure.MongoDB.Repositories;
@@ -41,17 +42,24 @@ public class SuggestedNameRepository : ISuggestedNameRepository
         return suggestedName;
     }
 
+    public async Task<SuggestedName> GetAsync(string id)
+    {
+        var filter = Builders<SuggestedName>.Filter.Eq("_id", id);
+        var result = await _suggestedNameCollection.Find(filter).FirstOrDefaultAsync();
+        return result;
+    }
+
     public async Task<List<SuggestedName>> GetAllAsync()
     {
         return await _suggestedNameCollection.Find(FilterDefinition<SuggestedName>.Empty)
             .ToListAsync();
     }
 
-    public async Task<SuggestedName> DeleteSuggestedNameAsync(string id)
+    public async Task<bool> DeleteSuggestedNameAsync(string id)
     {
-        var suggestedName = await _suggestedNameCollection.FindOneAndDeleteAsync(s => s.Id == id);
-
-        return suggestedName;
+        var filter = Builders<SuggestedName>.Filter.Eq("_id", id);
+        var result = await _suggestedNameCollection.DeleteOneAsync(filter);
+        return result.DeletedCount > 0;
     }
 
     public async Task<bool> DeleteAllSuggestionsAsync()
