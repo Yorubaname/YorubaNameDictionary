@@ -31,8 +31,10 @@ public static class SuggestedNamesControllerMapper
 
     public static SuggestedNameDto MapToDto(this SuggestedName request)
     {
+      
         return new SuggestedNameDto
         {
+            Id = request.Id,
             Name = request.Name,
             Email = request.Email,
             Details = request.Details,
