@@ -55,18 +55,32 @@ public class SuggestedNamesController : ControllerBase
         return Ok(data.MapToDtoCollection());
     }
 
+    [HttpGet]
+    [Route("id")]
+    [ProducesResponseType(typeof(SuggestedNameDto[]), 200)]
+    public async Task<IActionResult> GetSuggestedName(string id)
+    {
+        var data = await _suggestedNameService.GetAsync(id);
+
+        if(data == null)
+            return NotFound($"Suggested name with id: {id} not found");
+
+
+        return Ok(data.MapToDto());
+    }
+
     [HttpDelete]
     [Route("id")]
     public async Task<IActionResult> DeleteSuggestedName(string id)
     {
-        var suggestedName = await _suggestedNameService.DeleteSuggestedNameAsync(id);
+        var result = await _suggestedNameService.DeleteSuggestedNameAsync(id);
 
-        if(suggestedName == null)
+        if(result)
         {
             return NoContent();
         }
 
-        return BadRequest($"Suggested name with {id} not found as a suggested name");
+        return BadRequest($"Suggested name with id: {id} not found as a suggested name");
     }
 
     [HttpDelete]
