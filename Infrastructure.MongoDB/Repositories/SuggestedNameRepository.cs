@@ -38,7 +38,6 @@ public class SuggestedNameRepository : ISuggestedNameRepository
     public async Task<SuggestedName> SuggestedNameAsync(SuggestedName suggestedName)
     {
         await _suggestedNameCollection.InsertOneAsync(suggestedName);
-        // todo: retun the name only if saved
         return suggestedName;
     }
 
