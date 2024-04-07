@@ -35,7 +35,7 @@ public class SuggestedNameController : ControllerBase
         try
         {
             var data = await _suggestedNameService
-                .Create(request.MapToEntity());
+                .CreateAsync(request.MapToEntity());
 
             return Ok(data.MapToDto());
         }

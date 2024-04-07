@@ -35,7 +35,7 @@ public class SuggestedNameRepository : ISuggestedNameRepository
         return metaData;
     }
 
-    public async Task<SuggestedName> SuggestedNameAsync(SuggestedName suggestedName)
+    public async Task<SuggestedName> CreateAsync(SuggestedName suggestedName)
     {
         await _suggestedNameCollection.InsertOneAsync(suggestedName);
         return suggestedName;

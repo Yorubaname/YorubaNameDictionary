@@ -3,11 +3,11 @@ using Core.Repositories;
 
 namespace Application.Services;
 
-public class SuggestedNamesService
+public class SuggestedNameService
 {
     private readonly ISuggestedNameRepository _suggestedNameRepository;
 
-    public SuggestedNamesService(ISuggestedNameRepository suggestedNameRepository)
+    public SuggestedNameService(ISuggestedNameRepository suggestedNameRepository)
     {
         _suggestedNameRepository = suggestedNameRepository;
     }
@@ -17,9 +17,9 @@ public class SuggestedNamesService
         return await _suggestedNameRepository.CountAsync();
     }
 
-    public async Task<SuggestedName> SuggestedNameAsync(SuggestedName suggestedName)
+    public async Task<SuggestedName> CreateAsync(SuggestedName suggestedName)
     {
-        return await _suggestedNameRepository.SuggestedNameAsync(suggestedName);
+        return await _suggestedNameRepository.CreateAsync(suggestedName);
     }
 
     public async Task<List<SuggestedName>> GetAllAsync()
