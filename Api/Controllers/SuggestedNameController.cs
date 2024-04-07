@@ -30,20 +30,12 @@ public class SuggestedNameController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(SuggestedNameDto), 200)]
-    public async Task<IActionResult> SuggestName([FromBody] CreateSuggestedNameDto request)
+    public async Task<IActionResult> Create([FromBody] CreateSuggestedNameDto request)
     {
-        try
-        {
-            var data = await _suggestedNameService
+        var data = await _suggestedNameService
                 .CreateAsync(request.MapToEntity());
 
-            return Ok(data.MapToDto());
-        }
-        catch (Exception ex)
-        {
-            // Handle exception if save operation fails
-            return StatusCode(500, $"Failed to save suggested name: {ex.Message}");
-        }
+        return Created("Suggested Name successfully added", data.MapToDto());
     }
     
     [HttpGet]
