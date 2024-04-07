@@ -30,7 +30,7 @@ public class SuggestedNameRepository : ISuggestedNameRepository
             uniqueNames.Add(name.Name!);
         }
 
-        metaData.Add("uniqueSuggestedNames", uniqueNames.Count);
+        metaData.Add("totalSuggestedNames", uniqueNames.Count);
 
         return metaData;
     }
