@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Route("api/v1/[controller]")]
+[Route("api/v1/suggestions")]
 [ApiController]
 public class SuggestedNamesController : ControllerBase
 {
-    private readonly SuggestedNameService _suggestedNameService;
+    private readonly SuggestedNamesService _suggestedNameService;
 
-    public SuggestedNamesController(SuggestedNameService suggestedNameService)
+    public SuggestedNamesController(SuggestedNamesService suggestedNameService)
     {
         _suggestedNameService = suggestedNameService;
     }
