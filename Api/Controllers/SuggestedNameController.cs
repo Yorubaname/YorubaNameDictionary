@@ -4,6 +4,7 @@ using Core.Dto.Request;
 using Core.Dto.Response;
 using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Api.Controllers;
 
@@ -42,9 +43,8 @@ public class SuggestedNameController : ControllerBase
     [ProducesResponseType(typeof(SuggestedNameDto[]), 200)]
     public async Task<IActionResult> GetAll()
     {
-        var data = await _suggestedNameService.GetAllAsync();
-
-        return Ok(data.MapToDtoCollection());
+        await _suggestedNameService.GetAllAsync();  
+        return StatusCode((int)HttpStatusCode.Created, "Suggested Name successfully added");
     }
 
     [HttpGet]
