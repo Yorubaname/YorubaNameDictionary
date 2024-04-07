@@ -21,7 +21,7 @@ public class SuggestedNameController : ControllerBase
     [HttpGet]
     [Route("meta")]
     [ProducesResponseType(typeof(Dictionary<string, int>), 200)]
-    public async Task<IActionResult> GetSuggestedMetaData()
+    public async Task<IActionResult> GetMetaData()
     {
         var suggestname = await _suggestedNameService.CountAsync();
 
@@ -40,7 +40,7 @@ public class SuggestedNameController : ControllerBase
     
     [HttpGet]
     [ProducesResponseType(typeof(SuggestedNameDto[]), 200)]
-    public async Task<IActionResult> GetAllSuggestedNames()
+    public async Task<IActionResult> GetAll()
     {
         var data = await _suggestedNameService.GetAllAsync();
 
@@ -50,7 +50,7 @@ public class SuggestedNameController : ControllerBase
     [HttpGet]
     [Route("id")]
     [ProducesResponseType(typeof(SuggestedNameDto[]), 200)]
-    public async Task<IActionResult> GetSuggestedName(string id)
+    public async Task<IActionResult> Get(string id)
     {
         var data = await _suggestedNameService.GetAsync(id);
 
@@ -63,7 +63,7 @@ public class SuggestedNameController : ControllerBase
 
     [HttpDelete]
     [Route("id")]
-    public async Task<IActionResult> DeleteSuggestedName(string id)
+    public async Task<IActionResult> Delete(string id)
     {
         var result = await _suggestedNameService.DeleteSuggestedNameAsync(id);
 
