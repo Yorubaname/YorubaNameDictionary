@@ -9,11 +9,11 @@ namespace Api.Controllers;
 
 [Route("api/v1/suggestions")]
 [ApiController]
-public class SuggestedNamesController : ControllerBase
+public class SuggestedNameController : ControllerBase
 {
-    private readonly SuggestedNamesService _suggestedNameService;
+    private readonly SuggestedNameService _suggestedNameService;
 
-    public SuggestedNamesController(SuggestedNamesService suggestedNameService)
+    public SuggestedNameController(SuggestedNameService suggestedNameService)
     {
         _suggestedNameService = suggestedNameService;
     }
@@ -35,7 +35,7 @@ public class SuggestedNamesController : ControllerBase
         try
         {
             var data = await _suggestedNameService
-                .SuggestedNameAsync(request.MapToEntity());
+                .Create(request.MapToEntity());
 
             return Ok(data.MapToDto());
         }
