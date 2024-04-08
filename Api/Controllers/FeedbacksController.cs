@@ -47,8 +47,7 @@ namespace Api.Controllers
 
             if (nameEntry == null)
             {
-                string errorMsg = $"{model.Name} does not exist. Cannot add feedback";
-                return NotFound(errorMsg);
+                return NotFound($"{model.Name} does not exist. Cannot add feedback");
             }
 
             var success = await _nameEntryFeedbackService
@@ -103,9 +102,14 @@ namespace Api.Controllers
                 return NotFound(errorMsg);
             }
 
-            var result = await _nameEntryFeedbackService.DeleteAllFeedbackForNameAsync(name);
+            var success = await _nameEntryFeedbackService.DeleteAllFeedbackForNameAsync(name);
 
-            return Ok(result ? $"All Feedback messages deleted for {name}" : "Something went wrong!...");
+            if (!success)
+            {
+                return StatusCode(500, "Something went wrong!...");
+            }
+
+            return Ok($"All Feedback messages deleted for {name}");
         }
 
         [HttpGet]
