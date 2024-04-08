@@ -27,7 +27,7 @@ namespace Api.Controllers
         /// <returns> A list of all feedback</returns>
         [HttpGet]
         [ProducesResponseType(typeof(List<Feedback>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetFeedbacks()
+        public async Task<IActionResult> GetAll()
         {
             var feedbacks = await _nameEntryFeedbackService.FindAllAsync();
 
@@ -41,7 +41,7 @@ namespace Api.Controllers
         /// <returns>A string indicating the status of the operation</returns>
         [HttpPost]
         [ProducesResponseType(typeof(List<Feedback>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> AddFeedback([FromBody] CreateNameFeedbackDto model)
+        public async Task<IActionResult> Create([FromBody] CreateNameFeedbackDto model)
         {
             var nameEntry = await _nameEntryService.LoadName(model.Name);
 
@@ -65,7 +65,7 @@ namespace Api.Controllers
         [HttpGet]
         [Route("{name}")]
         [ProducesResponseType(typeof(List<Feedback>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetFeedbacksForName(string name)
+        public async Task<IActionResult> Get(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -83,7 +83,7 @@ namespace Api.Controllers
         /// <returns> A string containing outcome of action</returns>
         [HttpDelete]
         [Route("{name}")]
-        public async Task<IActionResult> DeleteAllFeedbackForName(string name)
+        public async Task<IActionResult> DeleteAll(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -105,7 +105,7 @@ namespace Api.Controllers
 
         [HttpGet]
         [Route("id")]
-        public async Task<IActionResult> GetAFeedback(string id)
+        public async Task<IActionResult> GetById(string id)
         {
             var feedback = await _nameEntryFeedbackService.GetFeedbackByIdAsync(id);
 
@@ -123,7 +123,7 @@ namespace Api.Controllers
         /// <returns> A string containing outcome of action</returns>
         [HttpDelete]
         [Route("{name}/{feedbackId}")]
-        public async Task<IActionResult> DeleteAFeedback(string name, string feedbackId)
+        public async Task<IActionResult> Delete(string name, string feedbackId)
         {
             if (string.IsNullOrEmpty(name))
             {
