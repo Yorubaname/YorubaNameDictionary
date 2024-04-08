@@ -1,4 +1,5 @@
 ﻿using Api.Mappers;
+using Application.Cache;
 using Application.Services;
 using Core.Dto.Response;
 using Core.Events;
@@ -14,13 +15,19 @@ namespace Api.Controllers
     {
         private readonly SearchService _searchService;
         private readonly IEventPubService _eventPubService;
+        private readonly RecentSearchesCache _recentSearchesCache;
+        private readonly RecentIndexesCache _recentIndexesCache;
 
         public SearchController(
             SearchService searchService,
-            IEventPubService eventPubService)
+            IEventPubService eventPubService,
+            RecentSearchesCache recentSearchesCache,
+            RecentIndexesCache recentIndexesCache)
         {
             _searchService = searchService;
             _eventPubService = eventPubService;
+            _recentSearchesCache = recentSearchesCache;
+            _recentIndexesCache = recentIndexesCache;
         }
 
         [HttpGet("meta")]
@@ -67,6 +74,44 @@ namespace Api.Controllers
             }
 
             return Ok(await _searchService.SearchByStartsWith(searchTerm));
+        }
+
+        [HttpGet("activity/all")]
+        public async Task<IActionResult> GetRecent()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="activityType">Possible values: "search", "index", "popular"</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        [HttpGet("activity")]
+        public async Task<IActionResult> GetRecentByActivity([FromQuery(Name = "q")] string? activityType = null)
+        {
+            if (string.IsNullOrEmpty(activityType))
+            {
+                return RedirectToAction(nameof(GetAllActivity));
+            }
+
+            if (activityType.Equals("search", StringComparison.OrdinalIgnoreCase))
+            {
+                return Ok(await _recentSearchesCache.Get());
+            }
+
+            if (activityType.Equals("index", StringComparison.OrdinalIgnoreCase))
+            {
+                return Ok(await _recentIndexesCache.Get());
+            }
+
+            if (activityType.Equals("popular", StringComparison.OrdinalIgnoreCase))
+            {
+                return  Ok(await _recentSearchesCache.GetMostPopular());
+            }
+
+            throw new Exception("Activity type not recognized");
         }
     }
 }

@@ -1,5 +1,6 @@
 using Api;
 using Api.Utilities;
+using Application.Cache;
 using Application.Domain;
 using Application.Services;
 using Core.Events;
@@ -34,6 +35,10 @@ services.AddScoped<NameEntryFeedbackService>();
 services.AddScoped<IEventPubService, EventPubService>();
 services.AddScoped<SearchService>();
 services.AddScoped<SuggestedNameService>();
+
+// TODO Hafiz: I foresee having problems with using scoped services in a singleton here. When I get there, I will cross the bridge.
+services.AddSingleton<RecentIndexesCache>();
+services.AddSingleton<RecentSearchesCache>();
 
 
 var app = builder.Build();
