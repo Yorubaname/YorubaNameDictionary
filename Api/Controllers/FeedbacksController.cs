@@ -51,10 +51,17 @@ namespace Api.Controllers
                 return NotFound(errorMsg);
             }
 
-            var result = await _nameEntryFeedbackService
+            var success = await _nameEntryFeedbackService
                 .AddFeedbackByNameAsync(model.Name, model.FeedbackContent);
 
-            return Ok(result ? "Feedback added" : "Something went wrong!...");
+            if (success)
+            {
+                return Ok("Feedback added successfully.");
+            }
+            else
+            {
+                return StatusCode(500, "Failed to add feedback.");
+            }
         }
 
         /// <summary>
@@ -134,14 +141,17 @@ namespace Api.Controllers
 
             if (nameEntry == null)
             {
-                string errorMsg = $"No feedback found with supplied name. None deleted";
-                return NotFound(errorMsg);
+                return NotFound("No feedback found with supplied name. None deleted");
             }
 
-            var result = await _nameEntryFeedbackService.DeleteFeedbackAsync(name, feedbackId);
+            var success = await _nameEntryFeedbackService.DeleteFeedbackAsync(name, feedbackId);
 
-            return Ok(result ? $"Feedback message deleted" : "No feedback found with supplied name or id");
+            if (!success)
+            {
+                return NotFound("No feedback found with supplied Id. None deleted.");
+            }
+
+            return Ok("Feedback message deleted");
         }
-
     }
 }
