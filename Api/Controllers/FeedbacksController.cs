@@ -54,14 +54,12 @@ namespace Api.Controllers
             var success = await _nameEntryFeedbackService
                 .AddFeedbackByNameAsync(model.Name, model.FeedbackContent);
 
-            if (success)
-            {
-                return Ok("Feedback added successfully.");
-            }
-            else
+            if (!success)            
             {
                 return StatusCode(500, "Failed to add feedback.");
             }
+
+            return Ok("Feedback added successfully.");
         }
 
         /// <summary>
