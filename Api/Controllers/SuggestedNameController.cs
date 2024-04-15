@@ -33,18 +33,18 @@ public class SuggestedNameController : ControllerBase
     [ProducesResponseType(typeof(SuggestedNameDto), 200)]
     public async Task<IActionResult> Create([FromBody] CreateSuggestedNameDto request)
     {
-        var data = await _suggestedNameService
+        await _suggestedNameService
                 .CreateAsync(request.MapToEntity());
 
-        return Created("Suggested Name successfully added", data.MapToDto());
+        return StatusCode((int)HttpStatusCode.Created, "Suggested Name successfully added");
     }
     
     [HttpGet]
     [ProducesResponseType(typeof(SuggestedNameDto[]), 200)]
     public async Task<IActionResult> GetAll()
     {
-        await _suggestedNameService.GetAllAsync();  
-        return StatusCode((int)HttpStatusCode.Created, "Suggested Name successfully added");
+        var data = await _suggestedNameService.GetAllAsync();
+        return Ok(data.MapToDtoCollection());
     }
 
     [HttpGet]
