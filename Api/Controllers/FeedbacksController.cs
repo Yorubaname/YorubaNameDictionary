@@ -99,7 +99,6 @@ namespace Api.Controllers
 
             await _nameEntryFeedbackService.DeleteAllFeedbackForNameAsync(name);
             return Ok(new { Message = $"All Feedback messages deleted for {name}" });
-
         }
 
         [HttpGet]
