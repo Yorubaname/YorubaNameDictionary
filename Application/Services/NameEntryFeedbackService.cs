@@ -22,9 +22,9 @@ namespace Application.Services
             return await _nameEntryFeedbackRepository.FindByNameAsync(name);
         }
 
-        public async Task<bool> AddFeedbackByNameAsync(string name, string feedbackContent)
+        public async Task AddFeedbackByNameAsync(string name, string feedbackContent)
         {
-            return await _nameEntryFeedbackRepository.AddFeedbackByNameAsync(name, feedbackContent);
+            await _nameEntryFeedbackRepository.AddFeedbackByNameAsync(name, feedbackContent);
         }
 
         public async Task<bool> DeleteAllFeedbackForNameAsync(string name)
