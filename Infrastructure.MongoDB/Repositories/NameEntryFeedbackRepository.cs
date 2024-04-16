@@ -65,12 +65,20 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
         await _nameEntryCollection.UpdateOneAsync(filter, update);
     }
 
-    public async Task DeleteFeedbackAsync(string name, string feedbackId)
+    public async Task<bool> DeleteFeedbackAsync(string name, string feedbackId)
     {
         var filter = Builders<NameEntry>.Filter.Where(x => x.Name.ToLower() == name.ToLower());
-        var update = Builders<NameEntry>.Update.PullFilter(entry => entry.Feedbacks, feedback => feedback.Id == feedbackId);
+        var entry = await _nameEntryCollection.Find(filter).FirstOrDefaultAsync();
 
-        await _nameEntryCollection.UpdateOneAsync(filter, update);
+        if (entry != null && entry.Feedbacks.Any(feedback => feedback.Id == feedbackId))
+        {
+            var update = Builders<NameEntry>.Update.PullFilter(e => e.Feedbacks, feedback => feedback.Id == feedbackId);
+            var result = await _nameEntryCollection.UpdateOneAsync(filter, update);
+
+            return result.ModifiedCount > 0;
+        }
+
+        return false;
     }
 
     public async Task<Feedback> GetFeedbackByIdAsync(string feedbackId)

@@ -8,6 +8,6 @@ namespace Core.Repositories
         Task AddFeedbackByNameAsync(string name, string feedbackContent);
         Task DeleteAllFeedbackForNameAsync(string name);
         Task<Feedback> GetFeedbackByIdAsync(string feedbackId);
-        Task DeleteFeedbackAsync(string name, string feedbackId);
+        Task<bool> DeleteFeedbackAsync(string name, string feedbackId);
     }
 }
