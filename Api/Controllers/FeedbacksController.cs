@@ -136,12 +136,7 @@ namespace Api.Controllers
                 return NotFound("No feedback found with supplied name. None deleted");
             }
 
-            var success = await _nameEntryFeedbackService.DeleteFeedbackAsync(name, feedbackId);
-
-            if (!success)
-            {
-                return NotFound("No feedback found with supplied Id. None deleted.");
-            }
+            await _nameEntryFeedbackService.DeleteFeedbackAsync(name, feedbackId);
 
             return Ok("Feedback message deleted");
         }

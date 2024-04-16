@@ -60,21 +60,17 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
     public async Task DeleteAllFeedbackForNameAsync(string name)
     {
         var filter = Builders<NameEntry>.Filter.Where(x => x.Name.ToLower() == name.ToLower());
-
         var update = Builders<NameEntry>.Update.Set(entry => entry.Feedbacks, new List<Feedback>());
 
-        var updateResult = await _nameEntryCollection.UpdateOneAsync(filter, update);
+        await _nameEntryCollection.UpdateOneAsync(filter, update);
     }
 
-    public async Task<bool> DeleteFeedbackAsync(string name, string feedbackId)
+    public async Task DeleteFeedbackAsync(string name, string feedbackId)
     {
-
         var filter = Builders<NameEntry>.Filter.Where(x => x.Name.ToLower() == name.ToLower());
         var update = Builders<NameEntry>.Update.PullFilter(entry => entry.Feedbacks, feedback => feedback.Id == feedbackId);
 
-        var updateResult = await _nameEntryCollection.UpdateOneAsync(filter, update);
-
-        return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
+        await _nameEntryCollection.UpdateOneAsync(filter, update);
     }
 
     public async Task<Feedback> GetFeedbackByIdAsync(string feedbackId)

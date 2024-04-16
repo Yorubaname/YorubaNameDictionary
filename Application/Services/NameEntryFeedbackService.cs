@@ -37,9 +37,9 @@ namespace Application.Services
             return await _nameEntryFeedbackRepository.GetFeedbackByIdAsync(feedbackId);
         }
 
-        public async Task<bool> DeleteFeedbackAsync(string name, string id)
+        public async Task DeleteFeedbackAsync(string name, string id)
         {
-            return await _nameEntryFeedbackRepository.DeleteFeedbackAsync(name, id);
+            await _nameEntryFeedbackRepository.DeleteFeedbackAsync(name, id);
         }
     }
 }
