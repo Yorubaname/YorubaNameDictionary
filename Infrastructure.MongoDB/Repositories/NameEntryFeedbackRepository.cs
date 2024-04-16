@@ -41,7 +41,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
         return feedbacksForName;
     }
 
-    public async Task<bool> AddFeedbackByNameAsync(string name, string feedbackContent)
+    public async Task AddFeedbackByNameAsync(string name, string feedbackContent)
     {
         var filter = Builders<NameEntry>.Filter.Where(x => x.Name.ToLower() == name.ToLower());
 
@@ -54,9 +54,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
         var update = Builders<NameEntry>.Update
             .Push(entry => entry.Feedbacks, nameFeedback);
 
-        var updateResult = await _nameEntryCollection.UpdateOneAsync(filter, update);
-
-        return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
+        await _nameEntryCollection.UpdateOneAsync(filter, update);
     }
 
     public async Task<bool> DeleteAllFeedbackForNameAsync(string name)
