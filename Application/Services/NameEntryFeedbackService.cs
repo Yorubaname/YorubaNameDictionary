@@ -27,9 +27,9 @@ namespace Application.Services
             await _nameEntryFeedbackRepository.AddFeedbackByNameAsync(name, feedbackContent);
         }
 
-        public async Task<bool> DeleteAllFeedbackForNameAsync(string name)
+        public async Task DeleteAllFeedbackForNameAsync(string name)
         {
-            return await _nameEntryFeedbackRepository.DeleteAllFeedbackForNameAsync(name);
+            await _nameEntryFeedbackRepository.DeleteAllFeedbackForNameAsync(name);
         }
 
         public async Task<Feedback> GetFeedbackByIdAsync(string feedbackId)

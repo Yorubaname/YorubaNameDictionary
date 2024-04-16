@@ -97,14 +97,9 @@ namespace Api.Controllers
                 return NotFound(errorMsg);
             }
 
-            var success = await _nameEntryFeedbackService.DeleteAllFeedbackForNameAsync(name);
+            await _nameEntryFeedbackService.DeleteAllFeedbackForNameAsync(name);
+            return Ok(new { Message = $"All Feedback messages deleted for {name}" });
 
-            if (!success)
-            {
-                return StatusCode(500, "Something went wrong!...");
-            }
-
-            return Ok($"All Feedback messages deleted for {name}");
         }
 
         [HttpGet]

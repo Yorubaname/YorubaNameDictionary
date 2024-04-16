@@ -6,7 +6,7 @@ namespace Core.Repositories
         Task<List<Feedback>> FindAllAsync();
         Task<List<Feedback>> FindByNameAsync(string name);
         Task AddFeedbackByNameAsync(string name, string feedbackContent);
-        Task<bool> DeleteAllFeedbackForNameAsync(string name);
+        Task DeleteAllFeedbackForNameAsync(string name);
         Task<Feedback> GetFeedbackByIdAsync(string feedbackId);
         Task<bool> DeleteFeedbackAsync(string name, string feedbackId);
     }
