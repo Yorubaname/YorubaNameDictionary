@@ -50,15 +50,10 @@ namespace Api.Controllers
                 return NotFound($"{model.Name} does not exist. Cannot add feedback");
             }
 
-            var success = await _nameEntryFeedbackService
+            await _nameEntryFeedbackService
                 .AddFeedbackByNameAsync(model.Name, model.FeedbackContent);
-
-            if (!success)            
-            {
-                return StatusCode(500, "Failed to add feedback.");
-            }
-
-            return Ok("Feedback added successfully.");
+            
+            return StatusCode((int)HttpStatusCode.Created, "Feedback added successfully.");
         }
 
         /// <summary>
