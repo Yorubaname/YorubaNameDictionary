@@ -22,7 +22,7 @@ namespace Api.Controllers
         }
 
         /// <summary>
-        /// Create a new Name entries. Updates are not possible through this endpoint.
+        /// CreateAsync a new Name entries. Updates are not possible through this endpoint.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
