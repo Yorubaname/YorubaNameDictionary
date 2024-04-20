@@ -101,15 +101,25 @@ public class NameEntryRepository : INameEntryRepository
                             .SingleOrDefaultAsync();
     }
 
-    // TODO Hafiz: Test to confirm that whatever code uses this is not affected by case sensitivity.
-    public async Task<HashSet<NameEntry>> FindByNameStartingWithAndState(string alphabet, State state)
+    public async Task<HashSet<NameEntry>> FindByNameStartingWithAndState(string searchTerm, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Name, new BsonRegularExpression($"^{alphabet}", "i"));
-        var result = await _nameEntryCollection
-                                .Find(filter & Builders<NameEntry>.Filter.Eq(ne => ne.State, state))
-                                .ToListAsync();
+        return await FindByNameStartingWithAnyAndState(new string[] { searchTerm }, state);
+    }
+
+    public async Task<HashSet<NameEntry>> FindByNameStartingWithAnyAndState(IEnumerable<string> searchTerms, State state)
+    {
+        var regexFilters = searchTerms.Select(term =>
+            Builders<NameEntry>.Filter.Regex(ne => ne.Name, new BsonRegularExpression($"^{term}", "i"))
+        );
+
+        var namesFilter = Builders<NameEntry>.Filter.Or(regexFilters);
+        var stateFilter = Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
+        var combinedFilter = Builders<NameEntry>.Filter.And(namesFilter, stateFilter);
+
+        var result = await _nameEntryCollection.Find(combinedFilter).ToListAsync();
         return new HashSet<NameEntry>(result);
     }
+
 
     public async Task<List<NameEntry>> FindByState(State state)
     {
@@ -118,7 +128,7 @@ public class NameEntryRepository : INameEntryRepository
 
     public async Task<HashSet<NameEntry>> FindNameEntryByExtendedMeaningContainingAndState(string name, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.ExtendedMeaning, new BsonRegularExpression(name, "i")) & 
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.ExtendedMeaning, new BsonRegularExpression(name, "i")) &
             Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var options = SetCollationPrimary<FindOptions>(new FindOptions());
         var result = await _nameEntryCollection.Find(filter, options).ToListAsync();
@@ -144,7 +154,7 @@ public class NameEntryRepository : INameEntryRepository
     public async Task<HashSet<NameEntry>> FindNameEntryByVariantsContainingAndState(string name, State state)
     {
         var regex = new BsonRegularExpression(name, "i");
-        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Variants , regex) & Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Variants, regex) & Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var options = SetCollationPrimary<FindOptions>(new FindOptions());
         var result = await _nameEntryCollection.Find(filter, options).ToListAsync();
         return new HashSet<NameEntry>(result);

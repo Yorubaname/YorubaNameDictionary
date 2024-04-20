@@ -30,6 +30,7 @@ services.InitializeDatabase(mongoDbSettings.GetValue<string>("ConnectionString")
 
 services.AddScoped<NameEntryService>();
 services.AddScoped<GeoLocationsService>();
+services.AddScoped<NameEntryFeedbackService>();
 services.AddScoped<IEventPubService, EventPubService>();
 services.AddScoped<SearchService>();
 services.AddScoped<SuggestedNameService>();
