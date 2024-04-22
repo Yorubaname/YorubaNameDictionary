@@ -1,4 +1,5 @@
-﻿using Application.Exceptions;
+﻿using Application.Events;
+using Application.Exceptions;
 using Core.Dto.Response;
 using Core.Entities.NameEntry;
 using Core.Enums;
@@ -179,7 +180,7 @@ namespace Application.Domain
 
         private async Task PublishNameDeletedEvent(string name)
         {
-            await _eventPubService.PublishEvent(new NameDeleted(name));
+            await _eventPubService.PublishEvent(new NameDeletedAdapter(name));
         }
     }
 }

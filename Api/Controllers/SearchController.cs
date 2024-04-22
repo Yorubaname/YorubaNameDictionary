@@ -1,5 +1,6 @@
 ﻿using Api.Mappers;
 using Application.Cache;
+using Application.Events;
 using Application.Services;
 using Core.Cache;
 using Core.Dto.Response;
