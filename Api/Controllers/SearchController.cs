@@ -1,6 +1,7 @@
 ﻿using Api.Mappers;
 using Application.Cache;
 using Application.Services;
+using Core.Cache;
 using Core.Dto.Response;
 using Core.Events;
 using Microsoft.AspNetCore.Mvc;
@@ -15,14 +16,14 @@ namespace Api.Controllers
     {
         private readonly SearchService _searchService;
         private readonly IEventPubService _eventPubService;
-        private readonly RecentSearchesCache _recentSearchesCache;
-        private readonly RecentIndexesCache _recentIndexesCache;
+        private readonly IRecentSearchesCache _recentSearchesCache;
+        private readonly IRecentIndexesCache _recentIndexesCache;
 
         public SearchController(
             SearchService searchService,
             IEventPubService eventPubService,
-            RecentSearchesCache recentSearchesCache,
-            RecentIndexesCache recentIndexesCache)
+            IRecentSearchesCache recentSearchesCache,
+            IRecentIndexesCache recentIndexesCache)
         {
             _searchService = searchService;
             _eventPubService = eventPubService;
@@ -76,12 +77,6 @@ namespace Api.Controllers
             return Ok(await _searchService.SearchByStartsWith(searchTerm));
         }
 
-        [HttpGet("activity/all")]
-        public async Task<IActionResult> GetRecentStats()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -91,7 +86,7 @@ namespace Api.Controllers
         [HttpGet("activity")]
         [ProducesResponseType(typeof(IEnumerable<string>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetRecentByActivity([FromQuery(Name = "q")] string? activityType = null)
+        public async Task<IActionResult> GetRecentStatsByActivity([FromQuery(Name = "q")] string? activityType = null)
         {
             // TODO Hafiz: Test that the action is executed when there is no "q" parameter
             if (string.IsNullOrEmpty(activityType))
@@ -115,6 +110,12 @@ namespace Api.Controllers
             }
 
             return BadRequest("Activity type not recognized");
+        }
+
+        [HttpGet("activity/all")]
+        public async Task<IActionResult> GetRecentStats()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

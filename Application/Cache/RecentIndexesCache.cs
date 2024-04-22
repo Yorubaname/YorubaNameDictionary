@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Core.Cache;
 
 namespace Application.Cache
 {
-    public class RecentIndexesCache
+    public class RecentIndexesCache : IRecentIndexesCache
     {
         public async Task<IEnumerable<string>> Get()
         {
