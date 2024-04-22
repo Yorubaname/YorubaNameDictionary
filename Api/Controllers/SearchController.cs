@@ -77,7 +77,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("activity/all")]
-        public async Task<IActionResult> GetRecent()
+        public async Task<IActionResult> GetRecentStats()
         {
             throw new NotImplementedException();
         }
@@ -89,11 +89,14 @@ namespace Api.Controllers
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         [HttpGet("activity")]
+        [ProducesResponseType(typeof(IEnumerable<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetRecentByActivity([FromQuery(Name = "q")] string? activityType = null)
         {
+            // TODO Hafiz: Test that the action is executed when there is no "q" parameter
             if (string.IsNullOrEmpty(activityType))
             {
-                return RedirectToAction(nameof(GetAllActivity));
+                return RedirectToAction(nameof(GetRecentStats));
             }
 
             if (activityType.Equals("search", StringComparison.OrdinalIgnoreCase))
@@ -108,10 +111,50 @@ namespace Api.Controllers
 
             if (activityType.Equals("popular", StringComparison.OrdinalIgnoreCase))
             {
-                return  Ok(await _recentSearchesCache.GetMostPopular());
+                return Ok(await _recentSearchesCache.GetMostPopular());
             }
 
-            throw new Exception("Activity type not recognized");
+            return BadRequest("Activity type not recognized");
+        }
+
+        /// <summary>
+        /// Publish a name to the index.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("indexes/{name}")]
+        public async Task<IActionResult> PublishName([FromRoute] string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Publish a collection of names to the index.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("indexes/batch")]
+        public async Task<IActionResult> PublishNames([FromBody] string[] names)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Remove a name from the index.
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete("indexes/{name}")]
+        public async Task<IActionResult> UnpublishName([FromRoute] string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Remove a name from the index.
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete("indexes/batch")]
+        public async Task<IActionResult> UnpublishNames([FromBody] string[] names)
+        {
+            throw new NotImplementedException();
         }
     }
 }
