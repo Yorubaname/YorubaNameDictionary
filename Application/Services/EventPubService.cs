@@ -16,14 +16,16 @@ namespace Application.Services
 
         public async Task PublishEvent<T>(T theEvent)
         {
-            Type? adapterType = Assembly.GetExecutingAssembly().GetType(typeof(T).FullName + "Adapter");
+            var adapterClassName = typeof(T).Name + "Adapter";
+            Type? adapterType = Assembly.GetExecutingAssembly().GetTypes().FirstOrDefault(t => t.Name == adapterClassName);
 
             if (adapterType == null)
             {
                 throw new InvalidOperationException("Adapter type not found for " + typeof(T).FullName);
             }
 
-            await _mediator.Publish(Activator.CreateInstance(adapterType, theEvent));
+            var adapterEvent = Activator.CreateInstance(adapterType, theEvent);
+            await _mediator.Publish(adapterEvent);
         }
     }
 }
