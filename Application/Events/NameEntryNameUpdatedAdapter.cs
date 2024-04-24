@@ -1,10 +1,10 @@
 ﻿using Core.Events;
+using MediatR;
 
 namespace Application.Events;
 
-public record NameEntryNameUpdatedAdapter : NameEntryNameUpdated
+public record NameEntryNameUpdatedAdapter : NameEntryNameUpdated, INotification
 {
-    public NameEntryNameUpdatedAdapter(string originalName, string newName) : base(originalName, newName) { } 
     public NameEntryNameUpdatedAdapter(NameEntryNameUpdated theEvent) : base(theEvent.OriginalName, theEvent.NewName)
     {
     }

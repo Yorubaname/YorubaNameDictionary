@@ -180,7 +180,7 @@ namespace Application.Domain
 
         private async Task PublishNameDeletedEvent(string name)
         {
-            await _eventPubService.PublishEvent(new NameDeletedAdapter(name));
+            await _eventPubService.PublishEvent(new NameDeleted(name));
         }
     }
 }

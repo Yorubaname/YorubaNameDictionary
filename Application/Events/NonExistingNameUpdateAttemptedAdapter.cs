@@ -1,8 +1,9 @@
 ﻿using Core.Events;
+using MediatR;
 
 namespace Application.Events
 {
-    public record NonExistingNameUpdateAttemptedAdapter : NonExistingNameUpdateAttempted
+    public record NonExistingNameUpdateAttemptedAdapter : NonExistingNameUpdateAttempted, INotification
     {
         public NonExistingNameUpdateAttemptedAdapter(string name) : base(name) { }
 
