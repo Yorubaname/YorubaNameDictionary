@@ -1,7 +1,6 @@
 ﻿namespace Core.Cache
 {
-    public interface IRecentIndexesCache
+    public interface IRecentIndexesCache : ICache<string>
     {
-        Task<IEnumerable<string>> Get();
     }
 }
