@@ -2,6 +2,6 @@
 {
     public interface IEventPubService
     {
-        Task PublishEvent(object theEvent);
+        Task PublishEvent<T>(T theEvent);
     }
 }

@@ -1,5 +1,8 @@
 ﻿using Api.Mappers;
+using Application.Cache;
+using Application.Events;
 using Application.Services;
+using Core.Cache;
 using Core.Dto.Response;
 using Core.Events;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +17,19 @@ namespace Api.Controllers
     {
         private readonly SearchService _searchService;
         private readonly IEventPubService _eventPubService;
+        private readonly IRecentSearchesCache _recentSearchesCache;
+        private readonly IRecentIndexesCache _recentIndexesCache;
 
         public SearchController(
             SearchService searchService,
-            IEventPubService eventPubService)
+            IEventPubService eventPubService,
+            IRecentSearchesCache recentSearchesCache,
+            IRecentIndexesCache recentIndexesCache)
         {
             _searchService = searchService;
             _eventPubService = eventPubService;
+            _recentSearchesCache = recentSearchesCache;
+            _recentIndexesCache = recentIndexesCache;
         }
 
         [HttpGet("meta")]
@@ -67,6 +76,87 @@ namespace Api.Controllers
             }
 
             return Ok(await _searchService.SearchByStartsWith(searchTerm));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="activityType">Possible values: "search", "index", "popular"</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        [HttpGet("activity")]
+        [ProducesResponseType(typeof(IEnumerable<string>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetRecentStatsByActivity([FromQuery(Name = "q")] string? activityType = null)
+        {
+            // TODO Hafiz: Test that the action is executed when there is no "q" parameter
+            if (string.IsNullOrEmpty(activityType))
+            {
+                return RedirectToAction(nameof(GetRecentStats));
+            }
+
+            if (activityType.Equals("search", StringComparison.OrdinalIgnoreCase))
+            {
+                return Ok(await _recentSearchesCache.Get());
+            }
+
+            if (activityType.Equals("index", StringComparison.OrdinalIgnoreCase))
+            {
+                return Ok(await _recentIndexesCache.Get());
+            }
+
+            if (activityType.Equals("popular", StringComparison.OrdinalIgnoreCase))
+            {
+                return Ok(await _recentSearchesCache.GetMostPopular());
+            }
+
+            return BadRequest("Activity type not recognized");
+        }
+
+        [HttpGet("activity/all")]
+        public async Task<IActionResult> GetRecentStats()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Publish a name to the index.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("indexes/{name}")]
+        public async Task<IActionResult> PublishName([FromRoute] string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Publish a collection of names to the index.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("indexes/batch")]
+        public async Task<IActionResult> PublishNames([FromBody] string[] names)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Remove a name from the index.
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete("indexes/{name}")]
+        public async Task<IActionResult> UnpublishName([FromRoute] string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Remove a name from the index.
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete("indexes/batch")]
+        public async Task<IActionResult> UnpublishNames([FromBody] string[] names)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -31,10 +31,13 @@ namespace Application.Services
             return new HashSet<string>(namesResult.Select(n => n.Name));
         }
 
+        /// <summary>
+        /// Return number of published names
+        /// </summary>
+        /// <returns></returns>
         public async Task<SearchMetadataDto> GetNamesMetadata()
         {
-            // Return number of published names
-            var totalPublishedNames = await _namesRepository.CountByState(Core.Enums.State.PUBLISHED);
+            var totalPublishedNames = await _namesRepository.CountByState(State.PUBLISHED);
             return new SearchMetadataDto { TotalPublishedNames = totalPublishedNames };
         }
 

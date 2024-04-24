@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Infrastructure.MongoDB\Infrastructure.MongoDB.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Model\Response\" />
-  </ItemGroup>
-
 </Project>

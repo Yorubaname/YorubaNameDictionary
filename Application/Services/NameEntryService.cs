@@ -1,4 +1,5 @@
-﻿using Application.Exceptions;
+﻿using Application.Events;
+using Application.Exceptions;
 using Core.Dto.Response;
 using Core.Entities.NameEntry;
 using Core.Enums;

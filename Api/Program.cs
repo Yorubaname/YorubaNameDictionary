@@ -1,9 +1,14 @@
 using Api;
 using Api.Utilities;
+using Application.Cache;
 using Application.Domain;
+using Application.Events;
 using Application.Services;
+using Core.Cache;
 using Core.Events;
 using Infrastructure.MongoDB;
+using Microsoft.AspNetCore.Hosting;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +39,11 @@ services.AddScoped<NameEntryFeedbackService>();
 services.AddScoped<IEventPubService, EventPubService>();
 services.AddScoped<SearchService>();
 services.AddScoped<SuggestedNameService>();
+
+// TODO Hafiz: I foresee having problems with using scoped services in a singleton here. When I get there, I will cross the bridge.
+services.AddSingleton<IRecentIndexesCache, RecentIndexesCache>();
+services.AddSingleton<IRecentSearchesCache, RecentSearchesCache>();
+services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ExactNameSearchedAdapter).Assembly));
 
 
 var app = builder.Build();
