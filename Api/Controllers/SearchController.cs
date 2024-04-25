@@ -20,6 +20,8 @@ namespace Api.Controllers
         private readonly IRecentSearchesCache _recentSearchesCache;
         private readonly IRecentIndexesCache _recentIndexesCache;
 
+        private const string SearchActivity = "search", IndexActivity = "index", PopularActivity = "popular";
+
         public SearchController(
             SearchService searchService,
             IEventPubService eventPubService,
@@ -95,17 +97,17 @@ namespace Api.Controllers
                 return RedirectToAction(nameof(GetRecentStats));
             }
 
-            if (activityType.Equals("search", StringComparison.OrdinalIgnoreCase))
+            if (activityType.Equals(SearchActivity, StringComparison.OrdinalIgnoreCase))
             {
                 return Ok(await _recentSearchesCache.Get());
             }
 
-            if (activityType.Equals("index", StringComparison.OrdinalIgnoreCase))
+            if (activityType.Equals(IndexActivity, StringComparison.OrdinalIgnoreCase))
             {
                 return Ok(await _recentIndexesCache.Get());
             }
 
-            if (activityType.Equals("popular", StringComparison.OrdinalIgnoreCase))
+            if (activityType.Equals(PopularActivity, StringComparison.OrdinalIgnoreCase))
             {
                 return Ok(await _recentSearchesCache.GetMostPopular());
             }
@@ -114,9 +116,16 @@ namespace Api.Controllers
         }
 
         [HttpGet("activity/all")]
+        [ProducesResponseType(typeof(Dictionary<string, IEnumerable<string>>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetRecentStats()
         {
-            throw new NotImplementedException();
+            var result = new Dictionary<string, IEnumerable<string>>()
+            {
+                { SearchActivity, await _recentSearchesCache.Get() },
+                { PopularActivity, await _recentSearchesCache.GetMostPopular() },
+                { IndexActivity, await _recentIndexesCache.Get() }
+            };
+            return Ok(result);
         }
 
         /// <summary>
