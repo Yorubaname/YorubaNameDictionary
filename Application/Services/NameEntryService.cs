@@ -187,5 +187,8 @@ namespace Application.Domain
         {
             await _eventPubService.PublishEvent(new NameDeleted(name));
         }
+
+        public async Task<NameEntry?> FindByNameAndState(string name, State state) => 
+            await _nameEntryRepository.FindByNameAndState(name, state);
     }
 }

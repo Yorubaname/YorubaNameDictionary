@@ -1,4 +1,5 @@
-﻿using Api.Mappers;
+﻿using Amazon.Runtime.Internal.Transform;
+using Api.Mappers;
 using Application.Cache;
 using Application.Domain;
 using Application.Events;
@@ -142,25 +143,20 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> PublishName([FromRoute] string name)
         {
-            var response = new Dictionary<string, string>();
             var nameEntry = await _nameEntryService.LoadName(name);
             if (nameEntry == null)
             {
-                response.Add("message", $"{name} not found in the repository so not indexed");
-                return BadRequest(response);
+                return BadRequest(GetResponseDict($"{name} not found in the repository so not indexed"));
             }
 
             var isNameAlreadyPublished = nameEntry.State.Equals(State.PUBLISHED);
             if (isNameAlreadyPublished)
             {
-                response.Add("message", $"{name} is already indexed");
-                return BadRequest(response);
+                return BadRequest(GetResponseDict($"{name} is already indexed"));
             }
 
             await PublishName(nameEntry);
-
-            response.Add("message", $"{name} has been published");
-            return StatusCode((int)HttpStatusCode.Created, response);
+            return StatusCode((int)HttpStatusCode.Created, GetResponseDict($"{name} has been published"));
         }
 
         /// <summary>
@@ -171,7 +167,6 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> PublishNames([FromBody] string[] names)
         {
-            var response = new Dictionary<string, object>();
             var entriesToIndex = new HashSet<NameEntry>();
 
             foreach (var name in names)
@@ -186,8 +181,7 @@ namespace Api.Controllers
 
             if (entriesToIndex.Count == 0)
             {
-                response.Add("message", "all names either do not exist or have already been indexed.");
-                return NotFound(response);
+                return NotFound(GetResponseDict("All names either do not exist or have already been indexed."));
             }
 
             foreach (var nameEntry in entriesToIndex)
@@ -196,8 +190,8 @@ namespace Api.Controllers
                 await PublishName(nameEntry);
             }
 
-            response.Add("message", $"The following names were successfully indexed: {string.Join(',', entriesToIndex.Select(x => x.Name))}");
-            return StatusCode((int)HttpStatusCode.Created, response);
+            var successMessage = $"The following names were successfully indexed: {string.Join(',', entriesToIndex.Select(x => x.Name))}";
+            return StatusCode((int)HttpStatusCode.Created, GetResponseDict(successMessage));
         }
 
         private async Task PublishName(NameEntry nameEntry)
@@ -213,9 +207,31 @@ namespace Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpDelete("indexes/{name}")]
+        [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> UnpublishName([FromRoute] string name)
         {
-            throw new NotImplementedException();
+            var entry = await _nameEntryService.FindByNameAndState(name, State.PUBLISHED);
+
+            if (entry == null)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, GetResponseDict("Published name not found."));
+            }
+
+            // NOTE: In the Java version, after setting the name state to Unpublished, we then set the name to new.
+            // The reason for that is not clear and it doesn't make much sense. As such, I am skipping doing things that way here.
+            // It might need revisiting since having the name in NEW status might be pre-requisite for, perhaps, republishing it.
+
+            entry.State = State.UNPUBLISHED;
+            await _nameEntryService.UpdateName(entry);
+            return Ok(GetResponseDict($"{name} removed from index."));
+        }
+
+        private Dictionary<string, string> GetResponseDict(string theMessage)
+        {
+            return new Dictionary<string, string>
+            {
+                { "message", theMessage}
+            };
         }
 
         /// <summary>
