@@ -194,14 +194,6 @@ namespace Api.Controllers
             return StatusCode((int)HttpStatusCode.Created, GetResponseDict(successMessage));
         }
 
-        private async Task PublishName(NameEntry nameEntry)
-        {
-            nameEntry.State = State.PUBLISHED;
-            await _nameEntryService.UpdateName(nameEntry);
-            // TODO Hafiz: Ideally, this would be in a transaction with the update, but for now, not important
-            await _eventPubService.PublishEvent(new NameIndexed(nameEntry.Name));
-        }
-
         /// <summary>
         /// Remove a name from the index.
         /// </summary>
@@ -226,22 +218,61 @@ namespace Api.Controllers
             return Ok(GetResponseDict($"{name} removed from index."));
         }
 
-        private Dictionary<string, string> GetResponseDict(string theMessage)
-        {
-            return new Dictionary<string, string>
-            {
-                { "message", theMessage}
-            };
-        }
-
         /// <summary>
         /// Remove a name from the index.
         /// </summary>
         /// <returns></returns>
         [HttpDelete("indexes/batch")]
+        [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> UnpublishNames([FromBody] string[] names)
         {
-            throw new NotImplementedException();
+            List<string> notFoundNames = new(), unpublishedNames = new();
+
+            foreach (var name in names)
+            {
+                var entry = await _nameEntryService.FindByNameAndState(name, State.PUBLISHED);
+
+                if (entry == null)
+                {
+                    notFoundNames.Add(name);
+                }
+                else
+                {
+                    entry.State = State.UNPUBLISHED;
+                    await _nameEntryService.UpdateName(entry);
+                    unpublishedNames.Add(entry.Name);
+                }
+            }
+
+            if (!unpublishedNames.Any())
+            {
+                return NotFound(GetResponseDict("None of the names was found in the repository so not attempting to remove."));
+            }
+
+            var successMessage = $"Successfully removed the following names from search index: {string.Join(',', unpublishedNames)}.";
+
+            if (notFoundNames.Any())
+            {
+                successMessage += $" The following names were skipped as they are not published in the database: {string.Join(',', notFoundNames)}.";
+            }
+
+            return Ok(GetResponseDict(successMessage));
+        }
+
+        private async Task PublishName(NameEntry nameEntry)
+        {
+            nameEntry.State = State.PUBLISHED;
+            await _nameEntryService.UpdateName(nameEntry);
+            // TODO Hafiz: Ideally, this would be in a transaction with the update, but for now, not important
+            await _eventPubService.PublishEvent(new NameIndexed(nameEntry.Name));
+        }
+
+        private static Dictionary<string, string> GetResponseDict(string theMessage)
+        {
+            return new Dictionary<string, string>
+            {
+                { "message", theMessage}
+            };
         }
     }
 }
