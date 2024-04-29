@@ -59,7 +59,7 @@ namespace Application.Domain
 
         public async Task<NameEntry> CreateOrUpdateName(NameEntry entry)
         {
-            var updated = await UpdateName(entry);
+            var updated = await UpdateNameWithUnpublish(entry);
 
             if (updated == null)
             {
@@ -75,12 +75,17 @@ namespace Application.Domain
             foreach (var entry in entries)
             {
                 savedNames.Add(await CreateOrUpdateName(entry));
-                // TODO: Ensure that removing batched writes to database here will not cause problems
+                // TODO Hafiz: Ensure that removing batched writes to database here will not cause problems
             }
             return savedNames;
         }
 
         public async Task<NameEntry?> UpdateName(NameEntry nameEntry)
+        {
+            return await _nameEntryRepository.Update(nameEntry.Name, nameEntry);
+        }
+
+        public async Task<NameEntry?> UpdateNameWithUnpublish(NameEntry nameEntry)
         {
             if (nameEntry.State == State.PUBLISHED)
             {
@@ -88,7 +93,7 @@ namespace Application.Domain
                 nameEntry.State = State.MODIFIED;
             }
 
-            return await _nameEntryRepository.Update(nameEntry.Name, nameEntry);
+            return await UpdateName(nameEntry);
         }
 
         /// <summary>
@@ -106,7 +111,7 @@ namespace Application.Domain
             }
 
             originalEntry.Modified = newEntry;
-            return await UpdateName(originalEntry);
+            return await UpdateNameWithUnpublish(originalEntry);
         }
 
         public async Task<List<NameEntry>> BulkUpdateNames(List<NameEntry> nameEntries)
@@ -115,7 +120,7 @@ namespace Application.Domain
             foreach (var nameEntry in nameEntries)
             {
                 // TODO: Cater for possible exception
-                var updated = await UpdateName(nameEntry);
+                var updated = await UpdateNameWithUnpublish(nameEntry);
 
                 if (updated != null)
                 {

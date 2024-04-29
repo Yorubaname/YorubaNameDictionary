@@ -1,9 +1,12 @@
 ﻿using Api.Mappers;
 using Application.Cache;
+using Application.Domain;
 using Application.Events;
 using Application.Services;
 using Core.Cache;
 using Core.Dto.Response;
+using Core.Entities.NameEntry;
+using Core.Enums;
 using Core.Events;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -16,6 +19,7 @@ namespace Api.Controllers
     public class SearchController : ControllerBase
     {
         private readonly SearchService _searchService;
+        private readonly NameEntryService _nameEntryService;
         private readonly IEventPubService _eventPubService;
         private readonly IRecentSearchesCache _recentSearchesCache;
         private readonly IRecentIndexesCache _recentIndexesCache;
@@ -26,12 +30,14 @@ namespace Api.Controllers
             SearchService searchService,
             IEventPubService eventPubService,
             IRecentSearchesCache recentSearchesCache,
-            IRecentIndexesCache recentIndexesCache)
+            IRecentIndexesCache recentIndexesCache,
+            NameEntryService nameEntryService)
         {
             _searchService = searchService;
             _eventPubService = eventPubService;
             _recentSearchesCache = recentSearchesCache;
             _recentIndexesCache = recentIndexesCache;
+            _nameEntryService = nameEntryService;
         }
 
         [HttpGet("meta")]
@@ -129,13 +135,35 @@ namespace Api.Controllers
         }
 
         /// <summary>
-        /// Publish a name to the index.
+        /// Publish an existing name to the index.
         /// </summary>
         /// <returns></returns>
         [HttpPost("indexes/{name}")]
         public async Task<IActionResult> PublishName([FromRoute] string name)
         {
-            throw new NotImplementedException();
+            var response = new Dictionary<string, string>();
+            var nameEntry = await _nameEntryService.LoadName(name);
+            if (nameEntry == null)
+            {
+                response.Add("message", $"{name} not found in the repository so not indexed");
+                return BadRequest(response);
+            }
+
+            var isNameAlreadyPublished = nameEntry.State.Equals(State.PUBLISHED);
+            if (isNameAlreadyPublished)
+            {
+                response.Add("message", $"{name} is already indexed");
+                return BadRequest(response);
+            }
+
+            nameEntry.State = State.PUBLISHED;
+            await _nameEntryService.UpdateName(nameEntry);
+
+            // TODO Hafiz: Ideally, this would be in a transaction with the update, but for now, not so critical.
+            await _eventPubService.PublishEvent(new NameIndexed(nameEntry.Name));
+
+            response.Add("message", $"{name} has been published");
+            return StatusCode((int) HttpStatusCode.Created, response);
         }
 
         /// <summary>
