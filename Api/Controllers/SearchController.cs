@@ -139,6 +139,7 @@ namespace Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("indexes/{name}")]
+        [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> PublishName([FromRoute] string name)
         {
             var response = new Dictionary<string, string>();
@@ -156,24 +157,55 @@ namespace Api.Controllers
                 return BadRequest(response);
             }
 
-            nameEntry.State = State.PUBLISHED;
-            await _nameEntryService.UpdateName(nameEntry);
-
-            // TODO Hafiz: Ideally, this would be in a transaction with the update, but for now, not so critical.
-            await _eventPubService.PublishEvent(new NameIndexed(nameEntry.Name));
+            await PublishName(nameEntry);
 
             response.Add("message", $"{name} has been published");
-            return StatusCode((int) HttpStatusCode.Created, response);
+            return StatusCode((int)HttpStatusCode.Created, response);
         }
 
         /// <summary>
-        /// Publish a collection of names to the index.
+        /// Publish a collection of existing names to the index.
         /// </summary>
         /// <returns></returns>
         [HttpPost("indexes/batch")]
+        [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> PublishNames([FromBody] string[] names)
         {
-            throw new NotImplementedException();
+            var response = new Dictionary<string, object>();
+            var entriesToIndex = new HashSet<NameEntry>();
+
+            foreach (var name in names)
+            {
+                // TODO Hafiz (Future improvements): Would be better as a bulk load.
+                var entry = await _nameEntryService.LoadName(name);
+                if (entry != null && entry.State != State.PUBLISHED)
+                {
+                    entriesToIndex.Add(entry);
+                }
+            }
+
+            if (entriesToIndex.Count == 0)
+            {
+                response.Add("message", "all names either do not exist or have already been indexed.");
+                return NotFound(response);
+            }
+
+            foreach (var nameEntry in entriesToIndex)
+            {
+                // TODO Hafiz: This should be transactional or in a batch but this would do for now since frequent use is not anticipated.
+                await PublishName(nameEntry);
+            }
+
+            response.Add("message", $"The following names were successfully indexed: {string.Join(',', entriesToIndex.Select(x => x.Name))}");
+            return StatusCode((int)HttpStatusCode.Created, response);
+        }
+
+        private async Task PublishName(NameEntry nameEntry)
+        {
+            nameEntry.State = State.PUBLISHED;
+            await _nameEntryService.UpdateName(nameEntry);
+            // TODO Hafiz: Ideally, this would be in a transaction with the update, but for now, not important
+            await _eventPubService.PublishEvent(new NameIndexed(nameEntry.Name));
         }
 
         /// <summary>
