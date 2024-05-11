@@ -172,7 +172,8 @@ namespace Api.Controllers
         {
 
             var foundNames = (await _nameEntryService.LoadNames(names))?.Select(f=>f.Name)?.ToArray();
-            if(foundNames is null)
+
+            if(foundNames is null || foundNames.Length ==0)
             {
                 return BadRequest("No deletion as none of the names were found in the database");
             }
