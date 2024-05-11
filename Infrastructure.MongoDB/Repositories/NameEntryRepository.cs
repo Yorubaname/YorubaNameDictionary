@@ -58,6 +58,13 @@ public class NameEntryRepository : INameEntryRepository
 
         await _nameEntryCollection.DeleteOneAsync(filter, options);
     }
+    public async Task DeleteMany(string[] names)
+    {
+        var filter = Builders<NameEntry>.Filter.In("Name", names);
+        var options = SetCollationPrimary<DeleteOptions>(new DeleteOptions());
+
+        await _nameEntryCollection.DeleteManyAsync(filter, options);
+    }
 
     public async Task<bool> DeleteByNameAndState(string name, State state)
     {
@@ -91,6 +98,14 @@ public class NameEntryRepository : INameEntryRepository
         var options = SetCollationPrimary<FindOptions>(new FindOptions());
 
         return await _nameEntryCollection.Find(filter, options).SingleOrDefaultAsync();
+    }
+
+    public async Task<List<NameEntry>> FindByNames(string[] names)
+    {
+        var filter = Builders<NameEntry>.Filter.In("Name", names);
+        var options = SetCollationPrimary<FindOptions>(new FindOptions());
+
+        return await _nameEntryCollection.Find(filter, options).ToListAsync();
     }
 
     public async Task<NameEntry?> FindByNameAndState(string name, State state)
