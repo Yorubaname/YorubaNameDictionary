@@ -155,7 +155,7 @@ namespace Api.Controllers
                 return BadRequest(GetResponseDict($"{name} is already indexed"));
             }
 
-            await PublishName(nameEntry);
+            await _nameEntryService.PublishName(nameEntry);
             return StatusCode((int)HttpStatusCode.Created, GetResponseDict($"{name} has been published"));
         }
 
@@ -187,7 +187,7 @@ namespace Api.Controllers
             foreach (var nameEntry in entriesToIndex)
             {
                 // TODO Hafiz: This should be transactional or in a batch but this would do for now since frequent use is not anticipated.
-                await PublishName(nameEntry);
+                await _nameEntryService.PublishName(nameEntry);
             }
 
             var successMessage = $"The following names were successfully indexed: {string.Join(',', entriesToIndex.Select(x => x.Name))}";
@@ -257,14 +257,6 @@ namespace Api.Controllers
             }
 
             return Ok(GetResponseDict(successMessage));
-        }
-
-        private async Task PublishName(NameEntry nameEntry)
-        {
-            nameEntry.State = State.PUBLISHED;
-            await _nameEntryService.UpdateName(nameEntry);
-            // TODO Hafiz: Ideally, this would be in a transaction with the update, but for now, not important
-            await _eventPubService.PublishEvent(new NameIndexed(nameEntry.Name));
         }
 
         private static Dictionary<string, string> GetResponseDict(string theMessage)
