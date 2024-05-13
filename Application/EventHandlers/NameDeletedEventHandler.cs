@@ -13,13 +13,11 @@ namespace Application.EventHandlers
 
     public class NameDeletedEventHandler : INotificationHandler<NameDeletedAdapter>
     {
-        private INameDeletedCache _nameDeletedCache;
         private IRecentIndexesCache _recentIndexesCache;
         private IRecentSearchesCache _recentSearchesCache;
 
-        public NameDeletedEventHandler(INameDeletedCache nameDeletedCache, IRecentIndexesCache recentIndexesCache, IRecentSearchesCache recentSearchesCache)
+        public NameDeletedEventHandler(IRecentIndexesCache recentIndexesCache, IRecentSearchesCache recentSearchesCache)
         {
-            _nameDeletedCache = nameDeletedCache;
             _recentIndexesCache = recentIndexesCache;
             _recentSearchesCache = recentSearchesCache;
         }
@@ -29,8 +27,7 @@ namespace Application.EventHandlers
             try
             {
                 await _recentIndexesCache.Remove(notification.Name);
-                await _recentSearchesCache.Remove(notification.Name);
-                await _nameDeletedCache.Stack(notification.Name); // not sure about this line just following conventions..
+                await _recentSearchesCache.Remove(notification.Name);              
             }
             catch (Exception ex)
             {

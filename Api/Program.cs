@@ -43,7 +43,6 @@ services.AddScoped<SuggestedNameService>();
 // TODO Hafiz: I foresee having problems with using scoped services in a singleton here. When I get there, I will cross the bridge.
 services.AddSingleton<IRecentIndexesCache, RecentIndexesCache>();
 services.AddSingleton<IRecentSearchesCache, RecentSearchesCache>();
-services.AddSingleton<INameDeletedCache, NameDeletedCache>();
 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ExactNameSearchedAdapter).Assembly));
 
 
