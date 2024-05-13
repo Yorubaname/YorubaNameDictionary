@@ -1,7 +1,9 @@
 ﻿using Application.Events;
 using Application.Exceptions;
 using Core.Dto.Response;
+using Core.Entities;
 using Core.Entities.NameEntry;
+using Core.Entities.NameEntry.Collections;
 using Core.Enums;
 using Core.Events;
 using Core.Repositories;
@@ -85,6 +87,37 @@ namespace Application.Domain
             return await _nameEntryRepository.Update(nameEntry.Name, nameEntry);
         }
 
+        public async Task PublishName(NameEntry nameEntry)
+        {
+            NameEntry? updates = nameEntry.Modified;
+
+            if (updates != null)
+            {
+                // Copy latest updates to the main object as part of the publish operation.
+                nameEntry.Name = updates.Name;
+                nameEntry.Pronunciation = updates.Pronunciation;
+                nameEntry.IpaNotation = updates.IpaNotation;
+                nameEntry.Meaning = updates.Meaning;
+                nameEntry.ExtendedMeaning = updates.ExtendedMeaning;
+                nameEntry.Morphology = updates.Morphology;
+                nameEntry.Media = updates.Media;
+                nameEntry.State = updates.State;
+                nameEntry.Etymology = updates.Etymology;
+                nameEntry.Videos = updates.Videos;
+                nameEntry.GeoLocation = updates.GeoLocation;
+                nameEntry.FamousPeople = updates.FamousPeople;
+                nameEntry.Syllables = updates.Syllables;
+                nameEntry.Variants = updates.Variants;
+                nameEntry.Modified = null;
+            }
+
+            nameEntry.State = State.PUBLISHED;
+            await UpdateName(nameEntry);
+
+            // TODO Hafiz: An ideal implementation would have below operation in a transaction with the above update.
+            await _eventPubService.PublishEvent(new NameIndexed(nameEntry.Name));
+        }
+
         public async Task<NameEntry?> UpdateNameWithUnpublish(NameEntry nameEntry)
         {
             if (nameEntry.State == State.PUBLISHED)
@@ -104,12 +137,6 @@ namespace Application.Domain
         /// <returns></returns>
         public async Task<NameEntry?> UpdateName(NameEntry originalEntry, NameEntry newEntry)
         {
-            if (originalEntry.Modified != null)
-            {
-                // This is to ensure that each name has a maximum of one pending update
-                throw new UnpublishedNameUpdateException();
-            }
-
             originalEntry.Modified = newEntry;
             return await UpdateNameWithUnpublish(originalEntry);
         }
@@ -188,7 +215,7 @@ namespace Application.Domain
             await _eventPubService.PublishEvent(new NameDeleted(name));
         }
 
-        public async Task<NameEntry?> FindByNameAndState(string name, State state) => 
+        public async Task<NameEntry?> FindByNameAndState(string name, State state) =>
             await _nameEntryRepository.FindByNameAndState(name, state);
     }
 }

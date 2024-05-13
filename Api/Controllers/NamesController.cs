@@ -122,7 +122,8 @@ namespace Api.Controllers
                 return NotFound(errorMsg);
             }
 
-            return Ok(nameEntry.MapToDto());
+            var nameToReturn = nameEntry.Modified ?? nameEntry;
+            return Ok(nameToReturn.MapToDto());
         }
 
         /// <summary>
