@@ -84,7 +84,8 @@ namespace Api.Controllers
                 return Ok(Enumerable.Empty<NameEntryDto>());
             }
 
-            return Ok(await _searchService.SearchByStartsWith(searchTerm));
+            var nameEntry = await _searchService.SearchByStartsWith(searchTerm);
+            return Ok(nameEntry.MapToDtoCollection());
         }
 
         /// <summary>

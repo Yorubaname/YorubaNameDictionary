@@ -123,6 +123,10 @@ namespace Api.Controllers
             }
 
             var nameToReturn = nameEntry.Modified ?? nameEntry;
+            nameToReturn.State = nameEntry.State;
+            nameToReturn.CreatedAt = nameEntry.CreatedAt;
+            nameToReturn.UpdatedAt = nameEntry.UpdatedAt;
+
             return Ok(nameToReturn.MapToDto());
         }
 
