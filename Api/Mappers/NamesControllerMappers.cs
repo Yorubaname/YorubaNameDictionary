@@ -1,4 +1,5 @@
-﻿using Core.Dto.Request;
+﻿using Core.Dto;
+using Core.Dto.Request;
 using Core.Dto.Response;
 using Core.Entities;
 using Core.Entities.NameEntry;
@@ -42,14 +43,14 @@ namespace Api.Mappers
             {
                 Pronunciation = nameEntry.Pronunciation,
                 IpaNotation = nameEntry.IpaNotation,
-                Variants = nameEntry.Variants,
-                Syllables = nameEntry.Syllables,
+                Variants = (CommaSeparatedString)nameEntry.Variants,
+                Syllables = (HyphenSeparatedString)nameEntry.Syllables,
                 Meaning = nameEntry.Meaning,
                 ExtendedMeaning = nameEntry.ExtendedMeaning,
-                Morphology = nameEntry.Morphology,
+                Morphology = (CommaSeparatedString)nameEntry.Morphology,
                 GeoLocation = nameEntry.GeoLocation.Select(ge => new GeoLocationDto(ge.Place, ge.Region)).ToList(),
-                FamousPeople = nameEntry.FamousPeople,
-                Media = nameEntry.Media,
+                FamousPeople = (CommaSeparatedString)nameEntry.FamousPeople,
+                Media = (CommaSeparatedString)nameEntry.Media,
                 SubmittedBy = nameEntry.CreatedBy,
                 Etymology = nameEntry.Etymology.Select(et => new EtymologyDto(et.Part, et.Meaning)).ToList(),
                 State = nameEntry.State,
