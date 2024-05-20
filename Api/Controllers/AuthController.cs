@@ -2,6 +2,7 @@
 using Application.Services;
 using Core.Dto.Response;
 using Core.Entities;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -12,10 +13,13 @@ namespace Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public UserService _userService;
-        public AuthController(UserService userService)
+        private readonly UserService _userService;
+        private readonly IValidator<CreateUserDto> _userValidator;
+
+        public AuthController(UserService userService, IValidator<CreateUserDto> userValidator)
         {
             _userService = userService;
+            _userValidator = userValidator;
         }
 
         [Authorize]
@@ -38,8 +42,10 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> Create([FromBody] CreateUserDto createUserDto)
         {
-            if (!ModelState.IsValid)
+            var result = await _userValidator.ValidateAsync(createUserDto);
+            if (!result.IsValid)
             {
+                result.AddToModelState(ModelState);
                 return BadRequest(ModelState);
             }
 

@@ -12,7 +12,7 @@ namespace Application.Validation
     {
         public CreateUserValidator()
         {
-            RuleFor(u => u.Email).NotEmpty().EmailAddress();
+            RuleFor(u => u.Email).EmailAddress();
             RuleFor(u => u.Password).NotEmpty();
             RuleFor(u => u.Username).NotEmpty();
             RuleFor(u => u.Roles).NotEmpty().WithMessage("No role is selected");
