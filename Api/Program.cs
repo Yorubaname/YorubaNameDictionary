@@ -4,10 +4,14 @@ using Application.Cache;
 using Application.Domain;
 using Application.Events;
 using Application.Services;
+using Application.Validation;
 using Core.Cache;
 using Core.Events;
+using FluentValidation;
 using Infrastructure.MongoDB;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
@@ -17,6 +21,8 @@ var services = builder.Services;
 
 // Add services to the container.
 
+services.AddAuthentication("BasicAuthentication")
+    .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new CommaSeparatedStringConverter());
@@ -28,10 +34,37 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen(c =>
 {
     c.SchemaFilter<CustomSchemaFilter>();
-    // Other configurations...
+
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Yoruba Names Dictionary API", Version = "v1" });
+
+    // Define the Basic Authentication scheme
+    c.AddSecurityDefinition("basic", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "basic",
+        Description = "Basic Authentication"
+    });
+
+    // Apply the Basic Authentication scheme globally
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "basic"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
 });
 var mongoDbSettings = Configuration.GetSection("MongoDB");
 services.InitializeDatabase(mongoDbSettings.GetValue<string>("ConnectionString"), mongoDbSettings.GetValue<string>("DatabaseName"));
+
+
 
 services.AddScoped<NameEntryService>();
 services.AddScoped<GeoLocationsService>();
@@ -39,10 +72,12 @@ services.AddScoped<NameEntryFeedbackService>();
 services.AddScoped<IEventPubService, EventPubService>();
 services.AddScoped<SearchService>();
 services.AddScoped<SuggestedNameService>();
+services.AddScoped<UserService>();
 
 // TODO Hafiz: I foresee having problems with using scoped services in a singleton here. When I get there, I will cross the bridge.
 services.AddSingleton<IRecentIndexesCache, RecentIndexesCache>();
 services.AddSingleton<IRecentSearchesCache, RecentSearchesCache>();
+services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ExactNameSearchedAdapter).Assembly));
 
 
@@ -57,6 +92,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
