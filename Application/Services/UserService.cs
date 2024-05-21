@@ -23,10 +23,11 @@ namespace Application.Services
         {
             var user = new User
             {
-                Roles = createUserDto.Roles.ToList(),
+                Roles = createUserDto.Roles.Select(r => r.ToUpper()).ToList(),
                 Email = createUserDto.Email,
                 Username = createUserDto.Username,
-                Password = BCrypt_.HashPassword(createUserDto.Password, BCrypt_.GenerateSalt())
+                Password = BCrypt_.HashPassword(createUserDto.Password, BCrypt_.GenerateSalt()),
+                CreatedBy = createUserDto.CreatedBy
             };
             await _userRepository.Create(user);
 

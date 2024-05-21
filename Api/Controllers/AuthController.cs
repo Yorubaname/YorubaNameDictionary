@@ -32,7 +32,7 @@ namespace Api.Controllers
             {
                 Id = theUser.Id,
                 Roles = theUser.Roles.ToArray(),
-                Username = theUser.Email
+                Username = theUser.Email,
             };
 
             return Ok(userDetails);
