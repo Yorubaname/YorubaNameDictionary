@@ -16,6 +16,7 @@ namespace Core.Repositories
         Task<HashSet<NameEntry>> ListAll();
 
         Task<NameEntry?> FindByName(string name);
+        Task<List<NameEntry>> FindByNames(string[] names);
 
         Task<List<NameEntry>> FindByState(State state);
 
@@ -37,6 +38,8 @@ namespace Core.Repositories
 
         Task Delete(string name);
 
+        Task DeleteMany(string[] name);
+        
         Task<bool> DeleteByNameAndState(string name, State state);
 
         Task<NameEntry?> Update(string originalName, NameEntry newEntry);

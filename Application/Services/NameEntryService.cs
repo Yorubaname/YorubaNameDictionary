@@ -204,6 +204,11 @@ namespace Application.Domain
             return await _nameEntryRepository.FindByName(name);
         }
 
+        public async Task<List<NameEntry>> LoadNames(string[] names)
+        {
+            return await _nameEntryRepository.FindByNames(names);
+        }
+
         public async Task Delete(string name)
         {
             await _nameEntryRepository.Delete(name);
@@ -217,5 +222,10 @@ namespace Application.Domain
 
         public async Task<NameEntry?> FindByNameAndState(string name, State state) =>
             await _nameEntryRepository.FindByNameAndState(name, state);
+
+        public async Task DeleteNamesBatch(string[] names)
+        {
+            await _nameEntryRepository.DeleteMany(names);
+        }
     }
 }

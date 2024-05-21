@@ -1,4 +1,5 @@
-﻿using Api.Mappers;
+﻿using Amazon.Runtime;
+using Api.Mappers;
 using Api.Model.In;
 using Application.Domain;
 using Core.Dto.Request;
@@ -168,6 +169,31 @@ namespace Api.Controllers
 
             await _nameEntryService.Delete(name);
             return Ok(new { Message = $"{name} Deleted" });
+        }
+
+
+        [HttpDelete("batch")]
+        public async Task<IActionResult> DeleteNamesBatch(string[]names)
+        {
+
+            var foundNames = (await _nameEntryService.LoadNames(names))?.Select(f=>f.Name)?.ToArray();
+
+            if(foundNames is null || foundNames.Length ==0)
+            {
+                return BadRequest("No deletion as none of the names were found in the database");
+            }
+
+            var notFoundNames = names.Where(d=> !foundNames.Contains(d)).ToList();
+
+            await _nameEntryService.DeleteNamesBatch(foundNames);
+
+            string responseMessage = string.Join(", ",foundNames) + " deleted";
+            if (notFoundNames.Any())
+            {
+                responseMessage += Environment.NewLine + string.Join(", ", notFoundNames) + " not deleted as they were not found in the database";
+            }
+
+            return Ok(new { Message = responseMessage });
         }
     }
 }
