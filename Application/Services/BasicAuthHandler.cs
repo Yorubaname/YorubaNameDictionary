@@ -1,17 +1,14 @@
 ﻿using Core.Entities;
 using Core.Repositories;
-using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -37,12 +34,7 @@ namespace Application.Services
 
             try
             {
-                var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
-                var credentialBytes = Convert.FromBase64String(authHeader.Parameter);
-                var credentials = Encoding.UTF8.GetString(credentialBytes).Split(':');
-                var username = credentials[0];
-                var password = credentials[1];
-
+                (string username, string password) = DecodeBasicAuthToken(Request.Headers["Authorization"]);
 
                 var matchingUser = await AuthenticateUser(username, password);
                 if (matchingUser == null)
@@ -50,20 +42,35 @@ namespace Application.Services
                     return await Task.FromResult(AuthenticateResult.Fail("Invalid Username or Password"));
                 }
 
-                var claims = new[] {
-                    new Claim(ClaimTypes.NameIdentifier, username),
-                    new Claim(ClaimTypes.Name, username),
-                };
-                var identity = new ClaimsIdentity(claims, Scheme.Name);
-                var principal = new ClaimsPrincipal(identity);
-                var ticket = new AuthenticationTicket(principal, Scheme.Name);
-
-                return await Task.FromResult(AuthenticateResult.Success(ticket));
+                return await Task.FromResult(AuthenticateResult.Success(GenerateAuthTicket(matchingUser)));
             }
             catch
             {
                 return await Task.FromResult(AuthenticateResult.Fail("Invalid Authorization Header"));
             }
+        }
+
+        private AuthenticationTicket GenerateAuthTicket(User theUser)
+        {
+            var claims = new List<Claim> {
+                    new(ClaimTypes.NameIdentifier, theUser.Email!),
+                    new(ClaimTypes.Name, theUser.Email!),
+                };
+
+            claims.AddRange(theUser.Roles.Select(r => new Claim(ClaimTypes.Role, r)));
+
+            var identity = new ClaimsIdentity(claims, Scheme.Name);
+            var principal = new ClaimsPrincipal(identity);
+            var ticket = new AuthenticationTicket(principal, Scheme.Name);
+            return ticket;
+        }
+
+        private static (string username, string password) DecodeBasicAuthToken(string theToken)
+        {
+            var authHeader = AuthenticationHeaderValue.Parse(theToken);
+            var credentialBytes = Convert.FromBase64String(authHeader.Parameter!);
+            var credentials = Encoding.UTF8.GetString(credentialBytes).Split(':');
+            return (credentials[0], credentials[1]);
         }
 
         private async Task<User?> AuthenticateUser(string username, string password)
