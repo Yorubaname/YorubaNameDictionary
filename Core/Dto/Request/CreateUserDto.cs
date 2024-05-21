@@ -7,7 +7,9 @@ namespace Core.Dto.Response
         public string? Username { get; set; }
         public string? Password { get; set; }
         public string? Email { get; set; }
-        [Required]
+
         public string[] Roles { get; set; }
+
+        public string? CreatedBy { get; set; }
     }
 }

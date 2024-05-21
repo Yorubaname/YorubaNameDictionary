@@ -13,8 +13,7 @@ namespace Core.Entities
         public string Id { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        [Required]
-        public string CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
         public DateTime UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
     }
