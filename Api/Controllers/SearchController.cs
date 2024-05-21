@@ -1,5 +1,6 @@
 ﻿using Amazon.Runtime.Internal.Transform;
 using Api.Mappers;
+using Api.Utilities;
 using Application.Cache;
 using Application.Domain;
 using Application.Events;
@@ -147,17 +148,17 @@ namespace Api.Controllers
             var nameEntry = await _nameEntryService.LoadName(name);
             if (nameEntry == null)
             {
-                return BadRequest(GetResponseDict($"{name} not found in the repository so not indexed"));
+                return BadRequest(ResponseHelper.GetResponseDict($"{name} not found in the repository so not indexed"));
             }
 
             var isNameAlreadyPublished = nameEntry.State.Equals(State.PUBLISHED);
             if (isNameAlreadyPublished)
             {
-                return BadRequest(GetResponseDict($"{name} is already indexed"));
+                return BadRequest(ResponseHelper.GetResponseDict($"{name} is already indexed"));
             }
 
             await _nameEntryService.PublishName(nameEntry);
-            return StatusCode((int)HttpStatusCode.Created, GetResponseDict($"{name} has been published"));
+            return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict($"{name} has been published"));
         }
 
         /// <summary>
@@ -182,7 +183,7 @@ namespace Api.Controllers
 
             if (entriesToIndex.Count == 0)
             {
-                return NotFound(GetResponseDict("All names either do not exist or have already been indexed."));
+                return NotFound(ResponseHelper.GetResponseDict("All names either do not exist or have already been indexed."));
             }
 
             foreach (var nameEntry in entriesToIndex)
@@ -192,7 +193,7 @@ namespace Api.Controllers
             }
 
             var successMessage = $"The following names were successfully indexed: {string.Join(',', entriesToIndex.Select(x => x.Name))}";
-            return StatusCode((int)HttpStatusCode.Created, GetResponseDict(successMessage));
+            return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict(successMessage));
         }
 
         /// <summary>
@@ -207,7 +208,7 @@ namespace Api.Controllers
 
             if (entry == null)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, GetResponseDict("Published name not found."));
+                return StatusCode((int)HttpStatusCode.BadRequest, ResponseHelper.GetResponseDict("Published name not found."));
             }
 
             // NOTE: In the Java version, after setting the name state to Unpublished, we then set the name to new.
@@ -216,7 +217,7 @@ namespace Api.Controllers
 
             entry.State = State.UNPUBLISHED;
             await _nameEntryService.UpdateName(entry);
-            return Ok(GetResponseDict($"{name} removed from index."));
+            return Ok(ResponseHelper.GetResponseDict($"{name} removed from index."));
         }
 
         /// <summary>
@@ -247,7 +248,7 @@ namespace Api.Controllers
 
             if (!unpublishedNames.Any())
             {
-                return NotFound(GetResponseDict("None of the names was found in the repository so not attempting to remove."));
+                return NotFound(ResponseHelper.GetResponseDict("None of the names was found in the repository so not attempting to remove."));
             }
 
             var successMessage = $"Successfully removed the following names from search index: {string.Join(',', unpublishedNames)}.";
@@ -257,15 +258,7 @@ namespace Api.Controllers
                 successMessage += $" The following names were skipped as they are not published in the database: {string.Join(',', notFoundNames)}.";
             }
 
-            return Ok(GetResponseDict(successMessage));
-        }
-
-        private static Dictionary<string, string> GetResponseDict(string theMessage)
-        {
-            return new Dictionary<string, string>
-            {
-                { "message", theMessage}
-            };
+            return Ok(ResponseHelper.GetResponseDict(successMessage));
         }
     }
 }
