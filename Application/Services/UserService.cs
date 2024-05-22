@@ -33,6 +33,11 @@ namespace Application.Services
             return user;
         }
 
+        public async Task<bool> DeleteBy(string username)
+        {
+            return await _userRepository.DeleteBy(username);
+        }
+
         public async Task<User> GetUserByEmail(string email)
         {
             return await _userRepository.GetUserByEmail(email);

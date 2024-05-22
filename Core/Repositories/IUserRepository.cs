@@ -12,5 +12,6 @@ namespace Core.Repositories
     {
         Task<User> GetUserByEmail(string email);
         Task Create(User newName);
+        Task<bool> DeleteBy(string username);
     }
 }

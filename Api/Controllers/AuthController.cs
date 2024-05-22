@@ -60,5 +60,19 @@ namespace Api.Controllers
 
             return Ok(ResponseHelper.GetResponseDict("success"));
         }
+
+        [HttpDelete("users/{username}")]
+        [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
+        public async Task<IActionResult> Create(string username)
+        {
+            bool isDeleted = await _userService.DeleteBy(username);
+
+            if (isDeleted)
+            {
+                return Ok("Name deleted successfully.");
+            }
+
+            return BadRequest(ResponseHelper.GetResponseDict("Delete failed: User not found."));
+        }
     }
 }
