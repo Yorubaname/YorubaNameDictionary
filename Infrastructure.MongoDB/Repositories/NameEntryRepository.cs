@@ -235,7 +235,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
         if (!string.IsNullOrWhiteSpace(newEntry.UpdatedBy))
         {
-            statement.Set(ne => ne.UpdatedBy, newEntry.UpdatedBy);
+            statement = statement.Set(ne => ne.UpdatedBy, newEntry.UpdatedBy);
         }
 
         return statement;

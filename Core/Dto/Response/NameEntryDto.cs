@@ -21,6 +21,7 @@ namespace Core.Dto.Response
         public string SubmittedBy { get; set; }
 
         public List<EtymologyDto> Etymology { get; set; }
+        public List<EmbeddedVideoDto> Videos { get; set; }
 
         public State State { get; set; }
         public DateTime CreatedAt { get; set; }

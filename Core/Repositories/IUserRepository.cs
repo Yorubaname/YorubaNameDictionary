@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using Core.Dto.Request;
+using Core.Entities;
 using Core.Entities.NameEntry;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Core.Repositories
     {
         Task<User> GetUserByEmail(string email);
         Task Create(User newName);
-        Task<bool> DeleteBy(string username);
+        Task<bool> DeleteBy(string email);
+        Task<bool> Update(string email, UpdateUserDto update);
     }
 }

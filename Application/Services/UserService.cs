@@ -1,4 +1,5 @@
-﻿using Core.Dto.Response;
+﻿using Core.Dto.Request;
+using Core.Dto.Response;
 using Core.Entities;
 using Core.Repositories;
 using System;
@@ -41,6 +42,12 @@ namespace Application.Services
         public async Task<User> GetUserByEmail(string email)
         {
             return await _userRepository.GetUserByEmail(email);
+        }
+
+        public async Task<bool> Update(string username, UpdateUserDto update)
+        {
+            var hashedPassword = update.Password == null ? null : BCrypt_.HashPassword(update.Password, BCrypt_.GenerateSalt());
+            return await _userRepository.Update(username, new UpdateUserDto(update.Username, hashedPassword, update.Roles, update.UpdatedBy));
         }
     }
 }

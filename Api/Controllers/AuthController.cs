@@ -1,5 +1,6 @@
 ﻿using Api.Utilities;
 using Application.Services;
+using Core.Dto.Request;
 using Core.Dto.Response;
 using Core.Entities;
 using FluentValidation;
@@ -53,7 +54,7 @@ namespace Api.Controllers
 
             if (existingUser != null)
             {
-                return BadRequest("This user already exists");
+                return BadRequest(ResponseHelper.GetResponseDict("This user already exists"));
             }
 
             _ = await _userService.CreateUser(createUserDto);
@@ -62,17 +63,31 @@ namespace Api.Controllers
         }
 
         [HttpDelete("users/{username}")]
-        [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
-        public async Task<IActionResult> Create(string username)
+        [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Delete(string username)
         {
             bool isDeleted = await _userService.DeleteBy(username);
 
             if (isDeleted)
             {
-                return Ok("Name deleted successfully.");
+                return Ok(ResponseHelper.GetResponseDict("Name deleted successfully."));
             }
 
             return BadRequest(ResponseHelper.GetResponseDict("Delete failed: User not found."));
+        }
+
+        [HttpPatch("users/{username}")]
+        [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Update(string username, [FromBody] UpdateUserDto update)
+        {
+            bool isUpdated = await _userService.Update(username, update);
+
+            if (isUpdated)
+            {
+                return Ok(ResponseHelper.GetResponseDict("Name updated successfully."));
+            }
+
+            return BadRequest(ResponseHelper.GetResponseDict("Update failed: User not found."));
         }
     }
 }

@@ -33,7 +33,8 @@ namespace Api.Mappers
                 FamousPeople = request.FamousPeople ?? new List<string>(),
                 Syllables = request.Syllables ?? new List<string>(),
                 Variants = request.Variants ?? new List<string>(),
-                CreatedBy = request.SubmittedBy
+                CreatedBy = request.SubmittedBy,
+                UpdatedBy = request.SubmittedBy
             };
         }
 
@@ -53,6 +54,7 @@ namespace Api.Mappers
                 Media = (CommaSeparatedString)nameEntry.Media,
                 SubmittedBy = nameEntry.CreatedBy,
                 Etymology = nameEntry.Etymology.Select(et => new EtymologyDto(et.Part, et.Meaning)).ToList(),
+                Videos = nameEntry.Videos.Select(v => new EmbeddedVideoDto(v.VideoId, v.Caption)).ToList(),
                 State = nameEntry.State,
                 CreatedAt = nameEntry.CreatedAt,
                 UpdatedAt = nameEntry.UpdatedAt,
