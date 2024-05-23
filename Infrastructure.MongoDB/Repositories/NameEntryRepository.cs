@@ -230,12 +230,16 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
                     .Set(ne => ne.Variants, newEntry.Variants)
                     .Set(ne => ne.Modified, newEntry.Modified)
                     .Set(ne => ne.Duplicates, newEntry.Duplicates)
-                    .Set(ne => ne.Feedbacks, newEntry.Feedbacks)
                     .CurrentDate(ne => ne.UpdatedAt);
 
         if (!string.IsNullOrWhiteSpace(newEntry.UpdatedBy))
         {
             statement = statement.Set(ne => ne.UpdatedBy, newEntry.UpdatedBy);
+        }
+
+        if (newEntry.Duplicates.Any())
+        {
+            statement = statement.Set(ne => ne.Duplicates, newEntry.Duplicates);
         }
 
         return statement;
