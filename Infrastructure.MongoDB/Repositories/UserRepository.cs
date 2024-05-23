@@ -1,7 +1,6 @@
 ﻿using Core.Dto.Request;
 using Core.Dto.Response;
 using Core.Entities;
-using System.Linq;
 using Core.Repositories;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -18,10 +17,10 @@ namespace Infrastructure.MongoDB.Repositories
             _userCollection = database.GetCollection<User>("Users");
         }
 
-        public async Task Create(User theUser)
+        public async Task Create(User newUser)
         {
-            theUser.Id = ObjectId.GenerateNewId().ToString();
-            await _userCollection.InsertOneAsync(theUser);
+            newUser.Id = ObjectId.GenerateNewId().ToString();
+            await _userCollection.InsertOneAsync(newUser);
         }
 
         public async Task<bool> DeleteBy(string email)

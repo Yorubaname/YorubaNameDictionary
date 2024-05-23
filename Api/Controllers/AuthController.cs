@@ -2,7 +2,6 @@
 using Application.Services;
 using Core.Dto.Request;
 using Core.Dto.Response;
-using Core.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

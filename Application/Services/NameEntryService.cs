@@ -1,9 +1,6 @@
-﻿using Application.Events;
-using Application.Exceptions;
+﻿using Application.Exceptions;
 using Core.Dto.Response;
-using Core.Entities;
 using Core.Entities.NameEntry;
-using Core.Entities.NameEntry.Collections;
 using Core.Enums;
 using Core.Events;
 using Core.Repositories;
