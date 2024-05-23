@@ -1,9 +1,6 @@
-﻿using Application.Events;
-using Application.Exceptions;
+﻿using Application.Exceptions;
 using Core.Dto.Response;
-using Core.Entities;
 using Core.Entities.NameEntry;
-using Core.Entities.NameEntry.Collections;
 using Core.Enums;
 using Core.Events;
 using Core.Repositories;
@@ -90,6 +87,7 @@ namespace Application.Domain
         public async Task PublishName(NameEntry nameEntry)
         {
             NameEntry? updates = nameEntry.Modified;
+            string originalName = nameEntry.Name;
 
             if (updates != null)
             {
@@ -108,11 +106,13 @@ namespace Application.Domain
                 nameEntry.FamousPeople = updates.FamousPeople;
                 nameEntry.Syllables = updates.Syllables;
                 nameEntry.Variants = updates.Variants;
+                nameEntry.UpdatedBy = updates.UpdatedBy;
+
                 nameEntry.Modified = null;
             }
 
             nameEntry.State = State.PUBLISHED;
-            await UpdateName(nameEntry);
+            await _nameEntryRepository.Update(originalName, nameEntry);
 
             // TODO Hafiz: An ideal implementation would have below operation in a transaction with the above update.
             await _eventPubService.PublishEvent(new NameIndexed(nameEntry.Name));

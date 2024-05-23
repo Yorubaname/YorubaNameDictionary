@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.MongoDB.Repositories;
 
-public class NameEntryRepository : INameEntryRepository
+public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 {
     private readonly IMongoCollection<NameEntry> _nameEntryCollection;
     private readonly IEventPubService _eventPubService;
@@ -77,12 +77,6 @@ public class NameEntryRepository : INameEntryRepository
         var deleteResult = await _nameEntryCollection.DeleteOneAsync(filter, options);
 
         return deleteResult.DeletedCount > 0;
-    }
-
-    private T SetCollationPrimary<T>(dynamic dbCommandOption)
-    {
-        dbCommandOption.Collation = new Collation("en", strength: CollationStrength.Primary);
-        return (T)dbCommandOption;
     }
 
     // TODO Hafiz: This is pulling too much data. We should eventually get rid of it.
@@ -251,12 +245,16 @@ public class NameEntryRepository : INameEntryRepository
                     .Set(ne => ne.Variants, newEntry.Variants)
                     .Set(ne => ne.Modified, newEntry.Modified)
                     .Set(ne => ne.Duplicates, newEntry.Duplicates)
-                    .Set(ne => ne.Feedbacks, newEntry.Feedbacks)
                     .CurrentDate(ne => ne.UpdatedAt);
 
         if (!string.IsNullOrWhiteSpace(newEntry.UpdatedBy))
         {
-            statement.Set(ne => ne.UpdatedBy, newEntry.UpdatedBy);
+            statement = statement.Set(ne => ne.UpdatedBy, newEntry.UpdatedBy);
+        }
+
+        if (newEntry.Duplicates.Any())
+        {
+            statement = statement.Set(ne => ne.Duplicates, newEntry.Duplicates);
         }
 
         return statement;

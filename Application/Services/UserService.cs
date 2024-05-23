@@ -1,11 +1,7 @@
-﻿using Core.Dto.Response;
+﻿using Core.Dto.Request;
+using Core.Dto.Response;
 using Core.Entities;
 using Core.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BCrypt_ = BCrypt.Net.BCrypt;
 
 namespace Application.Services
@@ -34,9 +30,25 @@ namespace Application.Services
             return user;
         }
 
+        public async Task<bool> DeleteBy(string username)
+        {
+            return await _userRepository.DeleteBy(username);
+        }
+
         public async Task<User> GetUserByEmail(string email)
         {
             return await _userRepository.GetUserByEmail(email);
+        }
+
+        public async Task<IEnumerable<UserDto>> List()
+        {
+            return await _userRepository.List();
+        }
+
+        public async Task<bool> Update(string email, UpdateUserDto update)
+        {
+            var hashedPassword = update.Password == null ? null : BCrypt_.HashPassword(update.Password, BCrypt_.GenerateSalt());
+            return await _userRepository.Update(email, new UpdateUserDto(update.Username, hashedPassword, update.Roles, update.UpdatedBy));
         }
     }
 }

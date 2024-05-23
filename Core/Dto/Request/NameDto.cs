@@ -25,9 +25,7 @@ namespace Core.Dto.Request
 
         public CommaSeparatedString? Media { get; set; }
 
-
-        [Required]
-        public string SubmittedBy { get; set; }
+        public virtual string SubmittedBy { get; set; }
 
         public NameDto(string name, string meaning)
         {

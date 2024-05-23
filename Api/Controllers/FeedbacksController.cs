@@ -51,7 +51,7 @@ namespace Api.Controllers
             }
 
             await _nameEntryFeedbackService
-                .AddFeedbackByNameAsync(model.Name, model.FeedbackContent);
+                .AddFeedbackByNameAsync(model.Name, model.Feedback);
             
             return StatusCode((int)HttpStatusCode.Created, "Feedback added successfully.");
         }

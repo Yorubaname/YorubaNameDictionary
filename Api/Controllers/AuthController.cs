@@ -1,7 +1,7 @@
 ﻿using Api.Utilities;
 using Application.Services;
+using Core.Dto.Request;
 using Core.Dto.Response;
-using Core.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +30,6 @@ namespace Api.Controllers
             var theUser = await _userService.GetUserByEmail(User.Identity!.Name!);
             var userDetails = new UserDto
             {
-                Id = theUser.Id,
                 Roles = theUser.Roles.ToArray(),
                 Username = theUser.Email,
             };
@@ -53,12 +52,63 @@ namespace Api.Controllers
 
             if (existingUser != null)
             {
-                return BadRequest("This user already exists");
+                return BadRequest(ResponseHelper.GetResponseDict("This user already exists"));
             }
 
             _ = await _userService.CreateUser(createUserDto);
 
             return Ok(ResponseHelper.GetResponseDict("success"));
+        }
+
+        [HttpDelete("users/{email}")]
+        [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Delete(string email)
+        {
+            bool isDeleted = await _userService.DeleteBy(email);
+
+            if (isDeleted)
+            {
+                return Ok(ResponseHelper.GetResponseDict("Name deleted successfully."));
+            }
+
+            return BadRequest(ResponseHelper.GetResponseDict("Delete failed: User not found."));
+        }
+
+        [HttpPatch("users/{email}")]
+        [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Update(string email, [FromBody] UpdateUserDto update)
+        {
+            bool isUpdated = await _userService.Update(email, update);
+
+            if (isUpdated)
+            {
+                return Ok(ResponseHelper.GetResponseDict("Name updated successfully."));
+            }
+
+            return BadRequest(ResponseHelper.GetResponseDict("Update failed: User not found."));
+        }
+
+        [HttpGet("users")]
+        [ProducesResponseType(typeof(IEnumerable<UserDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Get()
+        {
+            IEnumerable<UserDto> allUsers = await _userService.List();
+            return Ok(allUsers);
+        }
+
+        [HttpGet("users/{email}")]
+        [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Get(string email)
+        {
+            var theUser = await _userService.GetUserByEmail(email);
+            return theUser == null ?
+                NotFound(ResponseHelper.GetResponseDict("User was not found.")) :
+                Ok(new UserDto
+                {
+                    Email = theUser.Email!,
+                    Roles = theUser.Roles.ToArray(),
+                    Username = theUser.Username,
+                });
         }
     }
 }
