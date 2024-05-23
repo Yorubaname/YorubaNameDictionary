@@ -1,12 +1,10 @@
 ﻿using Core.Dto.Request;
+using Core.Dto.Response;
 using Core.Entities;
-using Core.Entities.NameEntry;
-using Core.Enums;
-using Core.Events;
+using System.Linq;
 using Core.Repositories;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Xml.Linq;
 
 namespace Infrastructure.MongoDB.Repositories
 {
@@ -93,6 +91,17 @@ namespace Infrastructure.MongoDB.Repositories
             var updateDefinition = updateBuilder.Combine(updates);
 
             return updateDefinition;
+        }
+
+        public async Task<IEnumerable<UserDto>> List()
+        {
+            var allUsers = await _userCollection.Find(_ => true).ToListAsync();
+            return allUsers.Select(u => new UserDto
+            {
+                Username = u.Username,
+                Email = u.Email!,
+                Roles = u.Roles.ToArray()
+            });
         }
     }
 }

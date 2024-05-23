@@ -44,10 +44,15 @@ namespace Application.Services
             return await _userRepository.GetUserByEmail(email);
         }
 
-        public async Task<bool> Update(string username, UpdateUserDto update)
+        public async Task<IEnumerable<UserDto>> List()
+        {
+            return await _userRepository.List();
+        }
+
+        public async Task<bool> Update(string email, UpdateUserDto update)
         {
             var hashedPassword = update.Password == null ? null : BCrypt_.HashPassword(update.Password, BCrypt_.GenerateSalt());
-            return await _userRepository.Update(username, new UpdateUserDto(update.Username, hashedPassword, update.Roles, update.UpdatedBy));
+            return await _userRepository.Update(email, new UpdateUserDto(update.Username, hashedPassword, update.Roles, update.UpdatedBy));
         }
     }
 }
