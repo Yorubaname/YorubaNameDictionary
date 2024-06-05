@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Infrastructure.MongoDB\Infrastructure.MongoDB.csproj" />
+    <ProjectReference Include="..\Infrastructure.MySQL\Infrastructure.MySQL.csproj" />
   </ItemGroup>
 
 </Project>

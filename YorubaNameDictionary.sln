@@ -5,17 +5,19 @@ VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{12B35F2A-85F6-45C5-B1E9-84089F529ED6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.MongoDB", "Infrastructure.MongoDB\Infrastructure.MongoDB.csproj", "{2C8E50D5-BE74-4370-B0CA-156C16D00AA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.MongoDB", "Infrastructure.MongoDB\Infrastructure.MongoDB.csproj", "{2C8E50D5-BE74-4370-B0CA-156C16D00AA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{6FBF4BDD-D321-4B30-BA9C-70B1B0320361}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{6FBF4BDD-D321-4B30-BA9C-70B1B0320361}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{6DF0AC0B-335E-44A3-AD11-5DC7A12602D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "Api\Api.csproj", "{6DF0AC0B-335E-44A3-AD11-5DC7A12602D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{B87D8AB1-7C4D-4B2D-A8FA-76E94015544E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{B87D8AB1-7C4D-4B2D-A8FA-76E94015544E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6DF0AC0B-335E-44A3-AD11-5DC7A12602D4} = {6DF0AC0B-335E-44A3-AD11-5DC7A12602D4}
 		{6FBF4BDD-D321-4B30-BA9C-70B1B0320361} = {6FBF4BDD-D321-4B30-BA9C-70B1B0320361}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.MySQL", "Infrastructure.MySQL\Infrastructure.MySQL.csproj", "{E0907817-E4F0-49F7-86EE-92B7D6870AE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{B87D8AB1-7C4D-4B2D-A8FA-76E94015544E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B87D8AB1-7C4D-4B2D-A8FA-76E94015544E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B87D8AB1-7C4D-4B2D-A8FA-76E94015544E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0907817-E4F0-49F7-86EE-92B7D6870AE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0907817-E4F0-49F7-86EE-92B7D6870AE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0907817-E4F0-49F7-86EE-92B7D6870AE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0907817-E4F0-49F7-86EE-92B7D6870AE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
