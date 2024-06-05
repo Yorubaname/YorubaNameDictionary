@@ -13,9 +13,6 @@ using FluentValidation;
 using Infrastructure.MongoDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi.Models;
-using MySql.EntityFrameworkCore.Extensions;
-using MySqlConnector;
-using System.Reflection;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -75,8 +72,6 @@ services.AddSwaggerGen(c =>
 });
 var mongoDbSettings = Configuration.GetSection("MongoDB");
 services.InitializeDatabase(mongoDbSettings.GetValue<string>("ConnectionString"), mongoDbSettings.GetValue<string>("DatabaseName"));
-
-var mySQLSettings = Configuration.GetSection("MySQL");
 
 services.AddScoped<NameEntryService>();
 services.AddScoped<GeoLocationsService>();

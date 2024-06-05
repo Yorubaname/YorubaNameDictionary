@@ -1,10 +1,5 @@
-﻿using Application;
-using Application.Migrator;
-using Core.Entities;
+﻿using Application.Migrator;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using MySql.Data.MySqlClient;
 using System.Text;
 
 namespace Api.Controllers
