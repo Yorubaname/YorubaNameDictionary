@@ -16,10 +16,17 @@ namespace Api.Controllers
         [HttpGet("MigrateGeoLocation")]
         public IActionResult MigrateGeoLocation()
         {
-           StringBuilder results = new StringBuilder();
-           results.AppendLine(_sQLToMongoMigrator.MigrateGeolocation());
-           return Ok(results.ToString());
+           string result = _sQLToMongoMigrator.MigrateGeolocation();
+           return Ok(result);
           
+        }
+
+        [HttpGet("MigrateNameEntry")]
+        public IActionResult MigrateNameEntry()
+        {
+            string result = _sQLToMongoMigrator.MigrateNameEntry();
+            return Ok(result);
+
         }
     }
 }
