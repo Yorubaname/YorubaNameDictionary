@@ -8,8 +8,8 @@ namespace Api.Controllers
     [ApiController]
     public class MigratorController : Controller
     {
-        private readonly SQLToMongoMigrator _sQLToMongoMigrator;
-        public MigratorController(SQLToMongoMigrator sQLToMongoMigrator)
+        private readonly SqlToMongoMigrator _sQLToMongoMigrator;
+        public MigratorController(SqlToMongoMigrator sQLToMongoMigrator)
         {
             _sQLToMongoMigrator = sQLToMongoMigrator;
         }

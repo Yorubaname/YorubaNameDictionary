@@ -1,8 +1,10 @@
 ﻿using Amazon.Runtime.Internal.Transform;
+using Application.Migrator.MigrationDTOs.cs;
 using Application.Services;
 using Core.Entities;
 using Core.Entities.NameEntry;
 using Core.Enums;
+using Dapper;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -16,12 +18,12 @@ using System.Threading.Tasks;
 
 namespace Application.Migrator
 {
-    public class SQLToMongoMigrator
+    public class SqlToMongoMigrator
     {
         private readonly IMongoCollection<GeoLocation> _geolocationCollection;
         private readonly IMongoCollection<NameEntry> _nameEntryCollection;
         private readonly IConfiguration _configuration;
-        public SQLToMongoMigrator(IMongoDatabase mongoDatabase, IConfiguration configuration)
+        public SqlToMongoMigrator(IMongoDatabase mongoDatabase, IConfiguration configuration)
         {
             _configuration = configuration;
             _geolocationCollection = mongoDatabase.GetCollection<GeoLocation>("GeoLocations");
@@ -29,112 +31,78 @@ namespace Application.Migrator
         }
         public string MigrateGeolocation()
         {
-            // Connect to MySQL
-            using (MySqlConnection mysqlConn = new MySqlConnection(GetSQLConnectionString()))
+            using var connection = new MySqlConnection(GetSQLConnectionString());
+            var geolocation = connection.Query<geolocation>("SELECT place, region FROM geo_location");
+
+            if (geolocation == null)
             {
-                mysqlConn.Open();
-
-                // Select data from MySQL
-                string mysqlQuery = "SELECT place, region FROM geo_location";
-                MySqlCommand mysqlCommand = new MySqlCommand(mysqlQuery, mysqlConn);
-                MySqlDataReader mysqlReader = mysqlCommand.ExecuteReader();
-
-
-                // Insert data into MongoDB
-                List<GeoLocation> documentsToInsert = new List<GeoLocation>();
-                while (mysqlReader.Read())
-                {
-                    documentsToInsert.Add(new GeoLocation()
-                    {
-                        Id = ObjectId.GenerateNewId().ToString(),
-                        Place = mysqlReader["place"].ToString(),
-                        Region = mysqlReader["region"].ToString()
-                    });
-                }
-                mysqlReader.Close();
-
-                if (documentsToInsert.Count > 0)
-                {
-                    _geolocationCollection.DeleteMany(FilterDefinition<GeoLocation>.Empty);
-                    _geolocationCollection.InsertMany(documentsToInsert);
-                    return $"{documentsToInsert.Count} geolocation records inserted into MongoDB successfully.";
-                }
-                else
-                {
-                    return "No data found in MySQL table.";
-                }
+                return "No data found in MySQL table.";
             }
-        }
+            List<GeoLocation> documentsToInsert = geolocation.Select(s=> new GeoLocation { Place =s.place, Region =s.region }).ToList();
 
+            _geolocationCollection.DeleteMany(FilterDefinition<GeoLocation>.Empty);
+            _geolocationCollection.InsertMany(documentsToInsert);
+            return $"{documentsToInsert.Count} geolocation records inserted into MongoDB successfully.";
+            
+        }
+        
+
+        //TODO handle 1 to many mappings i.e geolocation, duplicates, feedback, embedded video
         public string MigrateNameEntry()
         {
-            // Connect to MySQL
-            using (MySqlConnection mysqlConn = new MySqlConnection(GetSQLConnectionString()))
+            using var connection = new MySqlConnection(GetSQLConnectionString());
+
+            var etymology = connection.Query<etymology>("select name_entry_id, meaning, part from name_entry_etymology");
+
+            var name_entry = connection.Query<nameentry>("select id, created_at, extended_meaning, famous_people,ipa_notation, is_indexed, meaning, media, morphology, pronunciation, submitted_by, syllables, updated_at, variants, name, geo_location_id, state from name_entry");
+
+            if(name_entry == null)  return "No data found in MySQL table.";
+
+            //filter etymology per name
+            foreach (var item in name_entry)
             {
-                mysqlConn.Open();
-
-                // Select data from MySQL
-                string mysqlQuery = "select  created_at, extended_meaning, famous_people,ipa_notation, is_indexed, meaning, media, morphology, pronunciation, submitted_by, syllables, updated_at, variants, name, geo_location_id, state from name_entry";
-                MySqlCommand mysqlCommand = new MySqlCommand(mysqlQuery, mysqlConn);
-                MySqlDataReader mysqlReader = mysqlCommand.ExecuteReader();
-
-
-                // Insert data into MongoDB
-                List<NameEntry> documentsToInsert = new List<NameEntry>();
-                List<String> FamousPeople = new List<String>();
-                while (mysqlReader.Read())
-                {
-                    DateTime.TryParse(mysqlReader["created_at"].ToString(), out DateTime createdDate);
-                    DateTime.TryParse(mysqlReader["updated_at"].ToString(), out DateTime updatedDate);
-
-                    documentsToInsert.Add(new NameEntry()
-                    {
-                        Id = ObjectId.GenerateNewId().ToString(),
-                        Name = mysqlReader["name"].ToString(),
-                        CreatedAt = createdDate,
-                        ExtendedMeaning = mysqlReader["extended_meaning"].ToString(),
-                        FamousPeople = FamousPeople, // TODO handle this later
-                        IpaNotation = mysqlReader["ipa_notation"].ToString(),
-                        Meaning = mysqlReader["meaning"].ToString(),
-                        Media = mysqlReader["media"].ToString()?.Split(",").ToList(),
-                        Morphology = mysqlReader["morphology"].ToString()?.Split(",").ToList(),
-                        Pronunciation = mysqlReader["pronunciation"].ToString(),
-                        CreatedBy = mysqlReader["submitted_by"].ToString(),
-                        Syllables = mysqlReader["syllables"].ToString()?.Split(",").ToList(),
-                        UpdatedAt = updatedDate,
-                        Variants = mysqlReader["variants"].ToString()?.Split(",").ToList(),
-                        State = GetPublishState(mysqlReader["state"].ToString()),
-
-                    });
-                }
-                mysqlReader.Close();
-
-                if (documentsToInsert.Count > 0)
-                {
-                    _nameEntryCollection.DeleteMany(FilterDefinition<NameEntry>.Empty);
-                    _nameEntryCollection.InsertMany(documentsToInsert);
-                    return $"{documentsToInsert.Count} name records inserted into MongoDB successfully.";
-                }
-                else
-                {
-                    return "No data found in MySQL table.";
-                }
+                item.etymology = etymology.Where(f => f.name_entry_id == item.id).ToList();
             }
+          
+            List<NameEntry> documentsToInsert = name_entry.Select(s => new NameEntry()
+            {
+                Id = ObjectId.GenerateNewId().ToString(),
+                Name = s.name,
+                //CreatedAt = ((DateTime)s.created_at,
+                ExtendedMeaning = s.extended_meaning,
+                FamousPeople = s.famous_people.Split(",").ToList(),
+                IpaNotation = s.ipa_notation,
+                Meaning = s.meaning,
+                Media = s.media.Split(",").ToList(),
+                Morphology = s.morphology.Split(",").ToList(),
+                Pronunciation = s.pronunciation,
+                CreatedBy = s.submitted_by,
+                Syllables = s.syllables.Split(",").ToList(),
+                //UpdatedAt = (DateTime)s.updated_at,
+                Variants = s.variants.Split(",").ToList(),
+                State = GetPublishState(s.state),
+                Etymology = s.etymology.Select(s => new Core.Entities.NameEntry.Collections.Etymology(s.part, s.meaning) { }).ToList(),
+            }).ToList();
+        
+            _nameEntryCollection.DeleteMany(FilterDefinition<NameEntry>.Empty);
+            _nameEntryCollection.InsertMany(documentsToInsert);
+            return $"{documentsToInsert.Count} name records inserted into MongoDB successfully.";
+           
         }
 
 
-        private State GetPublishState (string input)
+        private State GetPublishState(string input)
         {
             switch (input)
             {
-               case "PUBLISHED":return State.PUBLISHED;
+                case "PUBLISHED": return State.PUBLISHED;
                 case "NEW": return State.NEW;
                 case "UNPUBLISHED": return State.UNPUBLISHED;
                 case "MODIFIED": return State.MODIFIED;
-           
+
                 default:
                     return State.PUBLISHED;
-                  
+
             }
         }
 

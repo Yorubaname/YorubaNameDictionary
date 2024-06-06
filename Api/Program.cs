@@ -13,6 +13,7 @@ using FluentValidation;
 using Infrastructure.MongoDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi.Models;
+using MySqlConnector;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -73,6 +74,9 @@ services.AddSwaggerGen(c =>
 var mongoDbSettings = Configuration.GetSection("MongoDB");
 services.InitializeDatabase(mongoDbSettings.GetValue<string>("ConnectionString"), mongoDbSettings.GetValue<string>("DatabaseName"));
 
+builder.Services.AddTransient(x =>
+  new MySqlConnection(builder.Configuration.GetSection("MySQL:ConnectionString").Value));
+
 services.AddScoped<NameEntryService>();
 services.AddScoped<GeoLocationsService>();
 services.AddScoped<NameEntryFeedbackService>();
@@ -80,8 +84,7 @@ services.AddScoped<IEventPubService, EventPubService>();
 services.AddScoped<SearchService>();
 services.AddScoped<SuggestedNameService>();
 services.AddScoped<UserService>();
-services.AddScoped<SQLToMongoMigrator>();
-
+services.AddScoped<SqlToMongoMigrator>();
 // TODO Hafiz: I foresee having problems with using scoped services in a singleton here. When I get there, I will cross the bridge.
 services.AddSingleton<IRecentIndexesCache, RecentIndexesCache>();
 services.AddSingleton<IRecentSearchesCache, RecentSearchesCache>();
