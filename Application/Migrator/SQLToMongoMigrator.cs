@@ -3,6 +3,7 @@ using Application.Migrator.MigrationDTOs.cs;
 using Application.Services;
 using Core.Entities;
 using Core.Entities.NameEntry;
+using Core.Entities.NameEntry.Collections;
 using Core.Enums;
 using Dapper;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Intrinsics.Arm;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,21 +50,35 @@ namespace Application.Migrator
         }
         
 
-        //TODO handle 1 to many mappings i.e geolocation, duplicates, feedback, embedded video
+        //TODO handle more 1 to many mappings i.e  duplicates, feedback, embedded video
         public string MigrateNameEntry()
         {
             using var connection = new MySqlConnection(GetSQLConnectionString());
 
             var etymology = connection.Query<etymology>("select name_entry_id, meaning, part from name_entry_etymology");
 
+            var geolocation = connection.Query<geolocation>("select t.region, t.place from  geo_location t");
+
+            var name_entry_geo_location = connection.Query<name_entry_geo_location>("select name_entry_id, geo_location_place from name_entry_geo_location");
+
+            var geolocationPlace = from a in geolocation
+                                   join b in name_entry_geo_location
+                                   on a.place equals b.geo_location_place
+                                   select new { a.region, a.place, b.name_entry_id };
+
+
             var name_entry = connection.Query<nameentry>("select id, created_at, extended_meaning, famous_people,ipa_notation, is_indexed, meaning, media, morphology, pronunciation, submitted_by, syllables, updated_at, variants, name, geo_location_id, state from name_entry");
 
             if(name_entry == null)  return "No data found in MySQL table.";
 
-            //filter etymology per name
+        
             foreach (var item in name_entry)
             {
-                item.etymology = etymology.Where(f => f.name_entry_id == item.id).ToList();
+                item.etymology = etymology.Where(f => f.name_entry_id == item.id).ToList()
+                    .Select(s => new Etymology(s.part, s.meaning) { }).ToList();
+
+                item.geoLocations = geolocationPlace.Where(d=>d.name_entry_id == item.id).
+                    Select(a=> new GeoLocation() { Place =a.place, Region = a.region}).ToList();
             }
           
             List<NameEntry> documentsToInsert = name_entry.Select(s => new NameEntry()
@@ -81,7 +98,8 @@ namespace Application.Migrator
                 //UpdatedAt = (DateTime)s.updated_at,
                 Variants = s.variants.Split(",").ToList(),
                 State = GetPublishState(s.state),
-                Etymology = s.etymology.Select(s => new Core.Entities.NameEntry.Collections.Etymology(s.part, s.meaning) { }).ToList(),
+                Etymology = s.etymology,
+                GeoLocation = s.geoLocations
             }).ToList();
         
             _nameEntryCollection.DeleteMany(FilterDefinition<NameEntry>.Empty);

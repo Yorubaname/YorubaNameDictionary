@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Core.Entities;
+using Core.Entities.NameEntry.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +26,7 @@ namespace Application.Migrator.MigrationDTOs.cs
         public string geo_location_id { get; set; }
         public string state { get; set; }
         public string ipa_notation { get; set; }
-        public List<etymology> etymology { get; set; }
+        public List<Etymology> etymology { get; set; }
+        public List<GeoLocation> geoLocations { get; set; }
     }
 }
