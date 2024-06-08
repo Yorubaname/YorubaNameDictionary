@@ -6,6 +6,7 @@ using Core.Entities.NameEntry;
 using Core.Entities.NameEntry.Collections;
 using Core.Enums;
 using Dapper;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -57,6 +58,10 @@ namespace Application.Migrator
 
             var etymology = connection.Query<etymology>("select name_entry_id, meaning, part from name_entry_etymology");
 
+            var feedbacks = connection.Query<nameentryfeedback>("select id, feedback, name, submitted_at from name_entry_feedback");
+
+            var videos = connection.Query<nameentryvideos>("select name_entry_id, caption, url from name_entry_videos");
+
             var geolocation = connection.Query<geolocation>("select t.region, t.place from  geo_location t");
 
             var name_entry_geo_location = connection.Query<name_entry_geo_location>("select name_entry_id, geo_location_place from name_entry_geo_location");
@@ -79,6 +84,12 @@ namespace Application.Migrator
 
                 item.geoLocations = geolocationPlace.Where(d=>d.name_entry_id == item.id).
                     Select(a=> new GeoLocation() { Place =a.place, Region = a.region}).ToList();
+
+                item.feedbacks = feedbacks.Where(d => d.name == item.name).
+                    Select(a => new Feedback() { Content = a.feedback }).ToList();
+                            
+                item.embeddedVideo = videos.Where(d=>d.name_entry_id == item.id).
+                    Select(s=> new EmbeddedVideo(s.url, s.caption)).ToList();
             }
           
             List<NameEntry> documentsToInsert = name_entry.Select(s => new NameEntry()
@@ -99,7 +110,10 @@ namespace Application.Migrator
                 Variants = s.variants.Split(",").ToList(),
                 State = GetPublishState(s.state),
                 Etymology = s.etymology,
-                GeoLocation = s.geoLocations
+                GeoLocation = s.geoLocations,
+                Feedbacks = s.feedbacks,
+                Videos = s.embeddedVideo
+
             }).ToList();
         
             _nameEntryCollection.DeleteMany(FilterDefinition<NameEntry>.Empty);
@@ -119,7 +133,7 @@ namespace Application.Migrator
                 case "MODIFIED": return State.MODIFIED;
 
                 default:
-                    return State.PUBLISHED;
+                    return State.NEW;
 
             }
         }

@@ -28,5 +28,7 @@ namespace Application.Migrator.MigrationDTOs.cs
         public string ipa_notation { get; set; }
         public List<Etymology> etymology { get; set; }
         public List<GeoLocation> geoLocations { get; set; }
+        public List<Feedback> feedbacks { get; set; }
+        public List<EmbeddedVideo> embeddedVideo { get; set; }
     }
 }
