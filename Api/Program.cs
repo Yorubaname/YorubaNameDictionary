@@ -1,5 +1,4 @@
 using Api.Utilities;
-using Application;
 using Application.Cache;
 using Application.Domain;
 using Application.Events;

@@ -28,5 +28,15 @@ namespace Api.Controllers
             return Ok(result);
 
         }
+
+        [HttpGet("MigrateSuggestedNames")]
+        public IActionResult MigrateSuggestedNames()
+        {
+            string result = _sQLToMongoMigrator.MigrateSuggestedNames();
+            return Ok(result);
+
+        }
+
+        
     }
 }

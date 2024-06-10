@@ -26,12 +26,14 @@ namespace Application.Migrator
     {
         private readonly IMongoCollection<GeoLocation> _geolocationCollection;
         private readonly IMongoCollection<NameEntry> _nameEntryCollection;
+        private readonly IMongoCollection<SuggestedName> _suggestedNameEntryCollection;
         private readonly IConfiguration _configuration;
         public SqlToMongoMigrator(IMongoDatabase mongoDatabase, IConfiguration configuration)
         {
             _configuration = configuration;
             _geolocationCollection = mongoDatabase.GetCollection<GeoLocation>("GeoLocations");
             _nameEntryCollection = mongoDatabase.GetCollection<NameEntry>("NameEntries");
+            _suggestedNameEntryCollection = mongoDatabase.GetCollection<SuggestedName>("SuggestedNames");
         }
         public string MigrateGeolocation()
         {
@@ -120,6 +122,31 @@ namespace Application.Migrator
             _nameEntryCollection.InsertMany(documentsToInsert);
             return $"{documentsToInsert.Count} name records inserted into MongoDB successfully.";
            
+        }
+
+        public string MigrateSuggestedNames()
+        {
+            using var connection = new MySqlConnection(GetSQLConnectionString());
+
+            var suggested_name = connection.Query<suggested_name>("select Id, details, email, name, geo_location_place from suggested_name");
+            var suggested_name_geo_location = connection.Query<suggested_name_geo_location>("select suggested_name_id, geo_location_place from suggested_name_geo_location");
+            
+            if (suggested_name == null) return "No data found in MySQL table.";
+
+            List<SuggestedName> suggestedNamesToInsert = suggested_name.Select(s => new SuggestedName()
+            {
+                Id = ObjectId.GenerateNewId().ToString(),
+                Name = s.name,
+                Details = s.details,
+                Email = s.email,   
+                GeoLocation = suggested_name_geo_location.Where(d=>d.suggested_name_id==s.Id).Select(s=> new GeoLocation() { Place= s.geo_location_place}).ToList(),
+            
+            }).ToList();
+
+            _suggestedNameEntryCollection.DeleteMany(FilterDefinition<SuggestedName>.Empty);
+            _suggestedNameEntryCollection.InsertMany(suggestedNamesToInsert);
+            return $"{suggestedNamesToInsert.Count} name records inserted into MongoDB successfully.";
+
         }
 
 
