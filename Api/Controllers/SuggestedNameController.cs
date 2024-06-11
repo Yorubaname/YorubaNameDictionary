@@ -2,7 +2,7 @@
 using Application.Services;
 using Core.Dto.Request;
 using Core.Dto.Response;
-using Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -10,6 +10,7 @@ namespace Api.Controllers;
 
 [Route("api/v1/suggestions")]
 [ApiController]
+[Authorize(Policy = "AdminAndLexicographers")]
 public class SuggestedNameController : ControllerBase
 {
     private readonly SuggestedNameService _suggestedNameService;
@@ -17,6 +18,17 @@ public class SuggestedNameController : ControllerBase
     public SuggestedNameController(SuggestedNameService suggestedNameService)
     {
         _suggestedNameService = suggestedNameService;
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
+    public async Task<IActionResult> Create([FromBody] CreateSuggestedNameDto request)
+    {
+        await _suggestedNameService
+                .CreateAsync(request.MapToEntity());
+
+        return StatusCode((int)HttpStatusCode.Created, "Suggested Name successfully added");
     }
 
     [HttpGet]
@@ -28,16 +40,6 @@ public class SuggestedNameController : ControllerBase
 
         return Ok(suggestname);
     }
-
-    [HttpPost]
-    [ProducesResponseType(typeof(SuggestedNameDto), 200)]
-    public async Task<IActionResult> Create([FromBody] CreateSuggestedNameDto request)
-    {
-        await _suggestedNameService
-                .CreateAsync(request.MapToEntity());
-
-        return StatusCode((int)HttpStatusCode.Created, "Suggested Name successfully added");
-    }
     
     [HttpGet]
     [ProducesResponseType(typeof(SuggestedNameDto[]), 200)]
@@ -47,22 +49,9 @@ public class SuggestedNameController : ControllerBase
         return Ok(data.MapToDtoCollection());
     }
 
-    [HttpGet]
-    [Route("id")]
-    [ProducesResponseType(typeof(SuggestedNameDto[]), 200)]
-    public async Task<IActionResult> Get(string id)
-    {
-        var data = await _suggestedNameService.GetAsync(id);
-
-        if(data == null)
-            return NotFound($"Suggested name with id: {id} not found");
-
-
-        return Ok(data.MapToDto());
-    }
-
     [HttpDelete]
-    [Route("id")]
+    [Authorize(Policy = "AdminAndProLexicographers")]
+    [Route("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
         var result = await _suggestedNameService.DeleteSuggestedNameAsync(id);

@@ -1,4 +1,4 @@
-﻿using Core.Entities.NameEntry.Collections;
+﻿using Core.Dto.Response;
 using Core.Repositories;
 
 namespace Application.Services
@@ -12,12 +12,12 @@ namespace Application.Services
             _nameEntryFeedbackRepository = nameEntryFeedbackRepository;
         }
 
-        public async Task<List<Feedback>> FindAllAsync()
+        public async Task<List<FeedbackDto>> FindAllAsync()
         {
             return await _nameEntryFeedbackRepository.FindAllAsync();
         }
 
-        public async Task<List<Feedback>> FindByNameAsync(string name)
+        public async Task<List<FeedbackDto>> FindByNameAsync(string name)
         {
             return await _nameEntryFeedbackRepository.FindByNameAsync(name);
         }
@@ -32,7 +32,7 @@ namespace Application.Services
             await _nameEntryFeedbackRepository.DeleteAllFeedbackForNameAsync(name);
         }
 
-        public async Task<Feedback> GetFeedbackByIdAsync(string feedbackId)
+        public async Task<FeedbackDto> GetFeedbackByIdAsync(string feedbackId)
         {
             return await _nameEntryFeedbackRepository.GetFeedbackByIdAsync(feedbackId);
         }
