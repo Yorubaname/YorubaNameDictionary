@@ -5,6 +5,11 @@
     /// </summary>
     public record GeoLocationDto(string Place, string Region)
     {
+
+        public override string ToString() 
+        {
+            return Place;
+        }
     }
 
 }

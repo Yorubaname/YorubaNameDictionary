@@ -1,4 +1,5 @@
 ﻿using Application.Services;
+using Core.Dto.Request;
 using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -22,10 +23,10 @@ namespace Api.Controllers
         /// An <see cref="GeoLocation[]"/> representing the response containing the list of <see cref="GeoLocation"/> objects.
         /// </returns>
         [HttpGet]
-        [ProducesResponseType(typeof(GeoLocation[]), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(GeoLocationDto[]), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ListGeoLocations()
         {
-            var result = await _geoLocationsService.GetAll();
+            var result = (await _geoLocationsService.GetAll()).Select(g => new GeoLocationDto(g.Place, g.Region));
             return Ok(result);
         }
     }
