@@ -1,4 +1,3 @@
-using Api;
 using Api.Utilities;
 using Application.Cache;
 using Application.Domain;
@@ -6,13 +5,13 @@ using Application.Events;
 using Application.Services;
 using Application.Validation;
 using Core.Cache;
+using Core.Enums;
 using Core.Events;
 using FluentValidation;
 using Infrastructure.MongoDB;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +22,15 @@ var services = builder.Services;
 
 services.AddAuthentication("BasicAuthentication")
     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
+// Configure policies
+services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole(Role.ADMIN.ToString()));
+    options.AddPolicy("AdminAndLexicographers", policy => policy.RequireRole(Role.ADMIN.ToString(), Role.PRO_LEXICOGRAPHER.ToString(), Role.BASIC_LEXICOGRAPHER.ToString()));
+    options.AddPolicy("AdminAndProLexicographers", policy => policy.RequireRole(Role.ADMIN.ToString(), Role.PRO_LEXICOGRAPHER.ToString()));
+});
+
 services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new CommaSeparatedStringConverter());

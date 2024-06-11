@@ -1,7 +1,6 @@
 ﻿using Core.Dto.Request;
 using Core.Dto.Response;
 using Core.Entities;
-using Core.Entities.NameEntry;
 using MongoDB.Bson;
 
 namespace Api.Mappers;
@@ -31,7 +30,6 @@ public static class SuggestedNamesControllerMapper
 
     public static SuggestedNameDto MapToDto(this SuggestedName request)
     {
-      
         return new SuggestedNameDto
         {
             Id = request.Id,
