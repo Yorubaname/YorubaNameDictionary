@@ -10,7 +10,6 @@ using Core.Events;
 using FluentValidation;
 using Infrastructure.MongoDB;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 
