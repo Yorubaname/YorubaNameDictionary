@@ -79,7 +79,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         return deleteResult.DeletedCount > 0;
     }
 
-    // TODO Hafiz: This is pulling too much data. We should eventually get rid of it.
+    // TODO Hafiz (Later): This is pulling too much data. We should eventually get rid of it.
     public async Task<HashSet<NameEntry>> ListAll()
     {
         var allEntries = await _nameEntryCollection.Find(_ => true).ToListAsync();
@@ -199,19 +199,29 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         return (int)count;
     }
 
-    public async Task<List<NameEntry>> List(int pageNumber, int pageSize, Expression<Func<NameEntry, bool>>? filter = null)
+    public async Task<List<NameEntry>> List(int? pageNumber, int? pageSize, State? state, string? submittedBy)
     {
-        var skipCount = (pageNumber - 1) * pageSize;
-        var sort = Builders<NameEntry>.Sort.Ascending(ne => ne.Id);
-        var query = _nameEntryCollection.Find(filter);
+        var filterBuilder = Builders<NameEntry>.Filter;
+        var filter = filterBuilder.Empty;
 
-        var pagedEntries = await query
-            .Sort(sort)
-            .Skip(skipCount)
-            .Limit(pageSize)
-            .ToListAsync();
+        if (state.HasValue)
+        {
+            filter &= filterBuilder.Eq(ne => ne.State, state.Value);
+        }
 
-        return pagedEntries;
+        if (!string.IsNullOrWhiteSpace(submittedBy))
+        {
+            filter &= filterBuilder.Eq(ne => ne.CreatedBy, submittedBy.Trim());
+        }
+
+        int? skip = (pageNumber.HasValue && pageSize.HasValue) ? (pageNumber.Value - 1) * pageSize.Value : null;
+        var names = await _nameEntryCollection
+                            .Find(filter)
+                            .Skip(skip)
+                            .Limit(pageSize)
+                            .Sort(Builders<NameEntry>.Sort.Ascending(ne => ne.Id))
+                            .ToListAsync();
+        return names;
     }
 
     public async Task<NamesMetadataDto> GetMetadata()

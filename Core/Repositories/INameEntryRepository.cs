@@ -12,7 +12,7 @@ namespace Core.Repositories
         Task Create(List<NameEntry> newName);
         Task<bool> DeleteAll();
 
-        // TODO: This method should not be accessible. Too heavy on the DB
+        // TODO Later: This method should not be accessible. Too heavy on the DB
         Task<HashSet<NameEntry>> ListAll();
 
         Task<NameEntry?> FindByName(string name);
@@ -46,7 +46,7 @@ namespace Core.Repositories
 
         Task<int> CountWhere(Expression<Func<NameEntry, bool>> filter);
 
-        Task<List<NameEntry>> List(int pageNumber, int pageSize, Expression<Func<NameEntry, bool>>? filter = null);
+        Task<List<NameEntry>> List(int? pageNumber, int? pageSize, State? state, string? submittedBy);
 
         Task<NamesMetadataDto> GetMetadata();
     }

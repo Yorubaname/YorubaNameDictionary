@@ -28,7 +28,7 @@ namespace Api.Mappers
                 State = request.State ?? State.NEW,
                 Etymology = request.Etymology.Select(et => new Etymology(et.Part, et.Meaning)).ToList(),
                 Videos = request.Videos.Select(ev => new EmbeddedVideo(ev.VideoId, ev.Caption)).ToList(),
-                // TODO: Add validation for these values to ensure illegal values are not entered
+                // TODO Later: Add validation for these values to ensure illegal values are not entered
                 GeoLocation = request.GeoLocation.Select(ge => new GeoLocation(ge.Place, ge.Region)).ToList(),
                 FamousPeople = request.FamousPeople ?? new List<string>(),
                 Syllables = request.Syllables ?? new List<string>(),

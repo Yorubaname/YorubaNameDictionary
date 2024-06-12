@@ -52,8 +52,6 @@ namespace Application.Migrator
             
         }
         
-
-        //TODO handle more 1 to many mappings i.e  duplicates, feedback, embedded video
         public string MigrateNameEntry()
         {
             using var connection = new MySqlConnection(GetSQLConnectionString());

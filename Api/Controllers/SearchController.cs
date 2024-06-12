@@ -98,7 +98,6 @@ namespace Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetRecentStatsByActivity([FromQuery(Name = "q")] string? activityType = null)
         {
-            // TODO Hafiz: Test that the action is executed when there is no "q" parameter
             if (string.IsNullOrEmpty(activityType))
             {
                 return RedirectToAction(nameof(GetRecentStats));
@@ -171,9 +170,10 @@ namespace Api.Controllers
         {
             var entriesToIndex = new HashSet<NameEntry>();
 
+
+            // TODO Later: Optimize by fetching all names in one database call instead of one-by-one.
             foreach (var name in names)
             {
-                // TODO Hafiz (Future improvements): Would be better as a bulk load.
                 var entry = await _nameEntryService.LoadName(name);
                 if (entry != null && entry.State != State.PUBLISHED)
                 {
@@ -188,7 +188,7 @@ namespace Api.Controllers
 
             foreach (var nameEntry in entriesToIndex)
             {
-                // TODO Hafiz: This should be transactional or in a batch but this would do for now since frequent use is not anticipated.
+                // TODO Later: The names should be updated in one batch instead of one-by-one.
                 await _nameEntryService.PublishName(nameEntry);
             }
 
