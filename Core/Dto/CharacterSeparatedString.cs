@@ -28,7 +28,7 @@
             return charSeparatedString.value
                 .Split(charSeparatedString.SeparatorIn)
                 .Select(item => item.Trim())
-                .Where(item => item != null)
+                .Where(item => !string.IsNullOrEmpty(item))
                 .ToList();
         }
     }

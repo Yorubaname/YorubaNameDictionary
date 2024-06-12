@@ -19,7 +19,7 @@ namespace Core.Dto.Request
 
         public HyphenSeparatedString Syllables { get; set; }
 
-        public CommaSeparatedString Variants { get; set; }
+        public CommaSeparatedString? Variants { get; set; }
 
         public CommaSeparatedString? Morphology { get; set; }
 
