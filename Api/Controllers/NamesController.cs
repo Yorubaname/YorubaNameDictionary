@@ -16,6 +16,9 @@ namespace Api.Controllers
     [Authorize(Policy = "AdminAndLexicographers")]
     public class NamesController : ControllerBase
     {
+        private const int DefaultPage = 1;
+        private const int DefaultListCount = 50;
+        private const int MaxListCount = 100; //TODO: Make configurable
         private readonly NameEntryService _nameEntryService;
 
         public NamesController(NameEntryService entryService)
@@ -82,30 +85,18 @@ namespace Api.Controllers
         [FromQuery] string? submittedBy,
         [FromQuery] State? state)
         {
-            List<NameEntry>? names = null;
-
-            // TODO: Move logic into application layer
             if (all.HasValue && all.Value)
             {
-                if (state.HasValue)
-                {
-                    names = await _nameEntryService.FindBy(state.Value);
-                }
-                else
-                {
-                    names = await _nameEntryService.ListNames();
-                }
+                page = null;
+                count = null;
             }
-            else if (state != null)
+            else
             {
-                names = await _nameEntryService.FindBy(state.Value, page, count);
+                page ??= DefaultPage;
+                count = Math.Min(count ?? DefaultListCount, MaxListCount);
             }
 
-            // TODO Minor: Do this filtering at database level to reduce waste of I/O
-            names = names == null ? new List<NameEntry>() : names
-                .Where(n => string.IsNullOrWhiteSpace(submittedBy) || n.CreatedBy.Equals(submittedBy.Trim(), StringComparison.OrdinalIgnoreCase))
-                .ToList();
-
+            var names = await _nameEntryService.FindBy(state, page, count, submittedBy);
             return Ok(names.MapToDtoCollection());
         }
 
@@ -144,7 +135,6 @@ namespace Api.Controllers
         [HttpPut("{name}")]
         public async Task<IActionResult> UpdateName(string name, [FromBody] UpdateNameDto updated)
         {
-            // TODO: Ensure that before connecting the dashboard to this endpoint, it follows the new update paradigm of only one active edit at a time
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -157,7 +147,6 @@ namespace Api.Controllers
                 return NotFound($"{name} not in database");
             }
 
-            // TODO: Ensure possible errors from calling UpdateName are handled in the global exception handling middleware
             _ = await _nameEntryService.UpdateName(oldNameEntry, updated.MapToEntity());
             return Ok(new { Message = "Name successfully updated" });
         }
@@ -179,21 +168,21 @@ namespace Api.Controllers
 
         [HttpDelete("batch")]
         [Authorize(Policy = "AdminOnly")]
-        public async Task<IActionResult> DeleteNamesBatch(string[]names)
+        public async Task<IActionResult> DeleteNamesBatch(string[] names)
         {
 
-            var foundNames = (await _nameEntryService.LoadNames(names))?.Select(f=>f.Name)?.ToArray();
+            var foundNames = (await _nameEntryService.LoadNames(names))?.Select(f => f.Name)?.ToArray();
 
-            if(foundNames is null || foundNames.Length ==0)
+            if (foundNames is null || foundNames.Length == 0)
             {
                 return BadRequest("No deletion as none of the names were found in the database");
             }
 
-            var notFoundNames = names.Where(d=> !foundNames.Contains(d)).ToList();
+            var notFoundNames = names.Where(d => !foundNames.Contains(d)).ToList();
 
             await _nameEntryService.DeleteNamesBatch(foundNames);
 
-            string responseMessage = string.Join(", ",foundNames) + " deleted";
+            string responseMessage = string.Join(", ", foundNames) + " deleted";
             if (notFoundNames.Any())
             {
                 responseMessage += Environment.NewLine + string.Join(", ", notFoundNames) + " not deleted as they were not found in the database";

@@ -98,7 +98,6 @@ namespace Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetRecentStatsByActivity([FromQuery(Name = "q")] string? activityType = null)
         {
-            // TODO Hafiz: Test that the action is executed when there is no "q" parameter
             if (string.IsNullOrEmpty(activityType))
             {
                 return RedirectToAction(nameof(GetRecentStats));

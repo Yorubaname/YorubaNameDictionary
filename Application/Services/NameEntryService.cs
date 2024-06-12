@@ -9,10 +9,6 @@ namespace Application.Domain
 {
     public class NameEntryService
     {
-        private const int DefaultPage = 1;
-        private const int DefaultListCount = 50;
-        private const int MaxListCount = 100; //TODO: Make configurable
-
         private readonly INameEntryRepository _nameEntryRepository;
         private readonly IEventPubService _eventPubService;
 
@@ -162,14 +158,6 @@ namespace Application.Domain
             return updatedNames;
         }
 
-        public async Task<List<NameEntry>> ListNames(int? pageNumber, int? count)
-        {
-            pageNumber ??= DefaultPage;
-            count = Math.Min(count ?? DefaultListCount, MaxListCount);
-
-            return await _nameEntryRepository.List(pageNumber.Value, count.Value);
-        }
-
         public async Task<List<NameEntry>> ListNames()
         {
             var result = await _nameEntryRepository.ListAll();
@@ -192,11 +180,9 @@ namespace Application.Domain
             return variantCount > 0;
         }
 
-        public async Task<List<NameEntry>> FindBy(State state, int? pageNumber, int? count)
+        public async Task<List<NameEntry>> FindBy(State? state, int? pageNumber, int? pageSize, string? submittedBy)
         {
-            pageNumber ??= DefaultPage;
-            count = Math.Min(count ?? DefaultListCount, MaxListCount);
-            return await _nameEntryRepository.List(pageNumber.Value, count.Value, ne => ne.State == state);
+            return await _nameEntryRepository.List(pageNumber, pageSize, state, submittedBy);
         }
 
         public async Task<NameEntry?> LoadName(string name)
