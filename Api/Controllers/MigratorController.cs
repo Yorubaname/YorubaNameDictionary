@@ -1,6 +1,5 @@
 ﻿using Application.Migrator;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
 
 namespace Api.Controllers
 {
@@ -8,15 +7,15 @@ namespace Api.Controllers
     [ApiController]
     public class MigratorController : Controller
     {
-        private readonly SqlToMongoMigrator _sQLToMongoMigrator;
-        public MigratorController(SqlToMongoMigrator sQLToMongoMigrator)
+        private readonly SqlToMongoMigrator _sqlToMongoMigrator;
+        public MigratorController(SqlToMongoMigrator sqlToMongoMigrator)
         {
-            _sQLToMongoMigrator = sQLToMongoMigrator;
+            _sqlToMongoMigrator = sqlToMongoMigrator;
         }
         [HttpGet("MigrateGeoLocation")]
         public IActionResult MigrateGeoLocation()
         {
-           string result = _sQLToMongoMigrator.MigrateGeolocation();
+           string result = _sqlToMongoMigrator.MigrateGeolocation();
            return Ok(result);
           
         }
@@ -24,7 +23,7 @@ namespace Api.Controllers
         [HttpGet("MigrateNameEntry")]
         public IActionResult MigrateNameEntry()
         {
-            string result = _sQLToMongoMigrator.MigrateNameEntry();
+            string result = _sqlToMongoMigrator.MigrateNameEntry();
             return Ok(result);
 
         }
@@ -32,11 +31,9 @@ namespace Api.Controllers
         [HttpGet("MigrateSuggestedNames")]
         public IActionResult MigrateSuggestedNames()
         {
-            string result = _sQLToMongoMigrator.MigrateSuggestedNames();
+            string result = _sqlToMongoMigrator.MigrateSuggestedNames();
             return Ok(result);
 
         }
-
-        
     }
 }
