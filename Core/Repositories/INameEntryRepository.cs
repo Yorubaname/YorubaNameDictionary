@@ -12,7 +12,7 @@ namespace Core.Repositories
         Task Create(List<NameEntry> newName);
         Task<bool> DeleteAll();
 
-        // TODO: This method should not be accessible. Too heavy on the DB
+        // TODO Later: This method should not be accessible. Too heavy on the DB
         Task<HashSet<NameEntry>> ListAll();
 
         Task<NameEntry?> FindByName(string name);

@@ -170,9 +170,10 @@ namespace Api.Controllers
         {
             var entriesToIndex = new HashSet<NameEntry>();
 
+
+            // TODO Later: Optimize by fetching all names in one database call instead of one-by-one.
             foreach (var name in names)
             {
-                // TODO Hafiz (Future improvements): Would be better as a bulk load.
                 var entry = await _nameEntryService.LoadName(name);
                 if (entry != null && entry.State != State.PUBLISHED)
                 {
@@ -187,7 +188,7 @@ namespace Api.Controllers
 
             foreach (var nameEntry in entriesToIndex)
             {
-                // TODO Later: The names should be updated in one batch.
+                // TODO Later: The names should be updated in one batch instead of one-by-one.
                 await _nameEntryService.PublishName(nameEntry);
             }
 

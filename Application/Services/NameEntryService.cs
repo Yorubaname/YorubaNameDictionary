@@ -48,7 +48,7 @@ namespace Application.Domain
             foreach (var entry in entries)
             {
                 await Create(entry);
-                // TODO: Ensure that removing batched writes to database here will not cause problems
+                // TODO Later: Ensure that removing batched writes to database here will not cause problems
             }
         }
 
@@ -70,7 +70,7 @@ namespace Application.Domain
             foreach (var entry in entries)
             {
                 savedNames.Add(await CreateOrUpdateName(entry));
-                // TODO Hafiz: Ensure that removing batched writes to database here will not cause problems
+                // TODO Later: Ensure that removing batched writes to database here will not cause problems
             }
             return savedNames;
         }
@@ -110,7 +110,7 @@ namespace Application.Domain
             nameEntry.State = State.PUBLISHED;
             await _nameEntryRepository.Update(originalName, nameEntry);
 
-            // TODO Hafiz: An ideal implementation would have below operation in a transaction with the above update.
+            // TODO Later: Use the outbox pattern to enforce event publishing after the DB update (https://www.youtube.com/watch?v=032SfEBFIJs&t=913s).
             await _eventPubService.PublishEvent(new NameIndexed(nameEntry.Name));
         }
 
@@ -140,9 +140,10 @@ namespace Application.Domain
         public async Task<List<NameEntry>> BulkUpdateNames(List<NameEntry> nameEntries)
         {
             var updatedNames = new List<NameEntry>();
+
+            // TODO Later: Update all names in one batch
             foreach (var nameEntry in nameEntries)
             {
-                // TODO: Cater for possible exception
                 var updated = await UpdateNameWithUnpublish(nameEntry);
 
                 if (updated != null)
@@ -153,7 +154,6 @@ namespace Application.Domain
                 {
                     await _eventPubService.PublishEvent(new NonExistingNameUpdateAttempted(nameEntry.Name));
                 }
-                // TODO: Ensure that removing batched writes to database here will not cause problems
             }
             return updatedNames;
         }

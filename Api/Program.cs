@@ -84,7 +84,6 @@ services.AddScoped<SearchService>();
 services.AddScoped<SuggestedNameService>();
 services.AddScoped<UserService>();
 services.AddScoped<SqlToMongoMigrator>();
-// TODO Hafiz: I foresee having problems with using scoped services in a singleton here. When I get there, I will cross the bridge.
 services.AddSingleton<IRecentIndexesCache, RecentIndexesCache>();
 services.AddSingleton<IRecentSearchesCache, RecentSearchesCache>();
 services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
