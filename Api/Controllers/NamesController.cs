@@ -6,6 +6,7 @@ using Core.Dto.Request;
 using Core.Dto.Response;
 using Core.Entities.NameEntry;
 using Core.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -13,6 +14,7 @@ namespace Api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+    [Authorize(Policy = "AdminAndLexicographers")]
     public class NamesController : ControllerBase
     {
         private readonly NameEntryService _nameEntryService;
@@ -54,6 +56,7 @@ namespace Api.Controllers
         /// <returns></returns>
         [HttpGet("meta")]
         [ProducesResponseType(typeof(NamesMetadataDto[]), (int)HttpStatusCode.OK)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetMetaData()
         {
             var metaData = await _nameEntryService.GetMetadata();
@@ -72,6 +75,7 @@ namespace Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(NameEntryDto[]), (int)HttpStatusCode.OK)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllNames(
         [FromQuery] int? page,
         [FromQuery] int? count,
@@ -113,6 +117,7 @@ namespace Api.Controllers
         /// <returns></returns>
         [HttpGet("{name}")]
         [ProducesResponseType(typeof(NameEntryDto), (int)HttpStatusCode.OK)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetName([FromRoute] string name)
         {
             var nameEntry = await _nameEntryService.LoadName(name);
@@ -159,6 +164,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{name}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> DeleteName(string name)
         {
             var nameEntry = await _nameEntryService.LoadName(name);
@@ -173,6 +179,7 @@ namespace Api.Controllers
 
 
         [HttpDelete("batch")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> DeleteNamesBatch(string[]names)
         {
 
