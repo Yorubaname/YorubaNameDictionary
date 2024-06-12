@@ -1,4 +1,6 @@
 namespace Api;
 
-// TODO Hafiz: Ask Dami to add some documentation for this class.
+/// <summary>
+/// Used solely as a pointer to the containing API assembly.
+/// </summary>
 public interface IApiMarker { }

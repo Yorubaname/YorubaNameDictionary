@@ -187,7 +187,7 @@ namespace Api.Controllers
 
             foreach (var nameEntry in entriesToIndex)
             {
-                // TODO Hafiz: This should be transactional or in a batch but this would do for now since frequent use is not anticipated.
+                // TODO Later: The names should be updated in one batch.
                 await _nameEntryService.PublishName(nameEntry);
             }
 

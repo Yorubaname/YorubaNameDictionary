@@ -67,8 +67,6 @@ public class NameEntry : BaseEntity, IComparable<NameEntry>
         InitializeLists();
     }
 
-    // TODO: Intentionally removed update method
-
     public int CompareTo(NameEntry? other)
     {
         return Name.CompareTo(other?.Name);

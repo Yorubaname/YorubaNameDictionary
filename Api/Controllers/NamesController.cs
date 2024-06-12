@@ -3,7 +3,6 @@ using Api.Model.In;
 using Application.Domain;
 using Core.Dto.Request;
 using Core.Dto.Response;
-using Core.Entities.NameEntry;
 using Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +17,7 @@ namespace Api.Controllers
     {
         private const int DefaultPage = 1;
         private const int DefaultListCount = 50;
-        private const int MaxListCount = 100; //TODO: Make configurable
+        private const int MaxListCount = 100; //TODO Later: Make configurable
         private readonly NameEntryService _nameEntryService;
 
         public NamesController(NameEntryService entryService)

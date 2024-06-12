@@ -18,7 +18,6 @@ namespace Application.Services
         {
             var searchTerms = new List<string>();
 
-            // TODO: Calling the db in a for loop might not be a terribly good idea. Revisit
             for (int i = 2; i <= query.Length; i++)
             {
                 searchTerms.Add(query.Substring(0, i));
