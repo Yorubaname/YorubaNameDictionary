@@ -1,5 +1,4 @@
-﻿using Amazon.Runtime;
-using Api.Mappers;
+﻿using Api.Mappers;
 using Api.Model.In;
 using Application.Domain;
 using Core.Dto.Request;

@@ -1,15 +1,13 @@
-﻿using Amazon.Runtime.Internal.Transform;
-using Api.Mappers;
+﻿using Api.Mappers;
 using Api.Utilities;
-using Application.Cache;
 using Application.Domain;
-using Application.Events;
 using Application.Services;
 using Core.Cache;
 using Core.Dto.Response;
 using Core.Entities.NameEntry;
 using Core.Enums;
 using Core.Events;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -143,6 +141,7 @@ namespace Api.Controllers
         /// <returns></returns>
         [HttpPost("indexes/{name}")]
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
+        [Authorize(Policy = "AdminAndProLexicographers")]
         public async Task<IActionResult> PublishName([FromRoute] string name)
         {
             var nameEntry = await _nameEntryService.LoadName(name);
@@ -167,6 +166,7 @@ namespace Api.Controllers
         /// <returns></returns>
         [HttpPost("indexes/batch")]
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
+        [Authorize(Policy = "AdminAndProLexicographers")]
         public async Task<IActionResult> PublishNames([FromBody] string[] names)
         {
             var entriesToIndex = new HashSet<NameEntry>();
@@ -202,6 +202,7 @@ namespace Api.Controllers
         /// <returns></returns>
         [HttpDelete("indexes/{name}")]
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.OK)]
+        [Authorize(Policy = "AdminAndProLexicographers")]
         public async Task<IActionResult> UnpublishName([FromRoute] string name)
         {
             var entry = await _nameEntryService.FindByNameAndState(name, State.PUBLISHED);
@@ -226,6 +227,7 @@ namespace Api.Controllers
         /// <returns></returns>
         [HttpDelete("indexes/batch")]
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.OK)]
+        [Authorize(Policy = "AdminAndProLexicographers")]
         public async Task<IActionResult> UnpublishNames([FromBody] string[] names)
         {
             List<string> notFoundNames = new(), unpublishedNames = new();

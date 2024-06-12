@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Core.Dto.Request
+﻿namespace Core.Dto.Request
 {
     /// <summary>
     /// TODO: Add field validations
