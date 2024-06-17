@@ -12,9 +12,7 @@ namespace Core.Repositories
         Task<List<GeoLocation>> GetAll();
 
         Task<GeoLocation> FindByPlace(string place);
-<<<<<<< HEAD
+
         Task<GeoLocation> FindByRegion(string region);
-=======
->>>>>>> b5e889cfd7992c57908bab3da26b61d5aaea9a52
     }
 }
