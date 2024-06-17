@@ -1,5 +1,4 @@
 ﻿using Core.Dto.Request;
-using Core.Repositories;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -11,11 +10,9 @@ namespace Application.Validation
 {
     public class GeoLocationValidator : AbstractValidator<GeoLocationDto>
     {
-        private readonly IGeoLocationsRepository _geoLocationsRepository;
-        public bool place;
-        public bool region;
-        public GeoLocationValidator(IGeoLocationsRepository geoLocationsRepository)
+        public GeoLocationValidator()
         {
+<<<<<<< HEAD
             _geoLocationsRepository = geoLocationsRepository;
 
             RuleFor(x => x).MustAsync(async (x, cancellation) =>
@@ -54,6 +51,11 @@ namespace Application.Validation
                 }
                 return "One or more GeoLocations are not valid.";
             });
+=======
+           RuleFor(x => x)
+                .Must(x => !(string.IsNullOrEmpty(x.Place) || string.IsNullOrEmpty(x.Region)))
+                .WithMessage("At least one of Place or Region must be provided");
+>>>>>>> b5e889cfd7992c57908bab3da26b61d5aaea9a52
         }
     }
 }
