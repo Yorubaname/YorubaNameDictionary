@@ -1,10 +1,8 @@
 ﻿using Api.Model.Request;
-using Api.Utilities;
 using Application.Domain;
 using Application.Services;
 using Core.Dto.Response;
 using Core.Entities.NameEntry.Collections;
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -20,6 +18,7 @@ namespace Api.Controllers
         private readonly NameEntryFeedbackService _nameEntryFeedbackService;
 
         private readonly NameEntryService _nameEntryService;
+
         public FeedbacksController(NameEntryFeedbackService nameEntryFeedbackService, NameEntryService nameEntryService)
         {
             _nameEntryFeedbackService = nameEntryFeedbackService;
@@ -65,12 +64,6 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> Create([FromBody] CreateNameFeedbackDto model)
         {
-            //var result = await _createNameFeedbackValidator.ValidateAsync(model);
-            //if (!result.IsValid)
-            //{
-            //    result.AddToModelState(ModelState);
-            //    return BadRequest();
-            //}
             var nameEntry = await _nameEntryService.LoadName(model.Name);
 
             if (nameEntry == null)

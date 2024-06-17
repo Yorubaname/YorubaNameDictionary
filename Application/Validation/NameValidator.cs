@@ -11,7 +11,7 @@ namespace Application.Validation
 {
     public class NameValidator : AbstractValidator<NameDto>
     {
-        public NameValidator(GeoLocationValidator geoLocationValidator)
+        public NameValidator()
         {
             RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required.");
@@ -26,7 +26,7 @@ namespace Application.Validation
                 .SetValidator(new EmbeddedVideoValidator());
 
             RuleForEach(x => x.GeoLocation)
-                .SetValidator(geoLocationValidator);
+                .SetValidator(new GeoLocationValidator());
 
             RuleFor(x => x.FamousPeople)
                 .NotNull().WithMessage("FamousPeople is required")
