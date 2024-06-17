@@ -11,7 +11,7 @@ namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-  //  [Authorize(Policy = "AdminAndLexicographers")]
+    [Authorize(Policy = "AdminAndLexicographers")]
     public class AuthController : ControllerBase
     {
         private readonly UserService _userService;
@@ -44,7 +44,7 @@ namespace Api.Controllers
 
         [HttpPost("create")]
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
-      //  [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Create([FromBody] CreateUserDto createUserDto)
         {
             var result = await _userValidator.ValidateAsync(createUserDto);

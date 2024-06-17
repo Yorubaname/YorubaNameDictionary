@@ -65,12 +65,6 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> Create([FromBody] CreateNameFeedbackDto model)
         {
-            //var result = await _createNameFeedbackValidator.ValidateAsync(model);
-            //if (!result.IsValid)
-            //{
-            //    result.AddToModelState(ModelState);
-            //    return BadRequest();
-            //}
             var nameEntry = await _nameEntryService.LoadName(model.Name);
 
             if (nameEntry == null)

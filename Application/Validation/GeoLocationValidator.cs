@@ -18,25 +18,19 @@ namespace Application.Validation
         {
             _geoLocationsRepository = geoLocationsRepository;
 
-            RuleFor(x => x)
-                 .Must(x => !(string.IsNullOrEmpty(x.Place) || string.IsNullOrEmpty(x.Region)))
-                 .WithMessage("At least one of Place or Region must be provided");
-
             RuleFor(x => x).MustAsync(async (x, cancellation) =>
             {
-                var placeExists = !string.IsNullOrEmpty(x.Place) 
+                var placeExists = !string.IsNullOrEmpty(x.Place)
                                  && await _geoLocationsRepository.FindByPlace(x.Place.ToUpper()) != null;
-                var regionExists = !string.IsNullOrEmpty(x.Region) 
+                var regionExists = !string.IsNullOrEmpty(x.Region)
                                    && await _geoLocationsRepository.FindByRegion(x.Region.ToUpper()) != null;
                 place = placeExists;
                 region = regionExists;
-
                 if (!string.IsNullOrWhiteSpace(x.Place) && !string.IsNullOrWhiteSpace(x.Region))
                 {
                     return placeExists && regionExists;
                 }
                 return placeExists || regionExists;
-
             }).WithMessage((x, validationResult) =>
             {
                 if (!string.IsNullOrEmpty(x.Place) && !string.IsNullOrEmpty(x.Region))
@@ -63,3 +57,4 @@ namespace Application.Validation
         }
     }
 }
+
