@@ -1,4 +1,5 @@
 ﻿using Core.Dto.Request;
+using Core.Repositories;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,55 @@ namespace Application.Validation
 {
     public class GeoLocationValidator : AbstractValidator<GeoLocationDto>
     {
-        public GeoLocationValidator()
+        private readonly IGeoLocationsRepository _geoLocationsRepository;
+        public bool place;
+        public bool region;
+        public GeoLocationValidator(IGeoLocationsRepository geoLocationsRepository)
         {
-           RuleFor(x => x)
-                .Must(x => !(string.IsNullOrEmpty(x.Place) || string.IsNullOrEmpty(x.Region)))
-                .WithMessage("At least one of Place or Region must be provided");
+            _geoLocationsRepository = geoLocationsRepository;
+
+            RuleFor(x => x)
+                 .Must(x => !(string.IsNullOrEmpty(x.Place) || string.IsNullOrEmpty(x.Region)))
+                 .WithMessage("At least one of Place or Region must be provided");
+
+            RuleFor(x => x).MustAsync(async (x, cancellation) =>
+            {
+                var placeExists = !string.IsNullOrEmpty(x.Place) 
+                                 && await _geoLocationsRepository.FindByPlace(x.Place.ToUpper()) != null;
+                var regionExists = !string.IsNullOrEmpty(x.Region) 
+                                   && await _geoLocationsRepository.FindByRegion(x.Region.ToUpper()) != null;
+                place = placeExists;
+                region = regionExists;
+
+                if (!string.IsNullOrWhiteSpace(x.Place) && !string.IsNullOrWhiteSpace(x.Region))
+                {
+                    return placeExists && regionExists;
+                }
+                return placeExists || regionExists;
+
+            }).WithMessage((x, validationResult) =>
+            {
+                if (!string.IsNullOrEmpty(x.Place) && !string.IsNullOrEmpty(x.Region))
+                {
+                    if (!place && !region)
+                    {
+                        return $"Place '{x.Place}' and Region '{x.Region}' are not valid.";
+                    }
+                    else if (!place)
+                    {
+                        return $"Place '{x.Place}' is not valid.";
+                    }
+                    else if (!region)
+                    {
+                        return $"Region '{x.Region}' is not valid.";
+                    }
+                }
+                else if (!place && !region)
+                {
+                    return "At least one of Place or Region must be provided.";
+                }
+                return "One or more GeoLocations are not valid.";
+            });
         }
     }
 }
