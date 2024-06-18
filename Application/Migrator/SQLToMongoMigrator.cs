@@ -1,24 +1,13 @@
-﻿using Amazon.Runtime.Internal.Transform;
-using Application.Migrator.MigrationDTOs.cs;
-using Application.Services;
+﻿using Application.Migrator.MigrationDTOs.cs;
 using Core.Entities;
 using Core.Entities.NameEntry;
 using Core.Entities.NameEntry.Collections;
 using Core.Enums;
 using Dapper;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MySqlConnector;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Intrinsics.Arm;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Migrator
 {
@@ -27,6 +16,7 @@ namespace Application.Migrator
         private readonly IMongoCollection<GeoLocation> _geolocationCollection;
         private readonly IMongoCollection<NameEntry> _nameEntryCollection;
         private readonly IMongoCollection<SuggestedName> _suggestedNameEntryCollection;
+        private readonly IMongoCollection<User> _userCollection;
         private readonly IConfiguration _configuration;
         public SqlToMongoMigrator(IMongoDatabase mongoDatabase, IConfiguration configuration)
         {
@@ -34,6 +24,7 @@ namespace Application.Migrator
             _geolocationCollection = mongoDatabase.GetCollection<GeoLocation>("GeoLocations");
             _nameEntryCollection = mongoDatabase.GetCollection<NameEntry>("NameEntries");
             _suggestedNameEntryCollection = mongoDatabase.GetCollection<SuggestedName>("SuggestedNames");
+            _userCollection = mongoDatabase.GetCollection<User>("Users");
         }
         public string MigrateGeolocation()
         {
@@ -147,6 +138,30 @@ namespace Application.Migrator
 
         }
 
+
+        public string MigrateUsers()
+        {
+            using var connection = new MySqlConnection(GetSQLConnectionString());
+
+            var user = connection.Query<users>("select email, password, roles, username from api_user");
+
+            if (user == null) return "No data found for users";
+
+            List<User> usersToMigrate = user.Select(s => new User()
+            {
+                Id = ObjectId.GenerateNewId().ToString(),
+                Email = s.email,
+                Username = s.username,
+                Password = s.password,
+                Roles = s.roles.Split(",").Select(d=>d.Trim().Substring(5, d.Trim().Length - 5)).ToList()
+            }).ToList();
+
+            _userCollection.DeleteMany(FilterDefinition<User>.Empty);
+            _userCollection.InsertMany(usersToMigrate);
+
+            return $"{usersToMigrate.Count} users records inserted into MongoDB successfully.";
+
+        }
 
         private State GetPublishState(string input)
         {
