@@ -13,6 +13,6 @@ namespace Core.Repositories
 
         Task<GeoLocation> FindByPlace(string place);
 
-        Task<GeoLocation> FindByRegion(string region);
+        Task<GeoLocation> FindByPlaceAndRegion(string region, string place);
     }
 }

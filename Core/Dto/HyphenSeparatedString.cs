@@ -8,5 +8,7 @@ namespace Core.Dto
             SeparatorIn = '-';
             SeparatorOut = "-";
         }
+
+        
     }
 }

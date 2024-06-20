@@ -31,10 +31,5 @@
                 .Where(item => !string.IsNullOrEmpty(item))
                 .ToList();
         }
-
-        public char GetSeparatorIn()
-        {
-            return SeparatorIn;
-        }
     }
 }

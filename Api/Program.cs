@@ -84,6 +84,8 @@ services.AddScoped<SearchService>();
 services.AddScoped<SuggestedNameService>();
 services.AddScoped<UserService>();
 services.AddScoped<GeoLocationValidator>();
+services.AddScoped<EmbeddedVideoValidator>();
+services.AddScoped<EtymologyValidator>();
 services.AddScoped<SqlToMongoMigrator>();
 services.AddSingleton<IRecentIndexesCache, RecentIndexesCache>();
 services.AddSingleton<IRecentSearchesCache, RecentSearchesCache>();

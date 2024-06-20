@@ -25,9 +25,12 @@ namespace Infrastructure.MongoDB.Repositories
             return await _geoLocationsCollection.Find(filter).SingleOrDefaultAsync();
         }
 
-        public async Task<GeoLocation> FindByRegion(string region)
+        public async Task<GeoLocation> FindByPlaceAndRegion(string region, string place)
         {
-            var filter = Builders<GeoLocation>.Filter.Eq("Region", region);
+            var filter = Builders<GeoLocation>.Filter.And(
+                Builders<GeoLocation>.Filter.Eq("Region", region.ToUpper()),
+                Builders<GeoLocation>.Filter.Eq("Place", place.ToUpper())
+                );
             return await _geoLocationsCollection.Find(filter).FirstOrDefaultAsync();
         }
 

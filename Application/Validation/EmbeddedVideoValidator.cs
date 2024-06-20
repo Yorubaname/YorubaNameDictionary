@@ -13,12 +13,10 @@ namespace Application.Validation
         public EmbeddedVideoValidator()
         {
             RuleFor(x => x.VideoId)
-                .NotEmpty().WithMessage("VideoId cannot be empty")
-                .NotNull().WithMessage("VideoId cannot be null");
+                .NotEmpty().WithMessage("VideoId cannot be empty");
 
             RuleFor(x => x.Caption)
-                .NotEmpty().WithMessage("Caption cannot be empty")
-                .NotNull().WithMessage("Caption cannot be null");
+                .NotEmpty().WithMessage("Caption cannot be empty");
         }
     }
 }
