@@ -6,7 +6,7 @@ namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "AdminOnly")]
+    //[Authorize(Policy = "AdminOnly")]
     public class MigratorController : Controller
     {
         private readonly SqlToMongoMigrator _sqlToMongoMigrator;
@@ -36,5 +36,14 @@ namespace Api.Controllers
             string result = _sqlToMongoMigrator.MigrateSuggestedNames();
             return Ok(result);
         }
+
+        [HttpGet("MigrateUsers")]
+        public IActionResult MigrateUsers()
+        {
+            string result = _sqlToMongoMigrator.MigrateUsers();
+            return Ok(result);
+        }
+
+        
     }
 }
