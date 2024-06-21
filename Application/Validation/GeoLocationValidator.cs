@@ -39,6 +39,4 @@ namespace Application.Validation
         }
     }
 
-
 }
-
