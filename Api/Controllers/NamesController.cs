@@ -1,9 +1,11 @@
 ﻿using Api.Mappers;
 using Api.Model.In;
+using Api.Utilities;
 using Application.Domain;
 using Core.Dto.Request;
 using Core.Dto.Response;
 using Core.Enums;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -19,10 +21,12 @@ namespace Api.Controllers
         private const int DefaultListCount = 50;
         private const int MaxListCount = 100; //TODO Later: Make configurable
         private readonly NameEntryService _nameEntryService;
+        private readonly IValidator<NameDto> _createNameValidator;
 
-        public NamesController(NameEntryService entryService)
+        public NamesController(NameEntryService entryService, IValidator<NameDto> createNameValidator)
         {
             _nameEntryService = entryService;
+            _createNameValidator = createNameValidator;
         }
 
         /// <summary>
@@ -35,8 +39,10 @@ namespace Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Post([FromBody] CreateNameDto request)
         {
-            if (!ModelState.IsValid)
+            var result = await _createNameValidator.ValidateAsync(request);
+            if (!result.IsValid)
             {
+                result.AddToModelState(ModelState);
                 return BadRequest(ModelState);
             }
             else
