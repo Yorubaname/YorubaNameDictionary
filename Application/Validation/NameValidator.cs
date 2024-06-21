@@ -11,7 +11,6 @@ namespace Application.Validation
 {
     public class NameValidator : AbstractValidator<NameDto>
     {
-
         public NameValidator(GeoLocationValidator geoLocationValidator, EmbeddedVideoValidator embeddedVideoValidator, EtymologyValidator etymologyValidator)
         {
             RuleFor(x => x.Name)
@@ -31,11 +30,11 @@ namespace Application.Validation
 
             RuleFor(x => x.FamousPeople)
                 .Must(BeAValidCommaSeparatedString).WithMessage("FamousPeople must be a valid comma-separated string.")
-                .When(x => x.FamousPeople != null && !string.IsNullOrWhiteSpace(x.FamousPeople.ToString())); ;
+                .When(x => x.FamousPeople != null && !string.IsNullOrWhiteSpace(x.FamousPeople.ToString()));
 
             RuleFor(x => x.Syllables)
                 .Must(BeAValidHyphenSeparatedString).WithMessage("Syllables must be a valid hyphen-separated string.")
-                .When(x => x.Syllables != null && !string.IsNullOrWhiteSpace(x.Syllables.ToString())); ;
+                .When(x => x.Syllables != null && !string.IsNullOrWhiteSpace(x.Syllables.ToString())); 
 
             RuleFor(x => x.SubmittedBy)
                 .NotEmpty().WithMessage("Submitted By is required.");
@@ -43,7 +42,7 @@ namespace Application.Validation
 
         private bool BeAValidCommaSeparatedString(CommaSeparatedString commaSeparatedString)
         {
-            if(commaSeparatedString == null)
+            if (commaSeparatedString == null)
             {
                 return false;
             }
@@ -58,8 +57,7 @@ namespace Application.Validation
                 return false;
 
             List<string> items = hyphenSeparatedString;
-            return items.All(item => !string.IsNullOrWhiteSpace(item));
+            return items.All(item => !string.IsNullOrWhiteSpace(item) && item.All(char.IsLetter));
         }
-
     }
 }

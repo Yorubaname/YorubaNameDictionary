@@ -12,6 +12,7 @@ namespace Application.Validation
     public class GeoLocationValidator : AbstractValidator<GeoLocationDto>
     {
         private readonly IGeoLocationsRepository _geoLocationsRepository;
+
         public GeoLocationValidator(IGeoLocationsRepository geoLocationsRepository)
         {
             _geoLocationsRepository = geoLocationsRepository;
@@ -38,6 +39,6 @@ namespace Application.Validation
         }
     }
 
-}
 
+}
 

@@ -31,7 +31,5 @@
                 .Where(item => !string.IsNullOrEmpty(item))
                 .ToList();
         }
-
-        
     }
 }
