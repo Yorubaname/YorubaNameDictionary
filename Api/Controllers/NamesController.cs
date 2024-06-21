@@ -14,7 +14,7 @@ namespace Api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-   // [Authorize(Policy = "AdminAndLexicographers")]
+    [Authorize(Policy = "AdminAndLexicographers")]
     public class NamesController : ControllerBase
     {
         private const int DefaultPage = 1;
