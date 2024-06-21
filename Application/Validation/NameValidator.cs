@@ -11,6 +11,7 @@ namespace Application.Validation
 {
     public class NameValidator : AbstractValidator<NameDto>
     {
+
         public NameValidator(GeoLocationValidator geoLocationValidator, EmbeddedVideoValidator embeddedVideoValidator, EtymologyValidator etymologyValidator)
         {
             RuleFor(x => x.Name)
