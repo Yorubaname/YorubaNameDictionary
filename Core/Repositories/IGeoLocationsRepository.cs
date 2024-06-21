@@ -12,6 +12,6 @@ namespace Core.Repositories
         Task<List<GeoLocation>> GetAll();
 
         Task<GeoLocation> FindByPlace(string place);
-        Task<GeoLocation> FindByRegion(string region);
+        Task<GeoLocation> FindByPlaceAndRegion(string region, string place);
     }
 }

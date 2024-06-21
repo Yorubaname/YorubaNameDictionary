@@ -32,9 +32,6 @@
                 .ToList();
         }
 
-        public char GetSeparatorIn()
-        {
-            return SeparatorIn;
-        }
+        
     }
 }

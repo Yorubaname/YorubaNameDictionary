@@ -1,10 +1,8 @@
 ﻿using Api.Model.Request;
-using Api.Utilities;
 using Application.Domain;
 using Application.Services;
 using Core.Dto.Response;
 using Core.Entities.NameEntry.Collections;
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -20,6 +18,7 @@ namespace Api.Controllers
         private readonly NameEntryFeedbackService _nameEntryFeedbackService;
 
         private readonly NameEntryService _nameEntryService;
+
         public FeedbacksController(NameEntryFeedbackService nameEntryFeedbackService, NameEntryService nameEntryService)
         {
             _nameEntryFeedbackService = nameEntryFeedbackService;

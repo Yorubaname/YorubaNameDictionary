@@ -11,7 +11,7 @@ namespace Application.Validation
 {
     public class NameValidator : AbstractValidator<NameDto>
     {
-        public NameValidator(GeoLocationValidator geoLocationValidator)
+        public NameValidator(GeoLocationValidator geoLocationValidator, EmbeddedVideoValidator embeddedVideoValidator, EtymologyValidator etymologyValidator)
         {
             RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required.");
@@ -20,21 +20,21 @@ namespace Application.Validation
                 .NotEmpty().WithMessage("Meaning is required.");
 
             RuleForEach(x => x.Etymology)
-                .SetValidator(new EtymologyValidator());
+                .SetValidator(etymologyValidator);
 
             RuleForEach(x => x.Videos)
-                .SetValidator(new EmbeddedVideoValidator());
+                .SetValidator(embeddedVideoValidator);
 
             RuleForEach(x => x.GeoLocation)
                 .SetValidator(geoLocationValidator);
 
             RuleFor(x => x.FamousPeople)
-                .NotNull().WithMessage("FamousPeople is required")
-                .Must(BeAValidCommaSeparatedString).WithMessage("FamousPeople must be a valid comma-separated string.");
+                .Must(BeAValidCommaSeparatedString).WithMessage("FamousPeople must be a valid comma-separated string.")
+                .When(x => x.FamousPeople != null && !string.IsNullOrWhiteSpace(x.FamousPeople.ToString())); ;
 
             RuleFor(x => x.Syllables)
-                .NotNull().WithMessage("Syllables is required.")
-                .Must(BeAValidHyphenSeparatedString).WithMessage("Syllables must be a valid hyphen-separated string.");
+                .Must(BeAValidHyphenSeparatedString).WithMessage("Syllables must be a valid hyphen-separated string.")
+                .When(x => x.Syllables != null && !string.IsNullOrWhiteSpace(x.Syllables.ToString())); ;
 
             RuleFor(x => x.SubmittedBy)
                 .NotEmpty().WithMessage("Submitted By is required.");
@@ -47,8 +47,7 @@ namespace Application.Validation
                 return false;
             }
 
-            var separator = commaSeparatedString.GetSeparatorIn();
-            var items = commaSeparatedString.ToString().Split(new[] {separator}, StringSplitOptions.None);
+            List<string> items = commaSeparatedString;
             return items.All(item => !string.IsNullOrWhiteSpace(item));
         }
 
@@ -57,8 +56,7 @@ namespace Application.Validation
             if (hyphenSeparatedString == null)
                 return false;
 
-            var separator = hyphenSeparatedString.GetSeparatorIn();
-            var items = hyphenSeparatedString.ToString().Split(new[] { separator }, StringSplitOptions.None);
+            List<string> items = hyphenSeparatedString;
             return items.All(item => !string.IsNullOrWhiteSpace(item));
         }
 
