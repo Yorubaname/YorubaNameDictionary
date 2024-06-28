@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
-    //[Authorize(Policy = "AdminOnly")]
+    [Authorize(Policy = "AdminOnly")]
     public class MigratorController : Controller
     {
         private readonly SqlToMongoMigrator _sqlToMongoMigrator;
@@ -19,8 +19,8 @@ namespace Api.Controllers
         [HttpGet("MigrateGeoLocation")]
         public IActionResult MigrateGeoLocation()
         {
-           string result = _sqlToMongoMigrator.MigrateGeolocation();
-           return Ok(result);
+            string result = _sqlToMongoMigrator.MigrateGeolocation();
+            return Ok(result);
         }
 
         [HttpGet("MigrateNameEntry")]
@@ -44,6 +44,6 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        
+
     }
 }

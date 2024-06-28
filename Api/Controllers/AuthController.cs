@@ -9,7 +9,7 @@ using System.Net;
 
 namespace Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize(Policy = "AdminAndLexicographers")]
     public class AuthController : ControllerBase
