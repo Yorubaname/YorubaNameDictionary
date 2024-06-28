@@ -1,4 +1,5 @@
 ﻿using Application.Migrator.MigrationDTOs.cs;
+using Core.Dto;
 using Core.Entities;
 using Core.Entities.NameEntry;
 using Core.Entities.NameEntry.Collections;
@@ -94,18 +95,16 @@ namespace Application.Migrator
             {
                 Id = ObjectId.GenerateNewId().ToString(),
                 Name = s.name,
-                //CreatedAt = ((DateTime)s.created_at,
                 ExtendedMeaning = s.extended_meaning,
-                FamousPeople = s.famous_people.Split(",").ToList(),
+                FamousPeople = new CommaSeparatedString(s.famous_people),
                 IpaNotation = s.ipa_notation,
                 Meaning = s.meaning,
-                Media = s.media.Split(",").ToList(),
-                Morphology = s.morphology.Split(",").ToList(),
+                Media = new CommaSeparatedString(s.media),
+                Morphology = new CommaSeparatedString(s.morphology),
                 Pronunciation = s.pronunciation,
                 CreatedBy = s.submitted_by,
-                Syllables = s.syllables.Split(",").ToList(),
-                //UpdatedAt = (DateTime)s.updated_at,
-                Variants = s.variants.Split(",").ToList(),
+                Syllables = new HyphenSeparatedString(s.syllables),
+                Variants = new CommaSeparatedString(s.variants),
                 State = GetPublishState(s.state),
                 Etymology = s.etymology,
                 GeoLocation = s.geoLocations,
