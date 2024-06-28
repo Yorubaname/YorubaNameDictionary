@@ -6,6 +6,6 @@
         {
             SeparatorIn = ',';
             SeparatorOut = ", ";
-        }
+        }        
     }
 }
