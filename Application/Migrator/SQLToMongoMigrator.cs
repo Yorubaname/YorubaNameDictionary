@@ -13,6 +13,7 @@ namespace Application.Migrator
 {
     public class SqlToMongoMigrator
     {
+        private const string MigratorProcessName = "SQLTOMongoMigrator";
         private readonly IMongoCollection<GeoLocation> _geolocationCollection;
         private readonly IMongoCollection<NameEntry> _nameEntryCollection;
         private readonly IMongoCollection<SuggestedName> _suggestedNameEntryCollection;
@@ -35,14 +36,20 @@ namespace Application.Migrator
             {
                 return "No data found in MySQL table.";
             }
-            List<GeoLocation> documentsToInsert = geolocation.Select(s=> new GeoLocation { Place =s.place, Region =s.region }).ToList();
+            List<GeoLocation> documentsToInsert = geolocation.Select(s => new GeoLocation
+            {
+                Id = ObjectId.GenerateNewId().ToString(),
+                Place = s.place,
+                Region = s.region,
+                CreatedBy = MigratorProcessName
+            }).ToList();
 
             _geolocationCollection.DeleteMany(FilterDefinition<GeoLocation>.Empty);
             _geolocationCollection.InsertMany(documentsToInsert);
             return $"{documentsToInsert.Count} geolocation records inserted into MongoDB successfully.";
-            
+
         }
-        
+
         public string MigrateNameEntry()
         {
             using var connection = new MySqlConnection(GetSQLConnectionString());
@@ -65,24 +72,24 @@ namespace Application.Migrator
 
             var name_entry = connection.Query<nameentry>("select id, created_at, extended_meaning, famous_people,ipa_notation, is_indexed, meaning, media, morphology, pronunciation, submitted_by, syllables, updated_at, variants, name, geo_location_id, state from name_entry");
 
-            if(name_entry == null)  return "No data found in MySQL table.";
+            if (name_entry == null) return "No data found in MySQL table.";
 
-        
+
             foreach (var item in name_entry)
             {
                 item.etymology = etymology.Where(f => f.name_entry_id == item.id).ToList()
                     .Select(s => new Etymology(s.part, s.meaning) { }).ToList();
 
-                item.geoLocations = geolocationPlace.Where(d=>d.name_entry_id == item.id).
-                    Select(a=> new GeoLocation() { Place =a.place, Region = a.region}).ToList();
+                item.geoLocations = geolocationPlace.Where(d => d.name_entry_id == item.id).
+                    Select(a => new GeoLocation() { Place = a.place, Region = a.region }).ToList();
 
                 item.feedbacks = feedbacks.Where(d => d.name == item.name).
                     Select(a => new Feedback() { Content = a.feedback }).ToList();
-                            
-                item.embeddedVideo = videos.Where(d=>d.name_entry_id == item.id).
-                    Select(s=> new EmbeddedVideo(s.url, s.caption)).ToList();
+
+                item.embeddedVideo = videos.Where(d => d.name_entry_id == item.id).
+                    Select(s => new EmbeddedVideo(s.url, s.caption)).ToList();
             }
-          
+
             List<NameEntry> documentsToInsert = name_entry.Select(s => new NameEntry()
             {
                 Id = ObjectId.GenerateNewId().ToString(),
@@ -104,13 +111,12 @@ namespace Application.Migrator
                 GeoLocation = s.geoLocations,
                 Feedbacks = s.feedbacks,
                 Videos = s.embeddedVideo
-
             }).ToList();
-        
+
             _nameEntryCollection.DeleteMany(FilterDefinition<NameEntry>.Empty);
             _nameEntryCollection.InsertMany(documentsToInsert);
             return $"{documentsToInsert.Count} name records inserted into MongoDB successfully.";
-           
+
         }
 
         public string MigrateSuggestedNames()
@@ -119,7 +125,7 @@ namespace Application.Migrator
 
             var suggested_name = connection.Query<suggested_name>("select Id, details, email, name, geo_location_place from suggested_name");
             var suggested_name_geo_location = connection.Query<suggested_name_geo_location>("select suggested_name_id, geo_location_place from suggested_name_geo_location");
-            
+
             if (suggested_name == null) return "No data found in MySQL table.";
 
             List<SuggestedName> suggestedNamesToInsert = suggested_name.Select(s => new SuggestedName()
@@ -127,9 +133,9 @@ namespace Application.Migrator
                 Id = ObjectId.GenerateNewId().ToString(),
                 Name = s.name,
                 Details = s.details,
-                Email = s.email,   
-                GeoLocation = suggested_name_geo_location.Where(d=>d.suggested_name_id==s.Id).Select(s=> new GeoLocation() { Place= s.geo_location_place}).ToList(),
-            
+                Email = s.email,
+                GeoLocation = suggested_name_geo_location.Where(d => d.suggested_name_id == s.Id).Select(s => new GeoLocation() { Place = s.geo_location_place }).ToList(),
+                CreatedBy = MigratorProcessName
             }).ToList();
 
             _suggestedNameEntryCollection.DeleteMany(FilterDefinition<SuggestedName>.Empty);
@@ -153,7 +159,8 @@ namespace Application.Migrator
                 Email = s.email,
                 Username = s.username,
                 Password = s.password,
-                Roles = s.roles.Split(",").Select(d=>d.Trim().Substring(5, d.Trim().Length - 5)).ToList()
+                Roles = s.roles.Split(",").Select(d => d.Trim().Substring(5, d.Trim().Length - 5)).ToList(),
+                CreatedBy = MigratorProcessName
             }).ToList();
 
             _userCollection.DeleteMany(FilterDefinition<User>.Empty);
