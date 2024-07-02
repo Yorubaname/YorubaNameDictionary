@@ -102,5 +102,11 @@ namespace Infrastructure.MongoDB.Repositories
                 Roles = u.Roles.ToArray()
             });
         }
+
+        public async Task<int> CountUsers()
+        {
+            var count = await _userCollection.EstimatedDocumentCountAsync();
+            return (int) count;
+        }
     }
 }

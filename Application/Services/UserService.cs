@@ -15,6 +15,11 @@ namespace Application.Services
             _userRepository = userRepository;
         }
 
+        public async Task<int> CountUsers()
+        {
+            return await _userRepository.CountUsers();
+        }
+
         public async Task<User> CreateUser(CreateUserDto createUserDto)
         {
             var user = new User
