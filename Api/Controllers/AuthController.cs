@@ -28,6 +28,16 @@ namespace Api.Controllers
             _updateUserValidator = updateUserValidator;
         }
 
+        [HttpPost("meta")]
+        [ProducesResponseType(typeof(Dictionary<string, int>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> CountUsers()
+        {
+            Dictionary<string, int> result = new Dictionary<string, int> {
+                { "totalUsers", await _userService.CountUsers() }
+            };
+            return Ok(result);
+        }
+
         [HttpPost("login")]
         [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Login()

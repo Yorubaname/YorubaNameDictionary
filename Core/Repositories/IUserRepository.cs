@@ -11,5 +11,6 @@ namespace Core.Repositories
         Task<bool> DeleteBy(string email);
         Task<bool> Update(string email, UpdateUserDto update);
         Task<IEnumerable<UserDto>> List();
+        Task<int> CountUsers();
     }
 }
