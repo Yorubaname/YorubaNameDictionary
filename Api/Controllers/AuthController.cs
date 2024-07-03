@@ -28,7 +28,7 @@ namespace Api.Controllers
             _updateUserValidator = updateUserValidator;
         }
 
-        [HttpPost("meta")]
+        [HttpGet("meta")]
         [ProducesResponseType(typeof(Dictionary<string, int>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> CountUsers()
         {
