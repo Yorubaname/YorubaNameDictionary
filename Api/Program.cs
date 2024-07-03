@@ -17,10 +17,19 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
+string DevCORSAllowAll = "AllowAllForDev";
 var services = builder.Services;
 
 // Add services to the container.
 
+services.AddCors(options =>
+{
+    options.AddPolicy(name: DevCORSAllowAll,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                      });
+});
 
 services.AddAuthentication("BasicAuthentication")
     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
@@ -100,9 +109,9 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(); 
-    
-    app.UseCors(builder => builder.WithOrigins("https://localhost"));
+    app.UseSwaggerUI();
+
+    app.UseCors(DevCORSAllowAll);
 }
 
 app.UseHttpsRedirection();
