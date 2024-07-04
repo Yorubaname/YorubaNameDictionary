@@ -6,8 +6,6 @@ namespace Application.Cache
     {
         private int popularListLimit = 5;
 
-        private readonly List<string> _theCache;
-
         public RecentSearchesCache() : base()
         {
         }
