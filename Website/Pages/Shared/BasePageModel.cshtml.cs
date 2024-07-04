@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Localization;
-using System.Globalization;
 using Website.Resources;
 
 namespace Website.Pages.Shared
@@ -18,6 +17,7 @@ namespace Website.Pages.Shared
         {
             base.OnPageHandlerExecuting(context);
 
+            // Some of the strings below should be internationalized.
             ViewData["Description"] = "YorubaNames";
             ViewData["SocialURL"] = "http://www.yorubaname.com";
             ViewData["SocialTitle"] = "YorubaNames";

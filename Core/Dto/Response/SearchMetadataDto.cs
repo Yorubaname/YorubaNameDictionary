@@ -2,6 +2,6 @@
 {
     public class SearchMetadataDto
     {
-        public long TotalPublishedNames { get; set; }
+        public int TotalPublishedNames { get; set; }
     }
 }

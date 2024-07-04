@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Configuration;
 using System.Globalization;
+using Website.Config;
+using Website.Services;
 
 namespace Website
 {
@@ -29,6 +32,10 @@ namespace Website
                     QueryStringKey = "lang"
                 });
             });
+
+            services.AddHttpClient();
+            services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+            services.AddTransient<ApiService>();
 
             var app = builder.Build();
 

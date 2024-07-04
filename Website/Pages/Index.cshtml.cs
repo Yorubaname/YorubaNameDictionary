@@ -1,23 +1,31 @@
+using Application.Services;
 using Microsoft.Extensions.Localization;
 using Website.Pages.Shared;
 using Website.Resources;
+using Website.Services;
 
 namespace Website.Pages
 {
-    public class IndexModel : BasePageModel
+    public class IndexModel(IStringLocalizer<Messages> localizer, ApiService apiService) : BasePageModel(localizer)
     {
-        private readonly ILogger<IndexModel> _logger;
+        public string Title { get; private set; } = string.Empty;
+        public int NameCount { get; private set; }
+        public string[] LatestSearches { get; private set; } = [];
+        public string[] LatestAdditions { get; private set; } = [];
+        public string[] MostPopular { get; private set; } = [];
+        public List<string> Alphabets { get; private set; } = [];
+        public ApiService _apiService = apiService;
 
-        public IndexModel(
-            ILogger<IndexModel> logger,
-            IStringLocalizer<Messages> localizer) : base(localizer)
+        public async Task OnGet()
         {
-            _logger = logger;
-        }
+            var searchActivity = await _apiService.GetRecentStats();
+            var indexedNameCount = await _apiService.GetIndexedNameCount();
 
-        public void OnGet()
-        {
-
+            NameCount = indexedNameCount.TotalPublishedNames;
+            LatestSearches = searchActivity.LatestSearches;
+            LatestAdditions = searchActivity.LatestAdditions;
+            MostPopular = searchActivity.MostPopular;
+            Alphabets = YorubaAlphabetService.YorubaAlphabets;
         }
     }
 }
