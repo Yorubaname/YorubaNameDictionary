@@ -1,0 +1,363 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="welcome" xml:space="preserve">
+    <value>Ẹ káàbọ̀</value>
+  </data>
+  <data name="home" xml:space="preserve">
+    <value>Ilé</value>
+  </data>
+  <data name="about" xml:space="preserve">
+    <value>Nípa Wa</value>
+  </data>
+  <data name="donate" xml:space="preserve">
+    <value>Rànwálọ́wọ́</value>
+  </data>
+  <data name="volunteer" xml:space="preserve">
+    <value>Darapọ̀ Mọ́ Wa</value>
+  </data>
+  <data name="logreg" xml:space="preserve">
+    <value>Forúkọ Sílẹ̀</value>
+  </data>
+  <data name="contact" xml:space="preserve">
+    <value>Kàn Sí Wa</value>
+  </data>
+  <data name="blog" xml:space="preserve">
+    <value>Búlọ́gì</value>
+  </data>
+  <data name="language" xml:space="preserve">
+    <value>Èdè</value>
+  </data>
+  <data name="search-plchol" xml:space="preserve">
+    <value>Tẹ Orúkọ Yorùbá tó bá wù ẹ́ síbí kí o sì tẹ “Enter”</value>
+  </data>
+  <data name="jumbotron1" xml:space="preserve">
+    <value>Ó ju</value>
+  </data>
+  <data name="jumbotron2" xml:space="preserve">
+    <value>Orùkọ Yorùbá lọ tí a ní níbí</value>
+  </data>
+  <data name="kybtitle" xml:space="preserve">
+    <value>Tẹ ibí fún bọ́tìnì alámì</value>
+  </data>
+  <data name="adv-search" xml:space="preserve">
+    <value>Àwárí Ìjìnlẹ̀</value>
+  </data>
+  <data name="jumboh31" xml:space="preserve">
+    <value>Darapọ̀ mọ́ àwọn olùlò yókù láti fi orúkọ mìíràn kún-un</value>
+  </data>
+  <data name="jumboh32" xml:space="preserve">
+    <value>Fún wa ní orúkọ kan</value>
+  </data>
+  <data name="latest-search" xml:space="preserve">
+    <value>Àwárí Tuntun</value>
+  </data>
+  <data name="latest-add" xml:space="preserve">
+    <value>Àfikún Tuntun</value>
+  </data>
+  <data name="most-popular" xml:space="preserve">
+    <value>Gbajúmọ̀ Orúkọ</value>
+  </data>
+  <data name="most-popular-names" xml:space="preserve">
+    <value>Àwọn Orúkọ Tó Gbajúmọ̀ Jù</value>
+  </data>
+  <data name="name-of-day" xml:space="preserve">
+    <value>Orúkọ Ojúmọ́</value>
+  </data>
+  <data name="play-sound" xml:space="preserve">
+    <value>Tẹ̀ láti gbọ́ ohùn</value>
+  </data>
+  <data name="submitby" xml:space="preserve">
+    <value>Ẹni tó fún wa ni</value>
+  </data>
+  <data name="pronunciation" xml:space="preserve">
+    <value>Sísọ síta</value>
+  </data>
+  <data name="share" xml:space="preserve">
+    <value>Fihànká</value>
+  </data>
+  <data name="improve-entry" xml:space="preserve">
+    <value>Tún orúkọ yìí ṣe</value>
+  </data>
+  <data name="meaningof" xml:space="preserve">
+    <value>Ìtumọọ</value>
+  </data>
+  <data name="extendedmeaningof" xml:space="preserve">
+    <value>Àwọn àlàyé mìíràn</value>
+  </data>
+  <data name="storyof" xml:space="preserve">
+    <value>Ìtàn díẹ̀ nípa orúkọ yìí</value>
+  </data>
+  <data name="morphology" xml:space="preserve">
+    <value>Ìtúpalẹ̀ Mọ́fímù</value>
+  </data>
+  <data name="etymology" xml:space="preserve">
+    <value>Ìtumọ̀ ẹyọ-ẹyọ</value>
+  </data>
+  <data name="geolocation" xml:space="preserve">
+    <value>Agbègbè</value>
+  </data>
+  <data name="variants" xml:space="preserve">
+    <value>Irúurú</value>
+  </data>
+  <data name="see-also" xml:space="preserve">
+    <value>Ẹ tún wo</value>
+  </data>
+  <data name="entryfoundfor" xml:space="preserve">
+    <value>A rí àwọn orúkọ fún -</value>
+  </data>
+  <data name="commonin" xml:space="preserve">
+    <value>Ó pọ̀ ní</value>
+  </data>
+  <data name="number-of-names" xml:space="preserve">
+    <value>Iye àwọn orúkọ</value>
+  </data>
+  <data name="name-listed-by-alphabets" xml:space="preserve">
+    <value>Awọn orúkọ tí a kọ ní A-B-D</value>
+  </data>
+  <data name="famous-persons" xml:space="preserve">
+    <value>Àwọn Ènìyàn Gbajúọ̀</value>
+  </data>
+  <data name="media-links" xml:space="preserve">
+    <value>Ibi tí a ti lè kà síi</value>
+  </data>
+  <data name="submitname.heading" xml:space="preserve">
+    <value>Fi orúkọ tuntun sílẹ̀</value>
+  </data>
+  <data name="submitname.entername" xml:space="preserve">
+    <value>Tẹ orúkọ tuntun síbí</value>
+  </data>
+  <data name="submitname.enternameplch" xml:space="preserve">
+    <value>Tẹ orúkọ tí a gbèrò ẹ síbí...</value>
+  </data>
+  <data name="submitname.entermeaning" xml:space="preserve">
+    <value>Ti o bá mọ̀, jọ̀ọ́ sọ ìtumọ̀ àti/tàbí ìtàn nípa orúkọ yìí</value>
+  </data>
+  <data name="submitname.enterlocation" xml:space="preserve">
+    <value>Níbo lo ti gbọ́ tàbí tí wọ́n ti wọ́n ti fún ẹ lórúkọ yìí.</value>
+  </data>
+  <data name="submitname.enteremail" xml:space="preserve">
+    <value>Àdírẹ́sì ímeèlì tí o fẹ́ ká ti sọ fún ẹ tí orúkọ yìí bá ti wọlé</value>
+  </data>
+  <data name="submitname.nameexists" xml:space="preserve">
+    <value>A ti ní orúkọ yìí tẹ́lẹ̀</value>
+  </data>
+  <data name="submitname.viewentry" xml:space="preserve">
+    <value>Wo Orúkọ</value>
+  </data>
+  <data name="improve-entry.help-us" xml:space="preserve">
+    <value>Bá wa ṣe àtúnṣe síi</value>
+  </data>
+  <data name="improve-entry.sub-text" xml:space="preserve">
+    <value>Bóyá o tiẹ̀ ní ìtàn kan láti sọ fún wa nípa orúkọ yìí, tàbí fún wa ní ǹkan tí a ṣì kọ, tàbí fikún oun kan tí a kọ sílẹ̀.</value>
+  </data>
+  <data name="entry-not-found.no-match" xml:space="preserve">
+    <value>Págà! A kò rí oun tó jọ</value>
+  </data>
+  <data name="entry-not-found.suggest-text" xml:space="preserve">
+    <value>Ǹjẹ́ o fẹ́ràn láti fi orúkọ kan kún àwọn orúkọ wa? Bá wa dáhùn àwọn ìbéèrè wọ̀nyí</value>
+  </data>
+  <data name="entry-not-found.suggest-pretext" xml:space="preserve">
+    <value>Ǹjẹ́ o fẹ́ràn láti fi orúkọ kún àwọn orúkọ wa?</value>
+  </data>
+  <data name="entry-not-found.similar-names" xml:space="preserve">
+    <value>Wò níbí àwọn orúkọ tó lè jọ ara wọn</value>
+  </data>
+  <data name="go-to-suggest-linktext" xml:space="preserve">
+    <value>Jọ̀ọ́ lọ sí abala ibi tí a ti ń forúkọ sílẹ̀.</value>
+  </data>
+  <data name="entry-not-found.minikeyb-text" xml:space="preserve">
+    <value>Jọ̀ọ́ lo oun ìtẹ̀wé Yorùbá tí a pèsè láti lo ààmì.</value>
+  </data>
+  <data name="join-the-team" xml:space="preserve">
+    <value>Darapọ̀ mọ́ wa</value>
+  </data>
+  <data name="amazing-team" xml:space="preserve">
+    <value>Àwọn Ọmọ Ẹgbẹ́ wa</value>
+  </data>
+  <data name="what-is-yorubaname" xml:space="preserve">
+    <value>Kíni YorubaName.com</value>
+  </data>
+  <data name="how-to-use" xml:space="preserve">
+    <value>Láti lo Dikṣọ́nárì Yìí</value>
+  </data>
+  <data name="work-in-progress" xml:space="preserve">
+    <value>Gbobo orúkọ̀ tó wà níbi jẹ́ Iṣẹ́-tí-a-ṣì-ńṣe- Lọ́wọ́</value>
+  </data>
+  <data name="about-tone-mark" xml:space="preserve">
+    <value>Ṣé ká fi ààmì síi tàbí bẹ́ẹ̀ kọ̀?</value>
+  </data>
+  <data name="how-names-collected" xml:space="preserve">
+    <value>Báwọ ni a ṣe ń gba àwọn orúkọ wọ̀nyí?</value>
+  </data>
+  <data name="about-tts" xml:space="preserve">
+    <value>Sísọ Síta: Gbígbọ́ Àwọn Orúkọ Wọ̀nyí</value>
+  </data>
+  <data name="join-us-lex" xml:space="preserve">
+    <value>Darapọ̀ Mọ́ Wa Gẹ́gẹ́ Bíi Onímọ̀ Ìjìnlẹ̀ Orúkọ</value>
+  </data>
+  <data name="lets-build-together" xml:space="preserve">
+    <value>Ẹ jẹ́ ká jọ mú orúkọ yìí kún papọ̀</value>
+  </data>
+  <data name="how-to-support" xml:space="preserve">
+    <value>Mo fẹ́ darapọ̀ pẹ̀lú yín lọ́nà kan tàbí òmíràn… ṣùgbọ́n báwo?</value>
+  </data>
+  <data name="contact-info" xml:space="preserve">
+    <value>Ibi tí ẹ ti lè kà sí wa</value>
+  </data>
+  <data name="contact-info-preamble" xml:space="preserve">
+    <value>Ó rọrùn láti kàn sí wa, bóyá nípa ara-sára tàbi nípa ímeèlì.</value>
+  </data>
+  <data name="contact-info-email-preamble" xml:space="preserve">
+    <value>Ẹ le fi ímeèlì ránṣẹ́ sí</value>
+  </data>
+  <data name="contact-info-contact-preamble" xml:space="preserve">
+    <value>Tàbí kàn sí ilé iṣẹ́ wa ní YorubaName.com</value>
+  </data>
+  <data name="social-media" xml:space="preserve">
+    <value>Ẹ tẹ̀lé wa lórí ẹ̀rọ ayélujára</value>
+  </data>
+  <data name="error-page-not-found" xml:space="preserve">
+    <value>Págà. Ǹjẹ́ o rò pé ọ̀nà tó tọ́ lo tẹ̀?</value>
+  </data>
+  <data name="error-message1" xml:space="preserve">
+    <value>Ó dàbíi pé a kò rí àwọn ǹkan tí o ń wá, tàbí wọ́n ti sún-un lọ síbòmíì.</value>
+  </data>
+  <data name="error-message2" xml:space="preserve">
+    <value>Oòṣe tẹ ibí yìí kí o padà sí &lt;a href="/" style="color:#0e5264; text-decoration:underline"&gt;abala ilé&lt;/a&gt; láti tún ṣàbápàdé àwọn orúkọ Yorùbá mìíràn?</value>
+  </data>
+  <data name="oni-message" xml:space="preserve">
+    <value>Iṣẹ́ gbògí tó ṣe pàtàki gidi tí yóò sì mú kí èdè Yorùbá tẹ̀síwájú ni. Mo faramọ́ọ gidigidi.</value>
+  </data>
+  <data name="key-supporters" xml:space="preserve">
+    <value>Àwọn agbèlẹ́yìn wa pàtàkì</value>
+  </data>
+  <data name="yoruba-name-dictionary" xml:space="preserve">
+    <value>Dikṣọ́nárì Orúkọ Yorùbá</value>
+  </data>
+  <data name="yoruba-name-newsletter" xml:space="preserve">
+    <value>Ìwé Ìròyìn YorubaName</value>
+  </data>
+  <data name="follow-update" xml:space="preserve">
+    <value>Tẹ̀lé wa wọlé láti gba ojúlówó ìròyìn, oun ọ̀fẹ́, ìsopọ̀, oun èlò àwọn onímọ̀ èdè, àti oríṣiríṣi ìròyìn pàtàkì nípa dikṣọ́nárì yìí.</value>
+  </data>
+  <data name="enter-your-email" xml:space="preserve">
+    <value>Tẹ email rẹ síbí</value>
+  </data>
+</root>
