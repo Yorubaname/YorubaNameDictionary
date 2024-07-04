@@ -1,0 +1,15 @@
+﻿@model IEnumerable<string>
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+@using Website.Resources
+@using Website.Utilities
+
+<ul class="alphabets">
+    @if (Model != null)
+    {
+        foreach (var alphabet in Model)
+        {
+            <a href="/alphabets/@alphabet.NormalizeLetter()">
+            <li>@alphabet.NormalizeLetter()</li></a>
+        }
+    }
+</ul>
