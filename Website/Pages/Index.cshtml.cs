@@ -18,6 +18,7 @@ namespace Website.Pages
 
         public async Task OnGet()
         {
+            // TODO: Parallelize these API calls
             var searchActivity = await _apiService.GetRecentStats();
             var indexedNameCount = await _apiService.GetIndexedNameCount();
 

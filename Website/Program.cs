@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Configuration;
+using ProxyKit;
 using System.Globalization;
 using Website.Config;
 using Website.Services;
@@ -17,6 +17,8 @@ namespace Website
             services.AddLocalization();
             services.AddRazorPages()
                     .AddViewLocalization();
+
+            services.AddProxy();
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
@@ -50,14 +52,27 @@ namespace Website
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();
+            app.UseRouting(); 
+            
+            app.MapRazorPages();
+
+            app.Map("/api/v1", appBuilder =>
+            {
+                appBuilder.RunProxy(context =>
+                {
+                    var externalApiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"];
+
+                    return context
+                        .ForwardTo(externalApiBaseUrl)
+                        .Send();
+                });
+            });
 
             app.UseAuthorization();
 
             var supportedCultures = new[] { new CultureInfo("en"), new CultureInfo("yo") };
 
             app.UseRequestLocalization();
-            app.MapRazorPages();
 
             app.Run();
         }

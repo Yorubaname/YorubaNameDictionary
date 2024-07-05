@@ -1,0 +1,12 @@
+﻿@model int
+@using Website.Resources
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+
+<section id="searchform">
+    <div class="jumbotron" id="home-banner">
+        <div class="container">
+            <h1>@Localizer["jumbotron1"] <span>@Model</span> @Localizer["jumbotron2"]</h1>
+            @await Html.PartialAsync("Partials/_SearchComponent");
+        </div>
+    </div>
+</section>

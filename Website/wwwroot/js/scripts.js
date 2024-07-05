@@ -133,7 +133,7 @@ $(function(){
       datumTokenizer: Bloodhound.tokenizers.whitespace,
       queryTokenizer: Bloodhound.tokenizers.whitespace,
       remote: {
-        url: '/v1/search/autocomplete?q=%QUERY',
+        url: '/api/v1/search/autocomplete?q=%QUERY',
         wildcard: '%QUERY'
       }
     });
