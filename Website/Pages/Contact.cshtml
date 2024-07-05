@@ -1,0 +1,37 @@
+﻿@page "/contact-us"
+@model Website.Pages.ContactModel
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+@using Website.Resources
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+
+@await Html.PartialAsync("Partials/_SearchForm", Model.NameCount);
+
+<section>
+    <div class="container">
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-6">
+            <h3>@Localizer["contact-info"]</h3>
+
+            <p class="lead">@Localizer["contact-info-preamble"]</p>
+
+            <p>@Localizer["contact-info-email-preamble"] <a href="mailto:project@yorubaname.com">project@yorubaname.com</a></p>
+            <p>
+                @Localizer["contact-info-contact-preamble"]<br>
+                2nd Floor, The Garnet Building<br>
+                Lekki - Epe Express Road, Lekki<br>
+                Lagos 101245<br>
+                Nigeria
+            </p>
+
+            <p class="lead">@Localizer["social-media"]</p>
+            <nav class="social-links">
+                <a href="https://facebook.com/YorubaNames" target="_blank"><i class="fa fa-facebook"></i></a>
+                <a href="https://twitter.com/YorubaNames" target="_blank"><i class="fa fa-twitter"></i></a>
+            </nav>
+        </div>
+    </div>
+</section>

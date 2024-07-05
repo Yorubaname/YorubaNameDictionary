@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Localization;
 using ProxyKit;
 using System.Globalization;
 using Website.Config;
+using Website.Middleware;
 using Website.Services;
 
 namespace Website
@@ -15,8 +16,6 @@ namespace Website
 
             // Add services to the container
             services.AddLocalization();
-            services.AddRazorPages()
-                    .AddViewLocalization();
 
             services.AddProxy();
 
@@ -28,12 +27,18 @@ namespace Website
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
 
-                // Configure localization based on query string 'lang'
                 options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider()
                 {
                     QueryStringKey = "lang"
                 });
+
+                options.RequestCultureProviders.Insert(1, new CookieRequestCultureProvider
+                {
+                    CookieName = "culture"
+                });
             });
+
+            services.AddRazorPages().AddViewLocalization();
 
             services.AddHttpClient();
             services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
@@ -52,8 +57,7 @@ namespace Website
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting(); 
-            
+
             app.MapRazorPages();
 
             app.Map("/api/v1", appBuilder =>
@@ -68,11 +72,11 @@ namespace Website
                 });
             });
 
-            app.UseAuthorization();
-
-            var supportedCultures = new[] { new CultureInfo("en"), new CultureInfo("yo") };
-
+            app.UseRouting();
             app.UseRequestLocalization();
+            app.UseMiddleware<LocalizationCookieMiddleware>();
+
+            app.UseAuthorization();
 
             app.Run();
         }
