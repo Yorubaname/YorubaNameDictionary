@@ -1,4 +1,5 @@
-﻿using Core.Dto.Response;
+﻿using Core.Dto.Request;
+using Core.Dto.Response;
 using Microsoft.Extensions.Options;
 using Website.Config;
 
@@ -38,6 +39,12 @@ namespace Website.Services
         public Task<SearchMetadataDto> GetIndexedNameCount()
         {
             return GetApiResponse<SearchMetadataDto>("/search/meta");
+        }
+
+        public Task<GeoLocationDto[]> GetGeoLocations()
+        {
+            //TODO: Use caching here since this dataset does not often change.
+            return GetApiResponse<GeoLocationDto[]>("/geolocations");
         }
     }
 }

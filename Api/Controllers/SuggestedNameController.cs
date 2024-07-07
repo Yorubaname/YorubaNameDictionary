@@ -1,4 +1,5 @@
 ﻿using Api.Mappers;
+using Api.Utilities;
 using Application.Services;
 using Core.Dto.Request;
 using Core.Dto.Response;
@@ -28,7 +29,7 @@ public class SuggestedNameController : ControllerBase
         await _suggestedNameService
                 .CreateAsync(request.MapToEntity());
 
-        return StatusCode((int)HttpStatusCode.Created, "Suggested Name successfully added");
+        return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict("Suggested Name successfully added"));
     }
 
     [HttpGet]

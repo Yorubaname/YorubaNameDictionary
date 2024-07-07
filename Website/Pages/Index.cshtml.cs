@@ -8,7 +8,6 @@ namespace Website.Pages
 {
     public class IndexModel(IStringLocalizer<Messages> localizer, ApiService apiService) : BasePageModel(localizer)
     {
-        public string Title { get; private set; } = string.Empty;
         public int NameCount { get; private set; }
         public string[] LatestSearches { get; private set; } = [];
         public string[] LatestAdditions { get; private set; } = [];
