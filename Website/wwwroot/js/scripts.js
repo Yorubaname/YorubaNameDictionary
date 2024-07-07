@@ -285,7 +285,7 @@ $(function(){
       }
 
       $.ajax({
-        url: '/v1/suggestions',
+        url: '/api/v1/suggestions',
         type: 'POST',
         contentType: "application/json",
         data: JSON.stringify(suggestedName),
