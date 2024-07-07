@@ -5,7 +5,7 @@ using Website.Services;
 
 namespace Website.Pages
 {
-    public class ContactModel(IStringLocalizer<Messages> localizer, ApiService apiService) : StaticPageModel(localizer, apiService)
+    public class TeamModel(IStringLocalizer<Messages> localizer, ApiService apiService) : StaticPageModel(localizer, apiService)
     {
 
     }
