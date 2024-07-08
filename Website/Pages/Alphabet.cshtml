@@ -1,0 +1,34 @@
+﻿@page "/alphabet/{letter}"
+@model Website.Pages.AlphabetModel
+@{
+    ViewData["Title"] = $"{Localizer["names-starting-with"]} {Model.Letter}";
+}
+
+@using Website.Resources
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+
+@await Html.PartialAsync("Partials/_MiniSearchForm")
+
+<!-- main-content -->
+<section id="content">
+
+    <div class="container">
+        @await Html.PartialAsync("Partials/_Alphabets", Model.Letters)
+        <br />
+        <div class="row">
+            <h3>@Localizer["number-of-names"]: @Model.Count</h3>
+            <div class="alphabet-listing">
+                <ul>
+                    @foreach (var name in Model.Names)
+                    {
+                    <a title="@name.Meaning" class="name intonation" href="/entries/@name.Name">
+                    <li>@name.Name</li></a>
+                    }
+                </ul>
+            </div>
+        </div>
+        <br />
+        @await Html.PartialAsync("Partials/_Alphabets", Model.Letters)
+    </div>
+
+</section>

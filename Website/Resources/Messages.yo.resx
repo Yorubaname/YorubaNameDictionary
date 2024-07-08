@@ -360,4 +360,7 @@
   <data name="enter-your-email" xml:space="preserve">
     <value>Tẹ email rẹ síbí</value>
   </data>
+  <data name="names-starting-with" xml:space="preserve">
+    <value>Àwọn orúkọ tó bẹ̀rẹ̀ pẹ̀lú</value>
+  </data>
 </root>

@@ -20,7 +20,7 @@ namespace Website.Pages
         [FromQuery(Name = "q")]
         public string? Query { get; set; } = null;
         public NameEntryDto[] Names { get; set; } = [];
-        public List<string> Alphabets { get; private set; } = [];
+        public List<string> Letters { get; private set; } = [];
 
         public async Task<IActionResult> OnGet()
         {
@@ -38,7 +38,7 @@ namespace Website.Pages
                 return RedirectToPage("SingleEntry", new { nameEntry = Query });
             }
 
-            Alphabets = YorubaAlphabetService.YorubaAlphabets;
+            Letters = YorubaAlphabetService.YorubaAlphabet;
             return Page();
         }
 

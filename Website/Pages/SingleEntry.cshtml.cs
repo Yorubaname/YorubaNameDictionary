@@ -2,7 +2,6 @@ using Application.Services;
 using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using System.Text.Json;
 using Website.Pages.Shared;
 using Website.Resources;
 using Website.Services;
@@ -16,7 +15,7 @@ namespace Website.Pages
         private readonly ApiService _apiService = apiService;
 
         public NameEntryDto Name { get; set; } = new NameEntryDto();
-        public List<string> Alphabets { get; private set; } = [];
+        public List<string> Letters { get; private set; } = [];
         public string Host { get; set; } = string.Empty;
 
         public string[] MostPopularNames { get; set; } = [];
@@ -34,7 +33,7 @@ namespace Website.Pages
             }
 
             Name = name;
-            Alphabets = YorubaAlphabetService.YorubaAlphabets;
+            Letters = YorubaAlphabetService.YorubaAlphabet;
             Host = $"{Request.Scheme}://{Request.Host}";
 
             var searchActivity = await _apiService.GetRecentStats();

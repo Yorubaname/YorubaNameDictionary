@@ -17,14 +17,13 @@ namespace Application.Services
 
         public async Task<HashSet<string>> AutoComplete(string query)
         {
-            var searchTerms = new List<string>();
+            var namesResult = new HashSet<NameEntry>();
 
-            for (int i = 2; i <= query.Length; i++)
+            if(query.Length > 1)
             {
-                searchTerms.Add(query.Substring(0, i));
+                namesResult = await _namesRepository.FindByNameStartingWithAndState(query, State.PUBLISHED);
             }
 
-            var namesResult = await _namesRepository.FindByNameStartingWithAnyAndState(searchTerms, State.PUBLISHED);
             var namesContainingQuery = await _namesRepository.FindNameEntryByNameContainingAndState(query, State.PUBLISHED);
             namesResult.UnionWith(namesContainingQuery);
 

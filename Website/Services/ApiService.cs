@@ -1,5 +1,6 @@
 ﻿using Core.Dto.Request;
 using Core.Dto.Response;
+using Core.Entities.NameEntry;
 using Core.StringObjectConverters;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
@@ -63,6 +64,11 @@ namespace Website.Services
         public Task<NameEntryDto?> GetName(string nameEntry)
         {
             return GetApiResponse<NameEntryDto?>($"/search/{nameEntry}");
+        }
+
+        public Task<NameEntryDto[]> GetAllNamesByAlphabet(string letter)
+        {
+            return GetApiResponse<NameEntryDto[]>($"/search/alphabet/{letter}");
         }
     }
 }
