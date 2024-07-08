@@ -1,4 +1,5 @@
-﻿using Core.Dto.Response;
+﻿using Application.Mappers;
+using Core.Dto.Response;
 using Core.Entities.NameEntry;
 using Core.Enums;
 using Core.Repositories;
@@ -28,6 +29,12 @@ namespace Application.Services
             namesResult.UnionWith(namesContainingQuery);
 
             return new HashSet<string>(namesResult.Select(n => n.Name));
+        }
+
+        public async Task<NameEntryDto?> GetName(string searchTerm)
+        {
+            var result = await _namesRepository.FindByNameAndState(searchTerm, State.PUBLISHED);
+            return result?.MapToDto();
         }
 
         /// <summary>

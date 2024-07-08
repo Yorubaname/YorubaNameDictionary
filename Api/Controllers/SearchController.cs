@@ -1,6 +1,6 @@
-﻿using Api.Mappers;
-using Api.Utilities;
+﻿using Api.Utilities;
 using Application.Domain;
+using Application.Mappers;
 using Application.Services;
 using Core.Cache;
 using Core.Dto.Response;
@@ -54,6 +54,7 @@ namespace Api.Controllers
         {
             var matches = await _searchService.Search(searchTerm);
 
+            // TODO: Check if the comparison here removes takes diacrits into consideration
             if (matches.Count() == 1 && matches.First().Name.ToLower() == searchTerm.ToLower())
             {
                 await _eventPubService.PublishEvent(new ExactNameSearched(searchTerm));
@@ -85,6 +86,20 @@ namespace Api.Controllers
 
             var nameEntry = await _searchService.SearchByStartsWith(searchTerm);
             return Ok(nameEntry.MapToDtoCollection());
+        }
+
+        [HttpGet("{searchTerm}")]
+        [ProducesResponseType(typeof(NameEntryDto), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> SearchOne(string searchTerm)
+        {
+            NameEntryDto nameEntry = await _searchService.GetName(searchTerm);
+
+            if(nameEntry != null)
+            {
+                await _eventPubService.PublishEvent(new ExactNameSearched(searchTerm));
+            }
+
+            return Ok(nameEntry);
         }
 
         /// <summary>

@@ -3,9 +3,9 @@ using Core.Dto.Response;
 using Core.Entities;
 using MongoDB.Bson;
 
-namespace Api.Mappers;
+namespace Application.Mappers;
 
-public static class SuggestedNamesControllerMapper
+public static class SuggestedNameMapper
 {
     public static SuggestedNameDto[] MapToDtoCollection(this IEnumerable<SuggestedName> names)
     {

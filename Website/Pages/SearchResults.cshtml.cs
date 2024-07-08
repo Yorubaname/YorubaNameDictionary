@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System.Globalization;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Website.Pages.Shared;
 using Website.Resources;
 using Website.Services;
@@ -13,10 +12,9 @@ namespace Website.Pages
 {
     public class SearchResultsModel(
         IStringLocalizer<Messages> localizer, 
-        ApiService apiService, JsonSerializerOptions jsonSerializerOptions) : BasePageModel(localizer)
+        ApiService apiService) : BasePageModel(localizer)
     {
         private readonly ApiService _apiService = apiService;
-        private readonly JsonSerializerOptions _jsonSerializerOptions = jsonSerializerOptions;
 
         [BindProperty(SupportsGet = true)]
         [FromQuery(Name = "q")]
@@ -36,8 +34,7 @@ namespace Website.Pages
 
             if (Names.Length == 1 && IsEqualWithoutAccent(Names[0].Name, Query))
             {
-                // var nameQuery = System.Net.WebUtility.UrlEncode(Query);
-                TempData["Name"] = JsonSerializer.Serialize(Names[0]);
+                // TODO: Pass this name to the other page
                 return RedirectToPage("SingleEntry", new { nameEntry = Query });
             }
 

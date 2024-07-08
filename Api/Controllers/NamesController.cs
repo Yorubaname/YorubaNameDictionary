@@ -1,7 +1,7 @@
-﻿using Api.Mappers;
-using Api.Model.In;
+﻿using Api.Model.In;
 using Api.Utilities;
 using Application.Domain;
+using Application.Mappers;
 using Core.Dto.Request;
 using Core.Dto.Response;
 using Core.Enums;

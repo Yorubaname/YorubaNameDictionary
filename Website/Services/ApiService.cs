@@ -15,7 +15,7 @@ namespace Website.Services
         private readonly JsonSerializerOptions _jsonSerializerOptions;
 
         public ApiService(
-            IHttpClientFactory httpClientFactory, 
+            IHttpClientFactory httpClientFactory,
             IOptions<ApiSettings> apiSettings,
             JsonSerializerOptions jsonSerializerOptions
             )
@@ -58,6 +58,11 @@ namespace Website.Services
         public Task<NameEntryDto[]> SearchNameAsync(string query)
         {
             return GetApiResponse<NameEntryDto[]>("/search/?q=" + query);
+        }
+
+        public Task<NameEntryDto?> GetName(string nameEntry)
+        {
+            return GetApiResponse<NameEntryDto?>($"/search/{nameEntry}");
         }
     }
 }

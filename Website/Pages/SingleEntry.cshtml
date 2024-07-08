@@ -1,0 +1,117 @@
+﻿@page "/entries/{nameEntry}"
+@model SingleEntryModel
+@{
+    ViewData["Title"] = $"{Localizer["meaningof"]} {Model.Name.Name}";
+}
+
+@using Website.Resources
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+
+@await Html.PartialAsync("Partials/_MiniSearchForm")
+
+<!-- main-content -->
+
+<section id="content">
+    <div class="container">
+        <div class="row search-result">
+            <div class="col-sm-7 entry">
+
+                <h2 class="intonation" id="name-entry">@Model.Name.Name</h2>
+
+                <p>
+                    <strong>@Localizer["pronunciation"]</strong>
+                    <button class="btn btn-default btn-sm" id="tts-button">
+                        <i class="fa fa-volume-up" data-placement="top" title="@Localizer["play-sound"]"></i>
+                    </button>
+                    <!--<span> class="pull-right text-muted"><strong>@Localizer["submitby"]</strong> @Model.Name.SubmittedBy</span>-->
+                </p>
+
+                <div class="share">
+                    <a class="btn btn-sm btn-success" href="#improve-entry" data-toggle="modal" data-target="#improveEntryModal" style="margin-right:20px">
+                        @Localizer["improve-entry"]  <i class="fa fa-pencil"></i>
+                    </a>
+                    <span class="text-muted">@Localizer["share"] <i class="fa fa-share-alt"></i></span>
+                    <a target="_blank" class="btn btn-social btn-sm btn-fb btn-primary" href="http://www.facebook.com/sharer.php?u=http%3A%2F%2F@Model.Host/entries/@Model.Name.Name"><i class="fa fa-facebook"></i> </a>
+                    <a target="_blank" class="btn btn-social btn-sm btn-tw btn-info" href="https://twitter.com/intent/tweet?url=http%3A%2F%2F@Model.Host/entries/@Model.Name.Name&amp;text=Did you know @Model.Name.Name means @Model.Name.Meaning?&amp;hashtags=YorubaNames&amp;via=YorubaNames"><i class="fa fa-twitter"></i> </a>
+                </div>
+                
+                <br><br>
+                <h4>@Localizer["meaningof"] @Model.Name.Name</h4>
+                <p class="intonation">@Model.Name.Meaning</p>
+
+                <br><br>
+                <h4>@Localizer["extendedmeaningof"]</h4>
+                <p>@Model.Name.ExtendedMeaning</p>
+
+                <br><br>
+                <h4 class="intonation">@Localizer["morphology"]</h4>
+                <p>@Model.Name.Morphology</p>
+
+                <br><br>
+                <h4>@Localizer["etymology"]</h4>
+                @foreach (var etymology in Model.Name.Etymology)
+                {
+                    <strong>@etymology.Part</strong><span> - @etymology.Meaning</span><br>
+                }
+
+                <br><br>
+                <h4>@Localizer["geolocation"]</h4>
+                <p>@Localizer["commonin"]:
+                    @foreach (var location in Model.Name.GeoLocation)
+                    {
+                        <br />@location.Place
+                    }
+                </p>
+
+                <br><br>
+                <h4>@Localizer["famous-persons"]</h4>
+                <p>@Model.Name.FamousPeople</p>
+
+                <br><br>
+                <h4>@Localizer["media-links"]</h4>
+                <p>@Model.Name.Media</p>
+
+                <br><br>
+                <h4>@Localizer["variants"]</h4>
+                <p class="intonation">@Model.Name.Variants</p>
+
+                <br><br>
+                <h4>@Localizer["see-also"]</h4>
+
+            </div>
+
+            <!-- sidebar -->
+            <aside>
+                <div class="col-md-4">
+                    @await Html.PartialAsync("Partials/_RightSidebar", Model.MostPopularNames)
+                </div>
+            </aside>
+            <!-- /sidebar -->
+            @await Html.PartialAsync("Partials/_Alphabets", Model.Alphabets)
+        </div>
+
+    </div>
+</section>
+<!-- /main-content -->
+
+<!--Improve Entry Modal -->
+<div class="modal fade" id="improveEntryModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>@Localizer["improve-entry.help-us"] "@Model.Name.Name"</h3>
+            </div>
+            <form name="name_feedback" class="modal-body" asp-page-handler="SubmitFeedback" method="post">
+                <div class="response"></div>
+                <div class="form-group">
+                    <input id="nameToFeedback" type="hidden" value="@Model.Name.Name" />
+                    <p class="lead">@Localizer["improve-entry.sub-text"]</p>
+                    <textarea name="feedback" id="improveEntry" class="form-control" rows="5" required="true"></textarea>
+                </div>
+                <button type="submit" id="submitEntry" class="btn btn-success btn-lg">Submit Feedback</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-dismiss="modal">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+<!--/Improve Entry Modal -->
