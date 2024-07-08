@@ -2,7 +2,7 @@
 using System.Text.Json;
 using Core.Dto;
 
-namespace Api.Utilities
+namespace Core.StringObjectConverters
 {
     public class CharacterSeparatedStringConverter<T> : JsonConverter<T> where T: CharacterSeparatedString<T>
     {

@@ -8,6 +8,7 @@ using Application.Validation;
 using Core.Cache;
 using Core.Enums;
 using Core.Events;
+using Core.StringObjectConverters;
 using FluentValidation;
 using Infrastructure.MongoDB;
 using Microsoft.AspNetCore.Authentication;

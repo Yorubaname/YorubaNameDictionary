@@ -1,6 +1,9 @@
 ﻿using Core.Dto.Request;
 using Core.Dto.Response;
+using Core.StringObjectConverters;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Website.Config;
 
 namespace Website.Services
@@ -9,11 +12,17 @@ namespace Website.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IOptions<ApiSettings> _apiSettings;
+        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-        public ApiService(IHttpClientFactory httpClientFactory, IOptions<ApiSettings> apiSettings)
+        public ApiService(
+            IHttpClientFactory httpClientFactory, 
+            IOptions<ApiSettings> apiSettings,
+            JsonSerializerOptions jsonSerializerOptions
+            )
         {
             _httpClient = httpClientFactory.CreateClient();
             _apiSettings = apiSettings;
+            _jsonSerializerOptions = jsonSerializerOptions;
         }
 
         private async Task<T> GetApiResponse<T>(string endpoint)
@@ -27,8 +36,7 @@ namespace Website.Services
                 throw new Exception("Error calling API");
             }
 
-            return await response.Content.ReadFromJsonAsync<T>()
-                   ?? throw new Exception("No data returned from API");
+            return await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions) ?? throw new Exception("No data returned from API");
         }
 
         public Task<RecentStats> GetRecentStats()

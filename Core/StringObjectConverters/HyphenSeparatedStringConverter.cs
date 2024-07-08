@@ -1,6 +1,6 @@
 ﻿using Core.Dto;
 
-namespace Api.Utilities
+namespace Core.StringObjectConverters
 {
     public class HyphenSeparatedStringConverter : CharacterSeparatedStringConverter<HyphenSeparatedString>
     {

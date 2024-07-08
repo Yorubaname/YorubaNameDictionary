@@ -7,6 +7,10 @@
 @using Website.Resources
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 
+@await Html.PartialAsync("Partials/_MiniSearchForm")
+
+<!-- main-content -->
+
 <section id="content">
     <div class="container">
         <div class="row">
@@ -34,7 +38,7 @@
                     }
                 }
             </div>
-            @await Html.PartialAsync("Partials/_Alphabets");
+            @await Html.PartialAsync("Partials/_Alphabets", @Model.Alphabets)
         </div>
     </div>
 </section>
