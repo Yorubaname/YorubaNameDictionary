@@ -46,5 +46,10 @@ namespace Website.Services
             //TODO: Use caching here since this dataset does not often change.
             return GetApiResponse<GeoLocationDto[]>("/geolocations");
         }
+
+        public Task<NameEntryDto[]> SearchNameAsync(string query)
+        {
+            return GetApiResponse<NameEntryDto[]>("/search/?q=" + query);
+        }
     }
 }
