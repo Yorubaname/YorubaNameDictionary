@@ -101,7 +101,7 @@
             <div class="modal-header">
                 <h3>@Localizer["improve-entry.help-us"] "@Model.Name.Name"</h3>
             </div>
-            <form name="name_feedback" class="modal-body" asp-page-handler="SubmitFeedback" method="post">
+            <form name="name_feedback" class="modal-body" action="/api/v1/feedbacks" method="post">
                 <div class="response"></div>
                 <div class="form-group">
                     <input id="nameToFeedback" type="hidden" value="@Model.Name.Name" />
@@ -109,7 +109,7 @@
                     <textarea name="feedback" id="improveEntry" class="form-control" rows="5" required="true"></textarea>
                 </div>
                 <button type="submit" id="submitEntry" class="btn btn-success btn-lg">Submit Feedback</button>
-                &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-dismiss="modal">Cancel</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-dismiss="modal" id="close_feedback_modal">Cancel</a>
             </form>
         </div>
     </div>

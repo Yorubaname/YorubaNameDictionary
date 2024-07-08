@@ -113,8 +113,8 @@ $(function(){
       success: function (resp) {
         e.currentTarget.reset();
         $('.response').html(alert_success("Feedback posted successfully. Thanks.")).fadeIn();
-        setTimeout(function(){
-          $('#improveEntryModal').modal('close');
+          setTimeout(function () {
+              $('#close_feedback_modal').trigger("click");
         }, 1000);
       },
       error: function (jqXHR) {
@@ -232,7 +232,7 @@ $(function(){
       var name = $(this).val();
 
       $.ajax({
-        url: '/v1/names/' + name.toLowerCase(),
+        url: '/api/v1/names/' + name.toLowerCase(),
         type: 'GET',
         contentType: "application/json",
       }).success(function (response) {
