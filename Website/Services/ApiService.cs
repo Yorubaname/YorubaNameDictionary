@@ -26,7 +26,7 @@ namespace Website.Services
             _jsonSerializerOptions = jsonSerializerOptions;
         }
 
-        private async Task<T> GetApiResponse<T>(string endpoint)
+        private async Task<T?> GetApiResponse<T>(string endpoint)
         {
             var url = $"{_apiSettings.Value.BaseUrl}{endpoint}";
             var response = await _httpClient.GetAsync(url);
@@ -36,29 +36,33 @@ namespace Website.Services
                 // TODO: Ensure this results in a decent user experience.
                 throw new Exception("Error calling API");
             }
-
-            return await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions) ?? throw new Exception("No data returned from API");
+            var rawContent = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrEmpty(rawContent))
+            {
+                return default;
+            }
+            return JsonSerializer.Deserialize<T>(rawContent, _jsonSerializerOptions);
         }
 
         public Task<RecentStats> GetRecentStats()
         {
-            return GetApiResponse<RecentStats>("/search/activity/all");
+            return GetApiResponse<RecentStats>("/search/activity/all")!;
         }
 
         public Task<SearchMetadataDto> GetIndexedNameCount()
         {
-            return GetApiResponse<SearchMetadataDto>("/search/meta");
+            return GetApiResponse<SearchMetadataDto>("/search/meta")!;
         }
 
         public Task<GeoLocationDto[]> GetGeoLocations()
         {
             //TODO: Use caching here since this dataset does not often change.
-            return GetApiResponse<GeoLocationDto[]>("/geolocations");
+            return GetApiResponse<GeoLocationDto[]>("/geolocations")!;
         }
 
         public Task<NameEntryDto[]> SearchNameAsync(string query)
         {
-            return GetApiResponse<NameEntryDto[]>("/search/?q=" + query);
+            return GetApiResponse<NameEntryDto[]>("/search/?q=" + query)!;
         }
 
         public Task<NameEntryDto?> GetName(string nameEntry)
@@ -68,7 +72,7 @@ namespace Website.Services
 
         public Task<NameEntryDto[]> GetAllNamesByAlphabet(string letter)
         {
-            return GetApiResponse<NameEntryDto[]>($"/search/alphabet/{letter}");
+            return GetApiResponse<NameEntryDto[]>($"/search/alphabet/{letter}")!;
         }
     }
 }
