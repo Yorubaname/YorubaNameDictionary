@@ -1,4 +1,3 @@
-using Api.Utilities;
 using Application.Cache;
 using Application.Domain;
 using Application.Events;

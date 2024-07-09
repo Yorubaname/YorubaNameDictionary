@@ -1,5 +1,6 @@
 using Application.Services;
 using Core.Dto.Response;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Website.Pages.Shared;
 using Website.Resources;
@@ -19,11 +20,11 @@ namespace Website.Pages
         public NameEntryDto[] Names { get; set; } = [];
 
 
-        public async Task OnGet(string letter)
+        public async Task<IActionResult> OnGet(string letter)
         {
             if (letter.Length > 2)
             {
-                // TODO: ideally you should only list names by a letter. If it's greater than 2, it's not a letter.
+                return RedirectToPage("Alphabet", new { letter = letter[..1] });
             }
 
             Letter = letter;
@@ -36,6 +37,8 @@ namespace Website.Pages
             }
 
             Count = Names.Length;
+
+            return Page();
         }
     }
 }
