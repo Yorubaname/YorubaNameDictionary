@@ -1,0 +1,25 @@
+﻿@using Website.Resources
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+
+
+<div style="text-align: center; padding: 50px;">
+    <div class="emoji" style="font-size: 100px; animation: pulse 2s infinite;">💥</div>
+    <h1>We encountered an unexpected issue. Please try again later.</h1>
+    <p>In the meantime, you can go back to the <a href="/" style="color:#0e5264; text-decoration:underline">@Localizer["home-page"]</a></p>
+</div>
+
+<style>
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
