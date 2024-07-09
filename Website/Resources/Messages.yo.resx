@@ -340,7 +340,7 @@
     <value>Ó dàbíi pé a kò rí àwọn ǹkan tí o ń wá, tàbí wọ́n ti sún-un lọ síbòmíì.</value>
   </data>
   <data name="error-message2" xml:space="preserve">
-    <value>Oòṣe tẹ ibí yìí kí o padà sí &lt;a href="/" style="color:#0e5264; text-decoration:underline"&gt;abala ilé&lt;/a&gt; láti tún ṣàbápàdé àwọn orúkọ Yorùbá mìíràn?</value>
+    <value>Oòṣe tẹ ibí yìí kí o padà sí</value>
   </data>
   <data name="oni-message" xml:space="preserve">
     <value>Iṣẹ́ gbògí tó ṣe pàtàki gidi tí yóò sì mú kí èdè Yorùbá tẹ̀síwájú ni. Mo faramọ́ọ gidigidi.</value>
@@ -362,5 +362,11 @@
   </data>
   <data name="names-starting-with" xml:space="preserve">
     <value>Àwọn orúkọ tó bẹ̀rẹ̀ pẹ̀lú</value>
+  </data>
+  <data name="error-discover-message" xml:space="preserve">
+    <value>láti tún ṣàbápàdé àwọn orúkọ Yorùbá mìíràn?</value>
+  </data>
+  <data name="home-page" xml:space="preserve">
+    <value>abala ilé</value>
   </data>
 </root>

@@ -340,7 +340,7 @@
     <value>It seems like we can't find the resource you're looking for, or it's been moved.</value>
   </data>
   <data name="error-message2" xml:space="preserve">
-    <value>Why not click here to go back to the &lt;a href="/" style="color:#0e5264; text-decoration:underline"&gt;home page&lt;/a&gt; to discover more Yoruba names?</value>
+    <value>Why not click here to go back to the</value>
   </data>
   <data name="oni-message" xml:space="preserve">
     <value>A phenomenal concept that will keep the Yorùbá culture alive. I strongly support the endeavor.</value>
@@ -362,5 +362,11 @@
   </data>
   <data name="names-starting-with" xml:space="preserve">
     <value>Names starting with</value>
+  </data>
+  <data name="error-discover-message" xml:space="preserve">
+    <value>to discover more Yoruba names?</value>
+  </data>
+  <data name="home-page" xml:space="preserve">
+    <value>home page</value>
   </data>
 </root>
