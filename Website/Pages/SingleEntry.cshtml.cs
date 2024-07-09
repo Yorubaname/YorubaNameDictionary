@@ -22,10 +22,8 @@ namespace Website.Pages
 
         public async Task<IActionResult> OnGet(string nameEntry)
         {
-            NameEntryDto? name = null;
-
-            // TODO: Pass data between pages
-            name ??= await _apiService.GetName(nameEntry);
+            // TODO: Try to get name from search page first.
+            NameEntryDto? name = await _apiService.GetName(nameEntry);
 
             if (name == null)
             {
