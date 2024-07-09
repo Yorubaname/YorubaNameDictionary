@@ -4,6 +4,7 @@ using System.Globalization;
 using Website.Config;
 using Website.Middleware;
 using Website.Services;
+using Website.Utilities;
 
 namespace Website
 {
@@ -15,6 +16,7 @@ namespace Website
             var services = builder.Services;
 
             // Add services to the container
+            services.AddSingleton(JsonSerializerOptionsProvider.GetJsonSerializerOptionsWithCustomConverters());
             services.AddLocalization();
 
             services.AddProxy();

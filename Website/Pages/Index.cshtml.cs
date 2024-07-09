@@ -12,7 +12,7 @@ namespace Website.Pages
         public string[] LatestSearches { get; private set; } = [];
         public string[] LatestAdditions { get; private set; } = [];
         public string[] MostPopular { get; private set; } = [];
-        public List<string> Alphabets { get; private set; } = [];
+        public List<string> Letters { get; private set; } = [];
         public ApiService _apiService = apiService;
 
         public async Task OnGet()
@@ -25,7 +25,7 @@ namespace Website.Pages
             LatestSearches = searchActivity.LatestSearches;
             LatestAdditions = searchActivity.LatestAdditions;
             MostPopular = searchActivity.MostPopular;
-            Alphabets = YorubaAlphabetService.YorubaAlphabets;
+            Letters = YorubaAlphabetService.YorubaAlphabet;
         }
     }
 }

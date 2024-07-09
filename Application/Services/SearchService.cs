@@ -1,4 +1,5 @@
-﻿using Core.Dto.Response;
+﻿using Application.Mappers;
+using Core.Dto.Response;
 using Core.Entities.NameEntry;
 using Core.Enums;
 using Core.Repositories;
@@ -16,18 +17,23 @@ namespace Application.Services
 
         public async Task<HashSet<string>> AutoComplete(string query)
         {
-            var searchTerms = new List<string>();
+            var namesResult = new HashSet<NameEntry>();
 
-            for (int i = 2; i <= query.Length; i++)
+            if(query.Length > 1)
             {
-                searchTerms.Add(query.Substring(0, i));
+                namesResult = await _namesRepository.FindByNameStartingWithAndState(query, State.PUBLISHED);
             }
 
-            var namesResult = await _namesRepository.FindByNameStartingWithAnyAndState(searchTerms, State.PUBLISHED);
             var namesContainingQuery = await _namesRepository.FindNameEntryByNameContainingAndState(query, State.PUBLISHED);
             namesResult.UnionWith(namesContainingQuery);
 
             return new HashSet<string>(namesResult.Select(n => n.Name));
+        }
+
+        public async Task<NameEntryDto?> GetName(string searchTerm)
+        {
+            var result = await _namesRepository.FindByNameAndState(searchTerm, State.PUBLISHED);
+            return result?.MapToDto();
         }
 
         /// <summary>

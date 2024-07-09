@@ -6,10 +6,9 @@
 <ul class="alphabets">
     @if (Model != null)
     {
-        foreach (var alphabet in Model)
+        foreach (var letter in Model)
         {
-            <a href="/alphabets/@alphabet.NormalizeLetter()">
-            <li>@alphabet.NormalizeLetter()</li></a>
+            <a href="/alphabet/@letter.NormalizeLetter()"><li>@letter.NormalizeLetter()</li></a>
         }
     }
 </ul>

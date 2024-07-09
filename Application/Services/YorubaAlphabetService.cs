@@ -2,7 +2,7 @@
 {
     public class YorubaAlphabetService
     {
-        public static List<string> YorubaAlphabets
+        public static List<string> YorubaAlphabet
         {
             get
             {

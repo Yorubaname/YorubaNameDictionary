@@ -6,13 +6,13 @@ using Core.Entities.NameEntry;
 using Core.Entities.NameEntry.Collections;
 using Core.Enums;
 
-namespace Api.Mappers
+namespace Application.Mappers
 {
-    public static class NamesControllerMappers
+    public static class NameEntryMapper
     {
         public static NameEntryDto[] MapToDtoCollection(this IEnumerable<NameEntry> names)
         {
-            return names.Select(nameEntry => MapToDto(nameEntry)).ToArray();
+            return names.Select(nameEntry => nameEntry.MapToDto()).ToArray();
         }
 
         public static NameEntry MapToEntity(this NameDto request)

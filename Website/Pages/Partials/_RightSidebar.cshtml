@@ -1,0 +1,18 @@
+﻿@using Website.Resources
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+
+<div class="side-bar">
+
+    @if (Model != null)
+    {
+        <h4>@Localizer["most-popular-names"]</h4>
+        <hr />
+        <ul id="side_popular">
+            @foreach (var popularName in Model)
+            {
+                <li><a href="/entries/@popularName">@popularName</a></li>
+            }
+        </ul>
+    }
+</div>

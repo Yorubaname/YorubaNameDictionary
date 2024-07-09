@@ -113,8 +113,8 @@ $(function(){
       success: function (resp) {
         e.currentTarget.reset();
         $('.response').html(alert_success("Feedback posted successfully. Thanks.")).fadeIn();
-        setTimeout(function(){
-          $('#improveEntryModal').modal('close');
+          setTimeout(function () {
+              $('#close_feedback_modal').trigger("click");
         }, 1000);
       },
       error: function (jqXHR) {
@@ -155,9 +155,7 @@ $(function(){
   // puts latest searches, latest addition and most popular in local storage
   $(function () {
 
-    var searches, additions, popular;
-
-    searches = additions = popular = [];
+    var searches = [], additions = [], popular = [];
 
     $("#recent_searches li.recent_entry").each(function () {
       if ($(this).text() !== "") {
@@ -197,12 +195,14 @@ $(function(){
   $(function () {
 
     var $ul = $("ul#side_popular"),
-      item = JSON.parse(localStorage.getItem("popular") || '[]');
+      items = JSON.parse(localStorage.getItem("popular") || '[]');
 
-    item.forEach(function (i) {
-      $ul.append("<li><a href='/entries/" + i + "'>" + i + "</a></li>");
-    });
-
+      if (items.length > 0) {
+          $ul.empty(); // Clear existing contents of the UL
+          items.forEach(function (item) {
+              $ul.append("<li><a href='/entries/" + item + "'>" + item + "</a></li>");
+          });
+      }
   });
 
 
@@ -232,7 +232,7 @@ $(function(){
       var name = $(this).val();
 
       $.ajax({
-        url: '/v1/names/' + name.toLowerCase(),
+        url: '/api/v1/names/' + name.toLowerCase(),
         type: 'GET',
         contentType: "application/json",
       }).success(function (response) {
