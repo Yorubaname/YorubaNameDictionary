@@ -2,6 +2,7 @@ using Application.Services;
 using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System.Web;
 using Website.Pages.Shared;
 using Website.Resources;
 using Website.Services;
@@ -32,7 +33,7 @@ namespace Website.Pages
 
             Name = name;
             Letters = YorubaAlphabetService.YorubaAlphabet;
-            Host = $"{Request.Scheme}://{Request.Host}";
+            Host = HttpUtility.UrlEncode($"{Request.Scheme}://{Request.Host}");
 
             var searchActivity = await _apiService.GetRecentStats();
             MostPopularNames = searchActivity.MostPopular;
