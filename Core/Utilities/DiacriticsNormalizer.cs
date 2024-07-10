@@ -7,7 +7,7 @@ namespace Core.Utilities
     public static class DiacriticsNormalizer
     {
         const char a = 'a', e = 'e', i = 'i', o = 'o', u = 'u';
-        static Dictionary<char, char> vowelMap = new()
+        static readonly Dictionary<char, char> vowelMap = new()
         {
                 { 'á', a },
                 { 'à', a },
@@ -26,6 +26,17 @@ namespace Core.Utilities
                 { 'ú', u },
                 { 'ù', u },
                 { 'u', u }
+        };
+
+
+        static readonly Dictionary<char, string> vowelPatterns = new()
+        {
+            // "\\p{Mn}?" means zero or one nonspacing unicode mark. It could occur after any vowel.
+            { 'a', "[aáà]\\p{Mn}?" },
+            { 'e', "[eéèẹ]\\p{Mn}?" },
+            { 'i', "[iíì]\\p{Mn}?" },
+            { 'o', "[oóòọ]\\p{Mn}?" },
+            { 'u', "[uúù]\\p{Mn}?" }
         };
 
         private static string RemoveDiacriticsAndSimplify(this string text)
@@ -53,15 +64,6 @@ namespace Core.Utilities
 
         public static string ReplaceYorubaVowelsWithPattern(this string term)
         {
-            var vowelPatterns = new Dictionary<char, string>
-            {
-                { 'a', "[aáà]\\p{Mn}?" },
-                { 'e', "[eéèẹ]\\p{Mn}?" },
-                { 'i', "[iíì]\\p{Mn}?" },
-                { 'o', "[oóòọ]\\p{Mn}?" },
-                { 'u', "[uúù]\\p{Mn}?" }
-            };
-
             term = RemoveDiacriticsAndSimplify(term);
 
             return string.Concat(term.Select(c =>
