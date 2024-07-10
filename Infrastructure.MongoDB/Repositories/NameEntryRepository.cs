@@ -3,6 +3,7 @@ using Core.Entities.NameEntry;
 using Core.Enums;
 using Core.Events;
 using Core.Repositories;
+using Core.Utilities;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Linq.Expressions;
@@ -118,8 +119,10 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
     public async Task<HashSet<NameEntry>> FindByNameStartingWithAnyAndState(IEnumerable<string> searchTerms, State state)
     {
         var regexFilters = searchTerms.Select(term =>
-            Builders<NameEntry>.Filter.Regex(ne => ne.Name, new BsonRegularExpression($"^{term}", "i"))
-        );
+        {
+            return Builders<NameEntry>.Filter.Regex(ne => ne.Name, 
+                new BsonRegularExpression($"^{term.ReplaceYorubaVowelsWithPattern()}", "i"));
+        });
 
         var namesFilter = Builders<NameEntry>.Filter.Or(regexFilters);
         var stateFilter = Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
@@ -137,16 +140,17 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task<HashSet<NameEntry>> FindNameEntryByExtendedMeaningContainingAndState(string name, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.ExtendedMeaning, new BsonRegularExpression(name, "i")) &
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.ExtendedMeaning, 
+            new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i")) &
             Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
-        var options = SetCollationPrimary<FindOptions>(new FindOptions());
-        var result = await _nameEntryCollection.Find(filter, options).ToListAsync();
+        var result = await _nameEntryCollection.Find(filter).ToListAsync();
         return new HashSet<NameEntry>(result);
     }
 
     public async Task<HashSet<NameEntry>> FindNameEntryByMeaningContainingAndState(string name, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Name, new BsonRegularExpression(name, "i"))
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Name, 
+            new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i"))
                                     & Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var result = await _nameEntryCollection.Find(filter).ToListAsync();
         return new HashSet<NameEntry>(result);
@@ -154,7 +158,8 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task<HashSet<NameEntry>> FindNameEntryByNameContainingAndState(string name, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Name, new BsonRegularExpression(name, "i")) &
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Name, 
+            new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i")) &
              Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var result = await _nameEntryCollection.Find(filter).ToListAsync();
         return new HashSet<NameEntry>(result);
@@ -162,10 +167,9 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task<HashSet<NameEntry>> FindNameEntryByVariantsContainingAndState(string name, State state)
     {
-        var regex = new BsonRegularExpression(name, "i");
+        var regex = new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i");
         var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Variants, regex) & Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
-        var options = SetCollationPrimary<FindOptions>(new FindOptions());
-        var result = await _nameEntryCollection.Find(filter, options).ToListAsync();
+        var result = await _nameEntryCollection.Find(filter).ToListAsync();
         return new HashSet<NameEntry>(result);
     }
 
