@@ -6,11 +6,9 @@ namespace Core.Utilities
 {
     public static class DiacriticsNormalizer
     {
-        private static string RemoveDiacriticsAndSimplify(this string text)
+        const char a = 'a', e = 'e', i = 'i', o = 'o', u = 'u';
+        static Dictionary<char, char> vowelMap = new()
         {
-            const char a = 'a', e = 'e', i = 'i', o = 'o', u = 'u';
-            var vowelMap = new Dictionary<char, char>
-            {
                 { 'á', a },
                 { 'à', a },
                 { 'a', a },
@@ -28,8 +26,10 @@ namespace Core.Utilities
                 { 'ú', u },
                 { 'ù', u },
                 { 'u', u }
-            };
+        };
 
+        private static string RemoveDiacriticsAndSimplify(this string text)
+        {
             var decomposed = text.Normalize(NormalizationForm.FormD);
             var stringBuilder = new StringBuilder();
 
