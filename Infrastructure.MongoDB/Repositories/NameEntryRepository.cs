@@ -118,7 +118,6 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task<HashSet<NameEntry>> FindByNameStartingWithAnyAndState(IEnumerable<string> searchTerms, State state)
     {
-        var options = SetCollationPrimary<FindOptions>(new FindOptions());
         var regexFilters = searchTerms.Select(term =>
         {
             return Builders<NameEntry>.Filter.Regex(ne => ne.Name, 
@@ -129,7 +128,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         var stateFilter = Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var combinedFilter = Builders<NameEntry>.Filter.And(namesFilter, stateFilter);
 
-        var result = await _nameEntryCollection.Find(combinedFilter, options).ToListAsync();
+        var result = await _nameEntryCollection.Find(combinedFilter).ToListAsync();
         return new HashSet<NameEntry>(result);
     }
 
