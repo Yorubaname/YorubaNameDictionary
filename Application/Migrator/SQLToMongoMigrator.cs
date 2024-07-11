@@ -122,8 +122,11 @@ namespace Application.Migrator
         {
             using var connection = new MySqlConnection(GetSQLConnectionString());
 
-            var suggested_name = connection.Query<suggested_name>("select Id, details, email, name, geo_location_place from suggested_name");
-            var suggested_name_geo_location = connection.Query<suggested_name_geo_location>("select suggested_name_id, geo_location_place from suggested_name_geo_location");
+            var suggested_name = connection.Query<suggested_name>(
+                "select Id, details, email, name, geo.geo_location_place place, gg.region " +
+                "from suggested_name n " +
+                "left join suggested_name_geo_location geo on n.id = geo.suggested_name_id " +
+                "left join geo_location gg on geo.geo_location_place = gg.place");
 
             if (suggested_name == null) return "No data found in MySQL table.";
 
@@ -133,7 +136,7 @@ namespace Application.Migrator
                 Name = s.name,
                 Details = s.details,
                 Email = s.email,
-                GeoLocation = suggested_name_geo_location.Where(d => d.suggested_name_id == s.Id).Select(s => new GeoLocation() { Place = s.geo_location_place }).ToList(),
+                GeoLocation = s.place == null ? new List<GeoLocation>() : new List<GeoLocation> { new GeoLocation(s.place, s.region) },
                 CreatedBy = MigratorProcessName
             }).ToList();
 
