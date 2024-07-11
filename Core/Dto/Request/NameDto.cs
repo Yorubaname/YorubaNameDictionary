@@ -15,9 +15,9 @@ namespace Core.Dto.Request
         public List<EmbeddedVideoDto> Videos { get; set; }
         public List<GeoLocationDto> GeoLocation { get; set; }
 
-        public CommaSeparatedString FamousPeople { get; set; }
+        public CommaSeparatedString? FamousPeople { get; set; }
 
-        public HyphenSeparatedString Syllables { get; set; }
+        public HyphenSeparatedString? Syllables { get; set; }
 
         public CommaSeparatedString? Variants { get; set; }
 
