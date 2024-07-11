@@ -71,7 +71,10 @@ namespace Application.Migrator
                                    select new { a.region, a.place, b.name_entry_id };
 
 
-            var name_entry = connection.Query<nameentry>("select id, created_at, extended_meaning, famous_people,ipa_notation, is_indexed, meaning, media, morphology, pronunciation, submitted_by, syllables, updated_at, variants, name, geo_location_id, state from name_entry");
+            var name_entry = connection.Query<nameentry>("select id, created_at, extended_meaning, famous_people,ipa_notation, is_indexed, " +
+                "meaning, media, morphology, pronunciation, submitted_by, syllables, " +
+                "updated_at, variants, name, geo_location_id, state " +
+                "from name_entry");
 
             if (name_entry == null) return "No data found in MySQL table.";
 
@@ -85,7 +88,7 @@ namespace Application.Migrator
                     Select(a => new GeoLocation() { Place = a.place, Region = a.region }).ToList();
 
                 item.feedbacks = feedbacks.Where(d => d.name == item.name).
-                    Select(a => new Feedback() { Content = a.feedback }).ToList();
+                    Select(a => new Feedback() { Id = $"{a.id}", Content = a.feedback }).ToList();
 
                 item.embeddedVideo = videos.Where(d => d.name_entry_id == item.id).
                     Select(s => new EmbeddedVideo(s.url, s.caption)).ToList();
