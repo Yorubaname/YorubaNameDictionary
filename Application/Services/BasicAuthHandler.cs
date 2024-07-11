@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Data;
-using System.Linq;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
@@ -15,6 +14,7 @@ namespace Application.Services
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly IUserRepository _userRepository;
+        private readonly ILogger<BasicAuthenticationHandler> _logger;
 
         public BasicAuthenticationHandler(
             IUserRepository userRepository,
@@ -25,6 +25,7 @@ namespace Application.Services
             : base(options, logger, encoder, clock)
         {
             _userRepository = userRepository;
+            _logger = logger.CreateLogger<BasicAuthenticationHandler>();
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -44,8 +45,9 @@ namespace Application.Services
 
                 return await Task.FromResult(AuthenticateResult.Success(GenerateAuthTicket(matchingUser)));
             }
-            catch
+            catch(Exception ex)
             {
+                _logger.LogError(ex, "Exception occurred during authentication.");
                 return await Task.FromResult(AuthenticateResult.Fail("Invalid Authorization Header"));
             }
         }
