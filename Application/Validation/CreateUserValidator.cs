@@ -15,7 +15,7 @@ namespace Application.Validation
             RuleFor(u => u.Roles)
                 .NotEmpty().WithMessage("No role is selected")
                 .Must(roles => roles.All(role => !string.IsNullOrWhiteSpace(role) && Enum.IsDefined(typeof(Role), role)))
-                .WithMessage("Invalid role selected"); ;
+                .WithMessage("Invalid role selected");
         }
     }
 }
