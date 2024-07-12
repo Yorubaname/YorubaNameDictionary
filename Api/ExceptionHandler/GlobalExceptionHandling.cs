@@ -1,5 +1,6 @@
 ﻿namespace Api.ExceptionHandler
 {
+    using Application.Exceptions;
     using System.Net;
     using System.Text.Json;
 
@@ -37,22 +38,18 @@
             };
             switch (exception)
             {
-                case ApplicationException ex:
-                    if (ex.Message.Contains("Invalid Token"))
-                    {
-                        response.StatusCode = (int)HttpStatusCode.Forbidden;
-                        errorResponse.Message = ex.Message;
-                        break;
-                    }
+                case ClientException ex:
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     errorResponse.Message = ex.Message;
                     break;
+
+
                 default:
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     errorResponse.Message = "Internal server error!";
                     break;
             }
-            _logger.LogError(exception.Message);
+            _logger.LogError(exception, exception.Message);
             var result = JsonSerializer.Serialize(errorResponse);
             await context.Response.WriteAsync(result);
         }

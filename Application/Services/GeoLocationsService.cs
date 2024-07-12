@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Core.Repositories;
+using Application.Exceptions;
 
 namespace Application.Services
 {
@@ -13,6 +14,7 @@ namespace Application.Services
         }
         public async Task<List<GeoLocation>> GetAll()
         {
+            throw new DuplicateException("YES an execption occured");
             return await _geoLocationsRepository.GetAll();
         }
     }
