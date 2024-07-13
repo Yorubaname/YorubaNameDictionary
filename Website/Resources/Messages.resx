@@ -372,4 +372,16 @@
   <data name="videos" xml:space="preserve">
     <value>Videos</value>
   </data>
+  <data name="keyboard-software-cta-button-mac" xml:space="preserve">
+    <value>For Mac</value>
+  </data>
+  <data name="keyboard-software-cta-button-windows" xml:space="preserve">
+    <value>For Windows</value>
+  </data>
+  <data name="keyboard-software-cta-text" xml:space="preserve">
+    <value>In 2015, we released a YorubaName tonemarker which can help you write properly in Yorùbá with appropriate tone marks. You can now buy it here and download to your computer.</value>
+  </data>
+  <data name="keyboard-software-cta-title" xml:space="preserve">
+    <value>Buy Yorùbá Writing Software</value>
+  </data>
 </root>

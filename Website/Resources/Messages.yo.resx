@@ -372,4 +372,16 @@
   <data name="videos" xml:space="preserve">
     <value>Àwọn fídíò</value>
   </data>
+  <data name="keyboard-software-cta-button-mac" xml:space="preserve">
+    <value>Fún Mac</value>
+  </data>
+  <data name="keyboard-software-cta-button-windows" xml:space="preserve">
+    <value>Fún Windows</value>
+  </data>
+  <data name="keyboard-software-cta-text" xml:space="preserve">
+    <value>Ní 2015, a gbé irin jáde láti YorubaName tí ẹ lè lò láti fi ààmì sí gbogbo ọ̀rọ̀ Yorùbá yín. Ẹ lè ràá níbí yìí báyìí, kí ẹ sì gbàá sínú kọ̀mpútà yín</value>
+  </data>
+  <data name="keyboard-software-cta-title" xml:space="preserve">
+    <value>Ra Oun Tí a Fi Ń Tẹ Ọ̀rọ̀ Yorùba</value>
+  </data>
 </root>
