@@ -369,4 +369,7 @@
   <data name="home-page" xml:space="preserve">
     <value>home page</value>
   </data>
+  <data name="videos" xml:space="preserve">
+    <value>Videos</value>
+  </data>
 </root>
