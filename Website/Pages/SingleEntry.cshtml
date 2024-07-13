@@ -34,50 +34,93 @@
                     <a target="_blank" class="btn btn-social btn-sm btn-fb btn-primary" href="http://www.facebook.com/sharer.php?u=@Model.Host/entries/@Model.Name.Name"><i class="fa fa-facebook"></i> </a>
                     <a target="_blank" class="btn btn-social btn-sm btn-tw btn-info" href="https://twitter.com/intent/tweet?url=@Model.Host/entries/@Model.Name.Name&amp;text=Did you know @Model.Name.Name means @Model.Name.Meaning?&amp;hashtags=YorubaNames&amp;via=YorubaNames"><i class="fa fa-twitter"></i> </a>
                 </div>
-                
+
                 <br><br>
                 <h4>@Localizer["meaningof"] @Model.Name.Name</h4>
                 <p class="intonation">@Model.Name.Meaning</p>
 
-                <br><br>
-                <h4>@Localizer["extendedmeaningof"]</h4>
-                <p>@Model.Name.ExtendedMeaning</p>
-
-                <br><br>
-                <h4 class="intonation">@Localizer["morphology"]</h4>
-                <p>@Model.Name.Morphology</p>
-
-                <br><br>
-                <h4>@Localizer["etymology"]</h4>
-                @foreach (var etymology in Model.Name.Etymology)
+                @if (!string.IsNullOrEmpty(Model.Name.ExtendedMeaning))
                 {
-                    <strong>@etymology.Part</strong><span> - @etymology.Meaning</span><br>
+                    <br>                    <br>
+                    <h4>@Localizer["extendedmeaningof"]</h4>
+                    <p>@Model.Name.ExtendedMeaning</p>
                 }
 
-                <br><br>
-                <h4>@Localizer["geolocation"]</h4>
-                <p>@Localizer["commonin"]:
-                    @foreach (var location in Model.Name.GeoLocation)
+                @if (Model.Name.Videos.Any())
+                {
+                    <br>                    <br>
+                    <h4>@Localizer["videos"]</h4>
+                    @foreach (var video in Model.Name.Videos)
                     {
-                        <br />@location.Place
+                        <div class="iframe-container" id="video@video.Index">
+                            <iframe src="https://www.youtube.com/embed/@video.VideoId"
+                                    title="@video.Caption" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen></iframe>
+                        </div>
                     }
-                </p>
+                }
 
-                <br><br>
-                <h4>@Localizer["famous-persons"]</h4>
-                <p>@Model.Name.FamousPeople</p>
+                @if (!string.IsNullOrEmpty(Model.Name.Morphology?.ToString()))
+                {
+                    <br>                    <br>
+                    <h4 class="intonation">@Localizer["morphology"]</h4>
+                    <p>@Model.Name.Morphology</p>
+                }
 
-                <br><br>
-                <h4>@Localizer["media-links"]</h4>
-                <p>@Model.Name.Media</p>
 
-                <br><br>
-                <h4>@Localizer["variants"]</h4>
-                <p class="intonation">@Model.Name.Variants</p>
+                @if (Model.Name.Etymology?.Count > 0)
+                {
+                    <br>
 
-                <br><br>
-                <h4>@Localizer["see-also"]</h4>
+                    <br>
+                    <h4>@Localizer["etymology"]</h4>
+                    @foreach (var etym in Model.Name.Etymology)
+                    {
+                        <strong>@etym.Part</strong>                        <span> - @etym.Meaning</span>
+                        <br>
+                    }
+                }
 
+
+                @if (Model.Name.GeoLocation?.Count > 0)
+                {
+                    <br>                    <br>
+                    <h4>@Localizer["geolocation"]</h4>
+                    <p>
+                        @Localizer["commonin"]:
+                        @foreach (var place in Model.Name.GeoLocation)
+                        {
+                            <br />
+                            @place
+                        }
+                    </p>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Name.FamousPeople?.ToString()))
+                {
+                    <br>                    <br>
+                    <h4>@Localizer["famous-persons"]</h4>
+                    <p>@Model.Name.FamousPeople</p>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Name.Media?.ToString()))
+                {
+                    <br>
+
+                    <br>
+                    <h4>@Localizer["media-links"]</h4>
+                    <p>@Model.Name.Media</p>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Name.Variants?.ToString()))
+                {
+                    <br>
+
+                    <br>
+                    <h4>@Localizer["variants"]</h4>
+                    <p class="intonation">@Model.Name.Variants</p>
+                }
             </div>
 
             <!-- sidebar -->
@@ -93,7 +136,6 @@
     </div>
 </section>
 <!-- /main-content -->
-
 <!--Improve Entry Modal -->
 <div class="modal fade" id="improveEntryModal" role="dialog">
     <div class="modal-dialog">
