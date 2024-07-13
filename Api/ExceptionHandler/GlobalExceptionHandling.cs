@@ -49,7 +49,7 @@
                     errorResponse.Message = "Internal server error!";
                     break;
             }
-            _logger.LogError(exception, exception.Message);
+            _logger.LogError(exception, "Unhandled Application Exception");
             var result = JsonSerializer.Serialize(errorResponse);
             await context.Response.WriteAsync(result);
         }

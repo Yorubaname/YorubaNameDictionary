@@ -14,8 +14,7 @@ namespace Application.Services
         }
         public async Task<List<GeoLocation>> GetAll()
         {
-            throw new DuplicateException("YES an execption occured");
-            return await _geoLocationsRepository.GetAll();
+           return await _geoLocationsRepository.GetAll();
         }
     }
 }
