@@ -102,16 +102,25 @@
                 {
                     <br>                    <br>
                     <h4>@Localizer["famous-persons"]</h4>
-                    <p>@Model.Name.FamousPeople</p>
+                    <ul>
+                        @foreach (var person in (List<string>)Model.Name.FamousPeople)
+                        {
+                            <li><p>@person</p></li>
+                        }
+                    </ul>
                 }
 
                 @if (!string.IsNullOrEmpty(Model.Name.Media?.ToString()))
                 {
                     <br>
-
                     <br>
                     <h4>@Localizer["media-links"]</h4>
-                    <p>@Model.Name.Media</p>
+                    <ul>
+                        @foreach (var link in (List<string>)Model.Name.Media)
+                        {
+                            <li><a href="@link" target="_blank">@link</a></li>
+                        }
+                    </ul>
                 }
 
                 @if (!string.IsNullOrEmpty(Model.Name.Variants?.ToString()))
