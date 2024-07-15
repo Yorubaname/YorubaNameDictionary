@@ -244,7 +244,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
             filter &= filterBuilder.Eq(ne => ne.CreatedBy, submittedBy.Trim());
         }
 
-        int skip = pageNumber - 1 * pageSize;
+        int skip = (pageNumber - 1) * pageSize;
         var names = await _nameEntryCollection
                             .Find(filter)
                             .Skip(skip)
