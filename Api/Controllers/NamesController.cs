@@ -4,6 +4,7 @@ using Application.Domain;
 using Application.Mappers;
 using Core.Dto.Request;
 using Core.Dto.Response;
+using Core.Entities.NameEntry;
 using Core.Enums;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -82,6 +83,7 @@ namespace Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(NameEntryDto[]), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(NameEntryMiniDto[]), (int)HttpStatusCode.OK)]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllNames(
         [FromQuery] int? page,
@@ -90,18 +92,17 @@ namespace Api.Controllers
         [FromQuery] string? submittedBy,
         [FromQuery] State? state)
         {
+            // TODO: Eventually create different endpoints for this to eliminate the IF statements.
+            IEnumerable<NameEntry> names;
             if (all.HasValue && all.Value)
             {
-                page = null;
-                count = null;
-            }
-            else
-            {
-                page ??= DefaultPage;
-                count = Math.Min(count ?? DefaultListCount, MaxListCount);
+                names = await _nameEntryService.GetAllNames(state, submittedBy);
+                return Ok(names.MapToDtoCollectionMini());
             }
 
-            var names = await _nameEntryService.FindBy(state, page, count, submittedBy);
+            page ??= DefaultPage;
+            count = Math.Min(count ?? DefaultListCount, MaxListCount);
+            names = await _nameEntryService.List(state, submittedBy, page.Value, count.Value);
             return Ok(names.MapToDtoCollection());
         }
 

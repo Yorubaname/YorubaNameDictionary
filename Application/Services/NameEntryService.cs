@@ -180,7 +180,12 @@ namespace Application.Domain
             return variantCount > 0;
         }
 
-        public async Task<List<NameEntry>> FindBy(State? state, int? pageNumber, int? pageSize, string? submittedBy)
+        public async Task<IEnumerable<NameEntry>> GetAllNames(State? state, string? submittedBy)
+        {
+            return await _nameEntryRepository.GetAllNames(state, submittedBy);
+        }
+
+        public async Task<List<NameEntry>> List(State? state, string? submittedBy, int pageNumber, int pageSize)
         {
             return await _nameEntryRepository.List(pageNumber, pageSize, state, submittedBy);
         }

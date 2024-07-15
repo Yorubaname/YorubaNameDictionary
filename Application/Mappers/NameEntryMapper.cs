@@ -15,6 +15,16 @@ namespace Application.Mappers
             return names.Select(nameEntry => nameEntry.MapToDto()).ToArray();
         }
 
+        public static NameEntryMiniDto[] MapToDtoCollectionMini(this IEnumerable<NameEntry> names)
+        {
+            return names.Select(nameEntry => new NameEntryMiniDto
+            {
+                Name = nameEntry.Name,
+                Meaning = nameEntry.Meaning,
+                SubmittedBy = nameEntry.CreatedBy
+            }).ToArray();
+        }
+
         public static NameEntry MapToEntity(this NameDto request)
         {
             return new NameEntry

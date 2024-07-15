@@ -53,6 +53,8 @@ public class NameEntry : BaseEntity, IComparable<NameEntry>
         Variants = new List<string>();
         Morphology = new List<string>();
         Media = new List<string>();
+
+        GeoLocation = new List<GeoLocation>();
     }
 
     public NameEntry(string name, string meaning)

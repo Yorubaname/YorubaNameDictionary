@@ -203,7 +203,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         return (int)count;
     }
 
-    public async Task<List<NameEntry>> List(int? pageNumber, int? pageSize, State? state, string? submittedBy)
+    public async Task<IEnumerable<NameEntry>> GetAllNames(State? state, string? submittedBy)
     {
         var filterBuilder = Builders<NameEntry>.Filter;
         var filter = filterBuilder.Empty;
@@ -218,12 +218,38 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
             filter &= filterBuilder.Eq(ne => ne.CreatedBy, submittedBy.Trim());
         }
 
-        int? skip = (pageNumber.HasValue && pageSize.HasValue) ? (pageNumber.Value - 1) * pageSize.Value : null;
+        var projection = Builders<NameEntry>.Projection.Include(ne => ne.Name).Exclude(ne => ne.Id);
+
+        var names = await _nameEntryCollection
+                            .Find(filter)
+                            .Project<NameEntry>(projection)
+                            .Sort(Builders<NameEntry>.Sort.Ascending(ne => ne.CreatedAt))
+                            .ToListAsync();
+
+        return names;
+    }
+
+    public async Task<List<NameEntry>> List(int pageNumber, int pageSize, State? state, string? submittedBy)
+    {
+        var filterBuilder = Builders<NameEntry>.Filter;
+        var filter = filterBuilder.Empty;
+
+        if (state.HasValue)
+        {
+            filter &= filterBuilder.Eq(ne => ne.State, state.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(submittedBy))
+        {
+            filter &= filterBuilder.Eq(ne => ne.CreatedBy, submittedBy.Trim());
+        }
+
+        int skip = pageNumber - 1 * pageSize;
         var names = await _nameEntryCollection
                             .Find(filter)
                             .Skip(skip)
                             .Limit(pageSize)
-                            .Sort(Builders<NameEntry>.Sort.Ascending(ne => ne.Id))
+                            .Sort(Builders<NameEntry>.Sort.Ascending(ne => ne.CreatedAt))
                             .ToListAsync();
         return names;
     }
