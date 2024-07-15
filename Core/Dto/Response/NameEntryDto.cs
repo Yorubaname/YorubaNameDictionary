@@ -18,7 +18,7 @@ namespace Core.Dto.Response
 
         public CommaSeparatedString FamousPeople { get; set; }
         public CommaSeparatedString Media { get; set; }
-        public string SubmittedBy { get; set; }
+        public string? SubmittedBy { get; set; }
 
         public List<EtymologyDto> Etymology { get; set; }
         public List<EmbeddedVideoDto> Videos { get; set; }

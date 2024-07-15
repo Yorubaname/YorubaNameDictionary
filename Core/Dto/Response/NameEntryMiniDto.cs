@@ -1,9 +1,15 @@
-﻿namespace Core.Dto.Response
+﻿using System.Text.Json.Serialization;
+
+namespace Core.Dto.Response
 {
     public class NameEntryMiniDto
     {
         public string Name { get; set; }
-        public string Meaning { get; set;}
-        public string SubmittedBy { get; set;}
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Meaning { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? SubmittedBy { get; set; }
     }
 }

@@ -46,8 +46,9 @@ namespace Core.Repositories
 
         Task<int> CountWhere(Expression<Func<NameEntry, bool>> filter);
 
-        Task<List<NameEntry>> List(int? pageNumber, int? pageSize, State? state, string? submittedBy);
+        Task<List<NameEntry>> List(int pageNumber, int pageSize, State? state, string? submittedBy);
 
         Task<NamesMetadataDto> GetMetadata();
+        Task<IEnumerable<NameEntry>> GetAllNames(State? state, string? submittedBy);
     }
 }
