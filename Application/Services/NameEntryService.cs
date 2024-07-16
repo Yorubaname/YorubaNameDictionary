@@ -1,9 +1,11 @@
-﻿using Application.Exceptions;
+﻿using Amazon.Runtime.Internal.Util;
+using Application.Exceptions;
 using Core.Dto.Response;
 using Core.Entities.NameEntry;
 using Core.Enums;
 using Core.Events;
 using Core.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Domain
 {
@@ -11,36 +13,33 @@ namespace Application.Domain
     {
         private readonly INameEntryRepository _nameEntryRepository;
         private readonly IEventPubService _eventPubService;
+        private readonly ILogger<NameEntryService> _logger;
 
         public NameEntryService(
             INameEntryRepository nameEntryRepository,
-            IEventPubService eventPubService)
+            IEventPubService eventPubService,
+            ILogger<NameEntryService> logger
+            )
         {
             _nameEntryRepository = nameEntryRepository;
             _eventPubService = eventPubService;
+            _logger = logger;
         }
 
         public async Task Create(NameEntry entry)
         {
             var name = entry.Name;
 
-            if (!await NamePresentAsVariant(name))
+            var existingName = await _nameEntryRepository.FindByName(name);
+            if (existingName != null)
             {
-                var existingName = await _nameEntryRepository.FindByName(name);
-                if (existingName != null)
-                {
-                    existingName.Duplicates.Add(entry);
-                    await UpdateName(existingName);
-                }
-                else
-                {
-                    await CreateOrUpdateName(entry);
-                }
+                existingName.Duplicates.Add(entry);
+                await UpdateName(existingName);
+                _logger.LogWarning($"Someone attempted to create a new name over existing name: {name}.");
+                return;
             }
-            else
-            {
-                throw new DuplicateException("Given name already exists as a variant entry");
-            }
+
+            await CreateOrUpdateName(entry);
         }
 
         public async Task BulkCreate(List<NameEntry> entries)
@@ -172,12 +171,6 @@ namespace Application.Domain
         public async Task<List<NameEntry>> FindBy(State state)
         {
             return await _nameEntryRepository.FindByState(state);
-        }
-
-        private async Task<bool> NamePresentAsVariant(string name)
-        {
-            var variantCount = await _nameEntryRepository.CountWhere(ne => ne.Variants.Contains(name));
-            return variantCount > 0;
         }
 
         public async Task<IEnumerable<NameEntry>> GetAllNames(State? state, string? submittedBy)
