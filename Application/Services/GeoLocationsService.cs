@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Core.Repositories;
+using Application.Exceptions;
 
 namespace Application.Services
 {
@@ -13,7 +14,7 @@ namespace Application.Services
         }
         public async Task<List<GeoLocation>> GetAll()
         {
-            return await _geoLocationsRepository.GetAll();
+           return await _geoLocationsRepository.GetAll();
         }
     }
 }
