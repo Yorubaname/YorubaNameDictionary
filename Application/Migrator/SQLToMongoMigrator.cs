@@ -12,6 +12,7 @@ using MySqlConnector;
 
 namespace Application.Migrator
 {
+    [Obsolete("Used for initial migration of sql to mongo.. Do not use!")]
     public class SqlToMongoMigrator
     {
         private const string MigratorProcessName = "SQLTOMongoMigrator";
@@ -30,6 +31,7 @@ namespace Application.Migrator
         }
         public string MigrateGeolocation()
         {
+            throw new NotImplementedException("Migrate Geolocation Failed.");
             using var connection = new MySqlConnection(GetSQLConnectionString());
             var geolocation = connection.Query<geolocation>("SELECT place, region FROM geo_location");
 
@@ -53,6 +55,7 @@ namespace Application.Migrator
 
         public string MigrateNameEntry()
         {
+            throw new NotImplementedException("Migrate NameEntries Failed.");
             using var connection = new MySqlConnection(GetSQLConnectionString());
 
             var etymology = connection.Query<etymology>("select name_entry_id, meaning, part from name_entry_etymology");
@@ -123,6 +126,7 @@ namespace Application.Migrator
 
         public string MigrateSuggestedNames()
         {
+            throw new NotImplementedException("Migrate SuggestedNames Failed.");
             using var connection = new MySqlConnection(GetSQLConnectionString());
 
             var suggested_name = connection.Query<suggested_name>(
@@ -152,6 +156,7 @@ namespace Application.Migrator
 
         public string MigrateUsers()
         {
+            throw new NotImplementedException("Migrate Users Failed.");
             using var connection = new MySqlConnection(GetSQLConnectionString());
 
             var user = connection.Query<users>("select email, password, roles, username from api_user");
