@@ -3,9 +3,8 @@
     /// <summary>
     /// TODO: This should be a 400 Bad Request exception
     /// </summary>
-    public abstract class ClientException : Exception
+    public class ClientException : Exception
     {
-        protected virtual string ClientMessage { get; init; }
         public ClientException()
         {
         }

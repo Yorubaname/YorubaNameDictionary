@@ -170,7 +170,7 @@ namespace Api.Controllers
                 return BadRequest(ResponseHelper.GetResponseDict($"{name} is already indexed"));
             }
 
-            await _nameEntryService.PublishName(nameEntry);
+            await _nameEntryService.PublishName(nameEntry, User!.Identity!.Name!);
             return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict($"{name} has been published"));
         }
 
@@ -204,7 +204,7 @@ namespace Api.Controllers
             foreach (var nameEntry in entriesToIndex)
             {
                 // TODO Later: The names should be updated in one batch instead of one-by-one.
-                await _nameEntryService.PublishName(nameEntry);
+                await _nameEntryService.PublishName(nameEntry, User!.Identity!.Name!);
             }
 
             var successMessage = $"The following names were successfully indexed: {string.Join(',', entriesToIndex.Select(x => x.Name))}";
