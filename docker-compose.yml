@@ -25,6 +25,20 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - MongoDB__ConnectionString=mongodb://yoruba-name-dictionary-mongo:27017 # Does this port need to be here?
       - MongoDB__DatabaseName=yoruba_name_dictionary
+  website:
+    build:
+      context: .
+      dockerfile: Website/Dockerfile
+    container_name: yoruba-name-dictionary-website
+    ports:
+      - "5001:8080"
+    networks:
+      - yoruba-name-dictionary-network
+    depends_on:
+      - api
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - ApiSettings__BaseUrl=http://yoruba-name-dictionary-api:80/api/v1
 
 networks:
   yoruba-name-dictionary-network:
