@@ -1,5 +1,4 @@
-﻿using Amazon.Runtime.Internal.Util;
-using Application.Exceptions;
+﻿using Application.Exceptions;
 using Core.Dto.Response;
 using Core.Entities.NameEntry;
 using Core.Enums;
@@ -79,8 +78,13 @@ namespace Application.Domain
             return await _nameEntryRepository.Update(nameEntry.Name, nameEntry);
         }
 
-        public async Task PublishName(NameEntry nameEntry)
+        public async Task PublishName(NameEntry nameEntry, string username)
         {
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new ClientException("Unexpected. User must be logged in to publish a name!");
+            }
+
             NameEntry? updates = nameEntry.Modified;
             string originalName = nameEntry.Name;
 
@@ -101,7 +105,7 @@ namespace Application.Domain
                 nameEntry.FamousPeople = updates.FamousPeople;
                 nameEntry.Syllables = updates.Syllables;
                 nameEntry.Variants = updates.Variants;
-                nameEntry.UpdatedBy = updates.UpdatedBy;
+                nameEntry.UpdatedBy = username;
 
                 nameEntry.Modified = null;
             }
