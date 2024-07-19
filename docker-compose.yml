@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: yoruba-name-dictionary-mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - yoruba-name-dictionary-network
+    volumes:
+      - mongo-data:/data/db
+  api:
+    build:
+      context: .
+      dockerfile: Api/Dockerfile
+    container_name: yoruba-name-dictionary-api
+    ports:
+      - "5000:80"
+    networks:
+      - yoruba-name-dictionary-network
+    depends_on: 
+      - mongodb
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - MongoDB__ConnectionString=mongodb://yoruba-name-dictionary-mongo:27017 # Does this port need to be here?
+      - MongoDB__DatabaseName=yoruba_name_dictionary
+
+networks:
+  yoruba-name-dictionary-network:
+    external: true
+
+volumes:
+  mongo-data:
