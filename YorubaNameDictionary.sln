@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Website", "Website\Website.csproj", "{725625C7-DD38-4E69-8A5B-99298026954B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{858D2F4F-B3A7-4475-8DE7-3C606C85F3BE}"
-EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{A69D2C16-E0AD-4911-8D4F-42369452BAB2}"
 EndProject
 Global
