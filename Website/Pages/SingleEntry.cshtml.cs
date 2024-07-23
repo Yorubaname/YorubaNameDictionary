@@ -28,7 +28,7 @@ namespace Website.Pages
 
             if (name == null)
             {
-                return Redirect($"/entries?q={nameEntry}");
+                return Redirect($"/entries?q={HttpUtility.UrlEncode(nameEntry)}");
             }
 
             Name = name;

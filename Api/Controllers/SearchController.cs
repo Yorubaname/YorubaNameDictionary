@@ -227,11 +227,7 @@ namespace Api.Controllers
                 return StatusCode((int)HttpStatusCode.BadRequest, ResponseHelper.GetResponseDict("Published name not found."));
             }
 
-            // NOTE: In the Java version, after setting the name state to Unpublished, we then set the name to new.
-            // The reason for that is not clear and it doesn't make much sense. As such, I am skipping doing things that way here.
-            // It might need revisiting since having the name in NEW status might be pre-requisite for, perhaps, republishing it.
-
-            entry.State = State.UNPUBLISHED;
+            entry.State = State.NEW;
             await _nameEntryService.UpdateName(entry);
             return Ok(ResponseHelper.GetResponseDict($"{name} removed from index."));
         }
