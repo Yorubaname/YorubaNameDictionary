@@ -17,6 +17,7 @@ namespace Infrastructure.MongoDB
             services.AddScoped<INameEntryFeedbackRepository, NameEntryFeedbackRepository>();
             services.AddScoped<ISuggestedNameRepository, SuggestedNameRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IEtymologyRepository, EtymologyRepository>();
         }
     }
 }
