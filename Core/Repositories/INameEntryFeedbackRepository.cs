@@ -1,5 +1,4 @@
 ﻿using Core.Dto.Response;
-using Core.Entities.NameEntry.Collections;
 namespace Core.Repositories
 {
     public interface INameEntryFeedbackRepository
