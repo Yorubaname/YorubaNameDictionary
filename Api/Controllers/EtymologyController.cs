@@ -23,10 +23,8 @@ namespace Api.Controllers
             }
 
             var partsList = parts.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim());
-
             var result = await _etymologyRepository.GetLatestMeaningOf(partsList);
             return Ok(result);
-
         }
     }
 }
