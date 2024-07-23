@@ -14,7 +14,7 @@ namespace Application.Validation
 
             RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required.")
-            .Length(2, 40).WithMessage("Name must be 2 to 40 chracters");
+            .Length(2, 50).WithMessage("Name must be 2 to 50 chracters");
 
             RuleFor(x => x.Meaning)
                 .NotEmpty().WithMessage("Meaning is required.");

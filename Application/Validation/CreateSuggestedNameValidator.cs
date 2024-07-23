@@ -12,7 +12,7 @@ namespace Application.Validation
             RuleLevelCascadeMode = CascadeMode.Stop;
 
             RuleFor(u => u.Name).NotEmpty().WithMessage("Name is required")
-                                .Length(2, 40).WithMessage("Name must be 2 to 40 characters");
+                                .Length(2, 50).WithMessage("Name must be 2 to 40 characters");
 
             RuleFor(u => u.Email).NotEmpty().WithMessage("Email is required")
                                  .EmailAddress().WithMessage("Please enter a valid email address");
