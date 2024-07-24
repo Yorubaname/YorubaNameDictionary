@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Application.Mappers;
+using Application.Validation;
 
 namespace Api.Controllers;
 
@@ -15,10 +16,12 @@ namespace Api.Controllers;
 public class SuggestedNameController : ControllerBase
 {
     private readonly SuggestedNameService _suggestedNameService;
+    private readonly CreateSuggestedNameValidator _suggestedNameValidator;
 
-    public SuggestedNameController(SuggestedNameService suggestedNameService)
+    public SuggestedNameController(SuggestedNameService suggestedNameService, CreateSuggestedNameValidator suggestedNameValidator)
     {
         _suggestedNameService = suggestedNameService;
+        _suggestedNameValidator = suggestedNameValidator;
     }
 
     [HttpPost]
@@ -26,6 +29,13 @@ public class SuggestedNameController : ControllerBase
     [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
     public async Task<IActionResult> Create([FromBody] CreateSuggestedNameDto request)
     {
+
+        var result = await _suggestedNameValidator.ValidateAsync(request);
+        if (!result.IsValid)
+        {
+            result.AddToModelState(ModelState);
+            return BadRequest(ModelState);
+        }
         await _suggestedNameService
                 .CreateAsync(request.MapToEntity());
 
