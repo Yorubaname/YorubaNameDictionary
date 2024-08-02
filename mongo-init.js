@@ -1,6 +1,4 @@
-﻿// Importing bcrypt library for password hashing
-
-// Current date
+﻿// Current date
 const currentDate = ISODate();
 db = db.getSiblingDB("yoruba_name_dictionary");
 
