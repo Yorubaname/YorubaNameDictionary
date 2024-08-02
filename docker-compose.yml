@@ -4,10 +4,20 @@ services:
     build:
       context: .
       dockerfile: Website/Dockerfile
+    depends_on:
+      - api
 
   api:
     image: ${DOCKER_REGISTRY-}api
     build:
       context: .
       dockerfile: Api/Dockerfile
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    container_name: ynd-mongodb
+    ports:
+      - "27020:27017"
 
