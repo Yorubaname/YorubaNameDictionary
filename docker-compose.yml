@@ -11,3 +11,9 @@ services:
       context: .
       dockerfile: Api/Dockerfile
 
+  mongodb:
+    image: mongo:latest
+    container_name: ynd-mongodb
+    ports:
+      - "27020:27017"
+
