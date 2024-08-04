@@ -418,27 +418,34 @@ ul.alphabets li:hover {
 	column-width: 100px;
 }
 
+.video-container {
+	margin-bottom: 20px;
+	text-align: left;
+}
+
 .iframe-container {
-	overflow: hidden;
-	padding-top: 56.25%;
 	position: relative;
-	border-radius: 10px;
+	width: 100%;
+	padding-top: 56.25%; /* 16:9 aspect ratio */
+	height: 0;
 	overflow: hidden;
-	margin-bottom: 10px;
+	border-radius: 10px; /* Rounded corners */
+	margin-bottom: 10px; /* Space between iframe and caption */
 }
 
 	.iframe-container iframe {
-		border: 0;
-		height: 100%;
-		left: 0;
 		position: absolute;
 		top: 0;
+		left: 0;
 		width: 100%;
+		height: 100%;
+		border: 0;
 	}
 
-/* 4x3 Aspect Ratio */
-.iframe-container-4x3 {
-	padding-top: 75%;
+.video-caption {
+	margin-top: 10px;
+	font-size: 14px;
+	color: #555;
 }
 
 /* ----- Media queries ----- */
