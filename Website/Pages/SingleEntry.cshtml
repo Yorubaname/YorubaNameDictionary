@@ -45,19 +45,24 @@
                     <h4>@Localizer["extendedmeaningof"]</h4>
                     <p>@Model.Name.ExtendedMeaning</p>
                 }
-
+                
                 @if (Model.Name.Videos.Any())
                 {
-                    <br>                    <br>
+                    <br>
+                    <br>
                     <h4>@Localizer["videos"]</h4>
-                    @foreach (var video in Model.Name.Videos)
+                    for (var index = 0; index < Model.Name.Videos.Count; index++)
                     {
-                        <div class="iframe-container" id="video@video.Index">
-                            <iframe src="https://www.youtube.com/embed/@video.VideoId"
-                                    title="@video.Caption" frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    referrerpolicy="strict-origin-when-cross-origin"
-                                    allowfullscreen></iframe>
+                        var video = Model.Name.Videos[index];
+                        <div class="video-container">
+                            <div class="iframe-container" id="video@@@index">
+                                <iframe src="https://www.youtube.com/embed/@video.VideoId"
+                                        title="@video.Caption" frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        referrerpolicy="strict-origin-when-cross-origin"
+                                        allowfullscreen></iframe>
+                            </div>
+                            <div class="video-caption">@video.Caption</div>
                         </div>
                     }
                 }
