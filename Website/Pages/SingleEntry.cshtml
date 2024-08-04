@@ -51,10 +51,11 @@
                     <br>
                     <br>
                     <h4>@Localizer["videos"]</h4>
-                    @foreach (var video in Model.Name.Videos)
+                    for (var index = 0; index < Model.Name.Videos.Count; index++)
                     {
+                        var video = Model.Name.Videos[index];
                         <div class="video-container">
-                            <div class="iframe-container" id="video@video.Index">
+                            <div class="iframe-container" id="video@@@index">
                                 <iframe src="https://www.youtube.com/embed/@video.VideoId"
                                         title="@video.Caption" frameborder="0"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
