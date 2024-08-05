@@ -37,7 +37,8 @@ jobs:
             sudo systemctl restart $SERVICE_NAME
             sleep 3
             STATUS=\$(sudo systemctl is-active $SERVICE_NAME)
-            if [ '\$STATUS' != 'active' ]; then
+            echo "The service $SERVICE_NAME is currently $STATUS)
+            if [ $STATUS != 'active' ]; then
                 sudo systemctl status $SERVICE_NAME --no-pager
                 exit 1
             else
