@@ -37,7 +37,7 @@ jobs:
             sudo systemctl restart $SERVICE_NAME
             sleep 3
             STATUS=\$(sudo systemctl is-active $SERVICE_NAME)
-            echo 'The service $SERVICE_NAME is currently \$STATUS'
+            echo "The service $SERVICE_NAME is currently \${STATUS}"
             if [ -z \$STATUS]; then
                 echo 'Service status is empty or not defined'
                 exit 1
