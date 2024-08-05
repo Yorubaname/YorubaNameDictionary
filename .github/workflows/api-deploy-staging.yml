@@ -33,13 +33,15 @@ jobs:
         echo "$SSH_PRIVATE_KEY" > private_key
         chmod 600 private_key
         rsync -avz --exclude 'appsettings.json' -e "ssh -i private_key -o StrictHostKeyChecking=no" out/ ec2-user@$EC2_INSTANCE_IP:$SERVICE_PATH
-        ssh -i private_key -o StrictHostKeyChecking=no ec2-user@$EC2_INSTANCE_IP '
-          sudo systemctl restart $SERVICE_NAME
-          sleep 3
-          STATUS=$(sudo systemctl is-active  $SERVICE_NAME)
-          if [ "$STATUS" != "active" ]; then
-            sudo systemctl status $SERVICE_NAME --no-pager
-            exit 1
-          fi
-        '
+        ssh -i private_key -o StrictHostKeyChecking=no ec2-user@$EC2_INSTANCE_IP "
+            sudo systemctl restart $SERVICE_NAME
+            sleep 1
+            STATUS=\$(sudo systemctl is-active $SERVICE_NAME)
+            if [ '\$STATUS\' != 'active' ]; then
+                sudo systemctl status $SERVICE_NAME --no-pager
+                exit 1
+            else
+                echo 'Service was restarted successfully.'
+            fi
+        "
       shell: bash
