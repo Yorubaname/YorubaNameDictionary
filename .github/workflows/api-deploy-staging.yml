@@ -10,14 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: staging
     outputs:
-      api_service_name: ${{ steps.set-vars.outputs.api_service_name }}
-      api_service_path: ${{ steps.set-vars.outputs.api_service_path }}
+      api_service_name: ${{ vars.API_SERVICE_NAME }}
+      api_service_path: ${{ vars.API_SERVICE_PATH }}
     steps:
-      - name: Set Environment Variables
-        id: set-vars
-        run: |
-          echo "api_service_name=${{ vars.API_SERVICE_NAME }}" >> $GITHUB_OUTPUT
-          echo "api_service_path=${{ vars.API_SERVICE_PATH }}" >> $GITHUB_OUTPUT
+      - run: |
+          echo "Exposing ENV vars to reusable workflows."
 
   deploy:
     needs: fetch-vars
