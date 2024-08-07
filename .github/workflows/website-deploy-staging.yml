@@ -6,14 +6,25 @@ on:
       - main
 
 jobs:
-  deploy:
+  fetch-vars:
     runs-on: ubuntu-latest
     environment: staging
+    outputs:
+      website_service_name: ${{ steps.set-vars.outputs.website_service_name }}
+      website_service_path: ${{ steps.set-vars.outputs.website_service_path }}
     steps:
-      - name: Call reusable workflow
-        uses: ./.github/workflows/deploy-dotnet-service-ec2.yml
-        with:
-          project-name: Website
-          dotnet-version: '8.0.x'
-          service-name: ${{ vars.WEBSITE_SERVICE_NAME }}
-          service-path: ${{ vars.WEBSITE_SERVICE_PATH }}
+      - name: Set Environment Variables
+        id: set-vars
+        run: |
+          echo "::set-output name=website_service_name::${{ vars.WEBSITE_SERVICE_NAME }}"
+          echo "::set-output name=website_service_path::${{ vars.WEBSITE_SERVICE_PATH }}"
+
+  deploy:
+    needs: fetch-vars
+    uses: ./.github/workflows/deploy-dotnet-service-ec2.yml
+    secrets: inherit
+    with:
+      project-name: Website
+      dotnet-version: '8.0.x'
+      service-name: ${{ needs.fetch-vars.outputs.website_service_name }}
+      service-path: ${{ needs.fetch-vars.outputs.website_service_path }}
