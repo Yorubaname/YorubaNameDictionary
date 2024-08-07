@@ -6,11 +6,25 @@ on:
       - main
 
 jobs:
+  fetch-vars:
+    runs-on: ubuntu-latest
+    environment: staging
+    outputs:
+      api_service_name: ${{ steps.set-vars.outputs.api_service_name }}
+      api_service_path: ${{ steps.set-vars.outputs.api_service_path }}
+    steps:
+      - name: Set Environment Variables
+        id: set-vars
+        run: |
+          echo "::set-output name=api_service_name::${{ vars.API_SERVICE_NAME }}"
+          echo "::set-output name=api_service_path::${{ vars.API_SERVICE_PATH }}"
+
   deploy:
+    needs: fetch-vars
     uses: ./.github/workflows/deploy-dotnet-service-ec2.yml
     secrets: inherit
     with:
       project-name: Api
       dotnet-version: '6.0.x'
-      service-name: ${{ vars.API_SERVICE_NAME }}
-      service-path: ${{ vars.API_SERVICE_PATH }}
+      service-name: ${{ needs.fetch-vars.outputs.api_service_name }}
+      service-path: ${{ needs.fetch-vars.outputs.api_service_path }}
