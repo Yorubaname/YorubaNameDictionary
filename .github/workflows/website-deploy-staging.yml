@@ -10,7 +10,8 @@ jobs:
     uses: ./.github/workflows/deploy-dotnet-service-ec2.yml
     secrets: inherit
     with:
+      environment: staging
       project-name: Website
       dotnet-version: '8.0.x'
-      service-name: ${{ env.WEBSITE_SERVICE_NAME }}
-      service-path: ${{ env.WEBSITE_SERVICE_PATH }}
+      service-name: ${{ vars.WEBSITE_SERVICE_NAME }}
+      service-path: ${{ vars.WEBSITE_SERVICE_PATH }}
