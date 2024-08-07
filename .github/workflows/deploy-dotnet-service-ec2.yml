@@ -21,7 +21,6 @@ on:
 
 jobs:
   deploy:
-    if: github.repository_owner == 'Yorubaname'
     runs-on: ubuntu-latest
     environment:  ${{ inputs.environment }}
 
