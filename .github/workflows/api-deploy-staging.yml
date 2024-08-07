@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     uses: ./.github/workflows/deploy-dotnet-service-ec2.yml
+    secrets: inherit
     with:
       project-name: Api
       dotnet-version: '6.0.x'
