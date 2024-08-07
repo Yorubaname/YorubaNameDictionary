@@ -1,4 +1,4 @@
-name: Deploy API to EC2 staging
+name: Deploy website to EC2 staging
 
 on:
   push:
@@ -18,17 +18,17 @@ jobs:
     - name: Set up .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '6.0.x'
+        dotnet-version: '8.0.x'
 
     - name: Build project
-      run: dotnet publish Api -c Release -o out
+      run: dotnet publish Website -c Release -o out
 
-    - name: Deploy API to EC2
+    - name: Deploy website to EC2
       env:
         SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
         EC2_INSTANCE_IP: ${{ vars.EC2_INSTANCE_IP}}
-        SERVICE_NAME: ${{ vars.API_SERVICE_NAME }}
-        SERVICE_PATH: ${{ vars.API_SERVICE_PATH }}
+        SERVICE_NAME: ${{ vars.WEBSITE_SERVICE_NAME }}
+        SERVICE_PATH: ${{ vars.WEBSITE_SERVICE_PATH }}
       run: |
         echo "$SSH_PRIVATE_KEY" > private_key
         chmod 600 private_key
@@ -45,7 +45,7 @@ jobs:
                 sudo systemctl status $SERVICE_NAME --no-pager
                 exit 1
             else
-                echo 'API was restarted successfully after deployment.'
+                echo 'Website was restarted successfully after deployment.'
             fi
         "
       shell: bash
