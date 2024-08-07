@@ -10,11 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: staging
     outputs:
-      api_service_name: ${{ vars.API_SERVICE_NAME }}
-      api_service_path: ${{ vars.API_SERVICE_PATH }}
-    steps:
-      - run: |
-          echo "Exposing ENV vars to reusable workflows."
+      service_name: ${{ vars.API_SERVICE_NAME }}
+      service_path: ${{ vars.API_SERVICE_PATH }}
 
   deploy:
     needs: fetch-vars
@@ -23,5 +20,6 @@ jobs:
     with:
       project-name: Api
       dotnet-version: '6.0.x'
-      service-name: ${{ needs.fetch-vars.outputs.api_service_name }}
-      service-path: ${{ needs.fetch-vars.outputs.api_service_path }}
+      service-name: ${{ needs.fetch-vars.outputs.service_name }}
+      service-path: ${{ needs.fetch-vars.outputs.service_path }}
+      environment: staging

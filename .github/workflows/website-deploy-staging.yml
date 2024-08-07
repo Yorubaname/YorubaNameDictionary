@@ -10,14 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: staging
     outputs:
-      website_service_name: ${{ steps.set-vars.outputs.website_service_name }}
-      website_service_path: ${{ steps.set-vars.outputs.website_service_path }}
-    steps:
-      - name: Set Environment Variables
-        id: set-vars
-        run: |
-          echo "website_service_name=${{ vars.WEBSITE_SERVICE_NAME }}" >> $GITHUB_OUTPUT
-          echo "website_service_path=${{ vars.WEBSITE_SERVICE_PATH }}" >> $GITHUB_OUTPUT
+      service_name: ${{ vars.WEBSITE_SERVICE_NAME }}
+      service_path: ${{ vars.WEBSITE_SERVICE_PATH }}
 
   deploy:
     needs: fetch-vars
@@ -26,5 +20,6 @@ jobs:
     with:
       project-name: Website
       dotnet-version: '8.0.x'
-      service-name: ${{ needs.fetch-vars.outputs.website_service_name }}
-      service-path: ${{ needs.fetch-vars.outputs.website_service_path }}
+      service-name: ${{ needs.fetch-vars.outputs.service_name }}
+      service-path: ${{ needs.fetch-vars.outputs.service_path }}
+      environment: staging

@@ -15,12 +15,15 @@ on:
       service-path:
         required: true
         type: string
+      environment:
+        required: true
+        type: string
 
 jobs:
   deploy:
     if: github.repository_owner == 'Yorubaname'
     runs-on: ubuntu-latest
-    environment: staging
+    environment:  ${{ inputs.environment }}
 
     steps:
     - name: Checkout code
