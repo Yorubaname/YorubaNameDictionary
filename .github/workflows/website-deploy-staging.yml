@@ -12,6 +12,8 @@ jobs:
     outputs:
       service_name: ${{ vars.WEBSITE_SERVICE_NAME }}
       service_path: ${{ vars.WEBSITE_SERVICE_PATH }}
+    steps:
+      - run: echo "Exposing vars to reusable workflow."
 
   deploy:
     needs: fetch-vars
