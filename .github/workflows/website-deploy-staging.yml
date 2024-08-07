@@ -7,11 +7,13 @@ on:
 
 jobs:
   deploy:
-    uses: ./.github/workflows/deploy-dotnet-service-ec2.yml
-    secrets: inherit
-    with:
-      environment: staging
-      project-name: Website
-      dotnet-version: '8.0.x'
-      service-name: ${{ vars.WEBSITE_SERVICE_NAME }}
-      service-path: ${{ vars.WEBSITE_SERVICE_PATH }}
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Call reusable workflow
+        uses: ./.github/workflows/deploy-dotnet-service-ec2.yml
+        with:
+          project-name: Website
+          dotnet-version: '8.0.x'
+          service-name: ${{ vars.WEBSITE_SERVICE_NAME }}
+          service-path: ${{ vars.WEBSITE_SERVICE_PATH }}
