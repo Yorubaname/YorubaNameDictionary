@@ -7,45 +7,9 @@ on:
 
 jobs:
   deploy:
-    if: github.repository_owner == 'Yorubaname'
-    runs-on: ubuntu-latest
-    environment: staging
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: '6.0.x'
-
-    - name: Build project
-      run: dotnet publish Api -c Release -o out
-
-    - name: Deploy API to EC2
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
-        EC2_INSTANCE_IP: ${{ vars.EC2_INSTANCE_IP}}
-        SERVICE_NAME: ${{ vars.API_SERVICE_NAME }}
-        SERVICE_PATH: ${{ vars.API_SERVICE_PATH }}
-      run: |
-        echo "$SSH_PRIVATE_KEY" > private_key
-        chmod 600 private_key
-        rsync -avz --exclude 'appsettings.json' -e "ssh -i private_key -o StrictHostKeyChecking=no" out/ ec2-user@$EC2_INSTANCE_IP:$SERVICE_PATH
-        ssh -i private_key -o StrictHostKeyChecking=no ec2-user@$EC2_INSTANCE_IP "
-            sudo systemctl restart $SERVICE_NAME
-            sleep 3
-            STATUS=\$(sudo systemctl is-active $SERVICE_NAME)
-            echo \"The service $SERVICE_NAME is currently \$STATUS\"
-            if [ -z \$STATUS ]; then
-                echo 'Service status is empty or not defined'
-                exit 1
-            elif [ \$STATUS != 'active' ]; then
-                sudo systemctl status $SERVICE_NAME --no-pager
-                exit 1
-            else
-                echo 'API was restarted successfully after deployment.'
-            fi
-        "
-      shell: bash
+    uses: ./.github/workflows/deploy-dotnet-service-ec2.yml
+    with:
+      project-name: Api
+      dotnet-version: '6.0.x'
+      service-name: ${{ vars.API_SERVICE_NAME }}
+      service-path: ${{ vars.API_SERVICE_PATH }}

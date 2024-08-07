@@ -1,0 +1,62 @@
+name: Deploy DotNet service to EC2
+
+on:
+  workflow_call:
+    inputs:
+      project-name:
+        required: true
+        type: string
+      dotnet-version:
+        required: true
+        type: string
+      service-name:
+        required: true
+        type: string
+      service-path:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    if: github.repository_owner == 'Yorubaname'
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Build project
+      run: dotnet publish ${{ inputs.project-name }} -c Release -o out
+
+    - name: Deploy to EC2
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+        EC2_INSTANCE_IP: ${{ vars.EC2_INSTANCE_IP }}
+        SERVICE_NAME: ${{ inputs.service-name }}
+        SERVICE_PATH: ${{ inputs.service-path }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > private_key
+        chmod 600 private_key
+        rsync -avz --exclude 'appsettings.json' -e "ssh -i private_key -o StrictHostKeyChecking=no" out/ ec2-user@$EC2_INSTANCE_IP:$SERVICE_PATH
+        ssh -i private_key -o StrictHostKeyChecking=no ec2-user@$EC2_INSTANCE_IP "
+            sudo systemctl restart $SERVICE_NAME
+            sleep 3
+            STATUS=\$(sudo systemctl is-active $SERVICE_NAME)
+            echo \"The service $SERVICE_NAME is currently \$STATUS\"
+            if [ -z \$STATUS ]; then
+                echo 'Service status is empty or not defined'
+                exit 1
+            elif [ \$STATUS != 'active' ]; then
+                sudo systemctl status $SERVICE_NAME --no-pager
+                exit 1
+            else
+                echo '${{ inputs.project-name }} was restarted successfully after deployment.'
+            fi
+        "
+      shell: bash
