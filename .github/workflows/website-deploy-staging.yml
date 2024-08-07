@@ -16,8 +16,8 @@ jobs:
       - name: Set Environment Variables
         id: set-vars
         run: |
-          echo "::set-output name=website_service_name::${{ vars.WEBSITE_SERVICE_NAME }}"
-          echo "::set-output name=website_service_path::${{ vars.WEBSITE_SERVICE_PATH }}"
+          echo "website_service_name=${{ vars.WEBSITE_SERVICE_NAME }}" >> $GITHUB_OUTPUT
+          echo "website_service_path=${{ vars.WEBSITE_SERVICE_PATH }}" >> $GITHUB_OUTPUT
 
   deploy:
     needs: fetch-vars
