@@ -45,7 +45,7 @@
                     <h4>@Localizer["extendedmeaningof"]</h4>
                     <p>@Model.Name.ExtendedMeaning</p>
                 }
-                
+
                 @if (Model.Name.Videos.Any())
                 {
                     <br>
@@ -134,7 +134,11 @@
 
                     <br>
                     <h4>@Localizer["variants"]</h4>
-                    <p class="intonation">@Model.Name.Variants</p>
+
+                    foreach (var variant in (List<string>)Model.Name.Variants)
+                    {
+                        <p class="name"><a href="/entries/@variant" target="_self">@variant</a></p>
+                    }
                 }
             </div>
 
