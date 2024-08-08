@@ -1,0 +1,29 @@
+name: Deploy API to EC2 PROD
+
+on:
+  push:
+    branches:
+      - PROD
+
+jobs:
+  fetch-vars:
+    if: github.repository_owner == 'Yorubaname'
+    runs-on: ubuntu-latest
+    environment: PROD
+    outputs:
+      service_name: ${{ vars.API_SERVICE_NAME }}
+      service_path: ${{ vars.API_SERVICE_PATH }}
+    steps:
+      - run: echo "Exposing vars to reusable workflow."
+
+  deploy:
+    if: github.repository_owner == 'Yorubaname'
+    needs: fetch-vars
+    uses: ./.github/workflows/deploy-dotnet-service-ec2.yml
+    secrets: inherit
+    with:
+      project-name: Api
+      dotnet-version: '6.0.x'
+      service-name: ${{ needs.fetch-vars.outputs.service_name }}
+      service-path: ${{ needs.fetch-vars.outputs.service_path }}
+      environment: PROD
