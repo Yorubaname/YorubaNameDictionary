@@ -1,9 +1,4 @@
 ﻿using Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Repositories
 {
@@ -13,5 +8,7 @@ namespace Core.Repositories
 
         Task<GeoLocation> FindByPlace(string place);
         Task<GeoLocation> FindByPlaceAndRegion(string region, string place);
+        Task Create(GeoLocation geoLocation);
+        Task<int> Delete(string id, string place);
     }
 }
