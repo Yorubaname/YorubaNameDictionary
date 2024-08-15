@@ -1,6 +1,7 @@
 ﻿using Api.Utilities;
 using Application.Services;
 using Core.Dto.Request;
+using Core.Dto.Response;
 using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,10 +37,12 @@ namespace Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(GeoLocationDto), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Create(GeoLocationDto geo)
+        public async Task<IActionResult> Create(CreateGeoLocationDto geo)
         {
-            var geoLocation = new GeoLocation(geo.Place, geo.Region);
-            geoLocation.CreatedBy = User!.Identity!.Name!;
+            var geoLocation = new GeoLocation(geo.Place, geo.Region)
+            {
+                CreatedBy = User!.Identity!.Name!
+            };
             await _geoLocationsService.Create(geoLocation);
             return StatusCode((int)HttpStatusCode.Created, "Geolocation successfully added");
         }

@@ -36,10 +36,10 @@ namespace Infrastructure.MongoDB.Repositories
             return await _geoLocationsCollection.Find(filter, options).FirstOrDefaultAsync();
         }
 
-        public async Task<List<GeoLocation>> GetAll()
-        {
-            return await _geoLocationsCollection.Find(FilterDefinition<GeoLocation>.Empty).ToListAsync();
-        }
+        public async Task<List<GeoLocation>> GetAll() => await _geoLocationsCollection
+                .Find(Builders<GeoLocation>.Filter.Empty)
+                .Sort(Builders<GeoLocation>.Sort.Ascending(g => g.Place))
+                .ToListAsync();
 
         public async Task Create(GeoLocation geoLocation)
         {

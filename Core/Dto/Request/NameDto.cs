@@ -1,4 +1,5 @@
-﻿using Core.Enums;
+﻿using Core.Dto.Response;
+using Core.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Core.Dto.Request

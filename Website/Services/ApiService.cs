@@ -1,5 +1,4 @@
-﻿using Core.Dto.Request;
-using Core.Dto.Response;
+﻿using Core.Dto.Response;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 using Website.Config;
