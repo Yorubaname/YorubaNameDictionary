@@ -44,7 +44,7 @@ namespace Api.Controllers
                 CreatedBy = User!.Identity!.Name!
             };
             await _geoLocationsService.Create(geoLocation);
-            return StatusCode((int)HttpStatusCode.Created, "Geolocation successfully added");
+            return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict("Geolocation successfully added"));
         }
 
         [HttpDelete("{id}/{place}")]
