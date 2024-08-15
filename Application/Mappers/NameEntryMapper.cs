@@ -59,7 +59,7 @@ namespace Application.Mappers
                 Meaning = nameEntry.Meaning,
                 ExtendedMeaning = nameEntry.ExtendedMeaning,
                 Morphology = (CommaSeparatedString)nameEntry.Morphology,
-                GeoLocation = nameEntry.GeoLocation.Select(ge => new GeoLocationDto(ge.Place, ge.Region)).ToList(),
+                GeoLocation = nameEntry.GeoLocation.Select(ge => new GeoLocationDto(ge.Id, ge.Place, ge.Region)).ToList(),
                 FamousPeople = (CommaSeparatedString)nameEntry.FamousPeople,
                 Media = (CommaSeparatedString)nameEntry.Media,
                 SubmittedBy = nameEntry.CreatedBy,

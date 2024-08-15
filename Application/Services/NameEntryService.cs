@@ -34,7 +34,7 @@ namespace Application.Domain
             {
                 existingName.Duplicates.Add(entry);
                 await UpdateName(existingName);
-                _logger.LogWarning($"Someone attempted to create a new name over existing name: {name}.");
+                _logger.LogWarning("Someone attempted to create a new name over existing name: {name}.", name);
                 return;
             }
 

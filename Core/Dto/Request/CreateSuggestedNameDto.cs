@@ -1,4 +1,6 @@
 ﻿
+using Core.Dto.Response;
+
 namespace Core.Dto.Request;
 
 public record CreateSuggestedNameDto

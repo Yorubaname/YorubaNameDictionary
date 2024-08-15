@@ -36,7 +36,7 @@ public static class SuggestedNameMapper
             Name = request.Name,
             Email = request.Email,
             Details = request.Details,
-            GeoLocation = request.GeoLocation.Select(ge => new GeoLocationDto(ge.Place, ge.Region)).ToList(),
+            GeoLocation = request.GeoLocation.Select(ge => new GeoLocationDto(ge.Id, ge.Place, ge.Region)).ToList(),
         };
     }
 }
