@@ -1,6 +1,4 @@
 ﻿using Core.Dto.Request;
-using Core.Dto.Response;
-using Core.Enums;
 using FluentValidation;
 
 namespace Application.Validation
