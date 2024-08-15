@@ -2,7 +2,6 @@
 using Core.Repositories;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using SharpCompress.Common;
 
 namespace Infrastructure.MongoDB.Repositories
 {
