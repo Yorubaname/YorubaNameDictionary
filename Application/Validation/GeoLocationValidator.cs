@@ -1,15 +1,10 @@
-﻿using Core.Dto.Response;
+﻿using Core.Dto.Request;
 using Core.Repositories;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Validation
 {
-    public class GeoLocationValidator : AbstractValidator<GeoLocationDto>
+    public class GeoLocationValidator : AbstractValidator<CreateGeoLocationDto>
     {
         private readonly IGeoLocationsRepository _geoLocationsRepository;
 

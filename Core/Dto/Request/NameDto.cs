@@ -1,6 +1,4 @@
-﻿using Core.Dto.Response;
-using Core.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using Core.Enums;
 
 namespace Core.Dto.Request
 {
@@ -14,7 +12,7 @@ namespace Core.Dto.Request
         public State? State { get; set; }
         public List<EtymologyDto> Etymology { get; set; }
         public List<EmbeddedVideoDto> Videos { get; set; }
-        public List<GeoLocationDto> GeoLocation { get; set; }
+        public List<CreateGeoLocationDto> GeoLocation { get; set; }
 
         public CommaSeparatedString? FamousPeople { get; set; }
 
@@ -34,14 +32,14 @@ namespace Core.Dto.Request
             Meaning = meaning ?? throw new ArgumentNullException(nameof(meaning));
             Etymology = new List<EtymologyDto>();
             Videos = new List<EmbeddedVideoDto>();
-            GeoLocation = new List<GeoLocationDto>();
+            GeoLocation = new List<CreateGeoLocationDto>();
         }
 
         public NameDto()
         {
             Etymology = new List<EtymologyDto>();
             Videos = new List<EmbeddedVideoDto>();
-            GeoLocation = new List<GeoLocationDto>();
+            GeoLocation = new List<CreateGeoLocationDto>();
         }
     }
 }
