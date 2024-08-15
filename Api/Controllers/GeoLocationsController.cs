@@ -1,5 +1,4 @@
-﻿using Amazon.Runtime;
-using Api.Utilities;
+﻿using Api.Utilities;
 using Application.Services;
 using Core.Dto.Request;
 using Core.Entities;
