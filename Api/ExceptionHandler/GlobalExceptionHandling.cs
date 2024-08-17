@@ -1,5 +1,6 @@
 ﻿namespace Api.ExceptionHandler
 {
+    using Api.Utilities;
     using Application.Exceptions;
     using System.Net;
     using System.Text.Json;
@@ -32,21 +33,17 @@
             context.Response.ContentType = "application/json";
             var response = context.Response;
 
-            var errorResponse = new ErrorResponse
-            {
-                Success = false
-            };
+            Dictionary<string, string> errorResponse;
             switch (exception)
             {
                 case ClientException ex:
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    errorResponse.Message = ex.Message;
+                    errorResponse = ResponseHelper.GetResponseDict(ex.Message);
                     break;
-
 
                 default:
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    errorResponse.Message = "Internal server error!";
+                    errorResponse = ResponseHelper.GetResponseDict("Internal server error!");
                     break;
             }
             _logger.LogError(exception, "Unhandled Application Exception");

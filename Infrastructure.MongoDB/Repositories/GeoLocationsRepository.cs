@@ -5,7 +5,7 @@ using MongoDB.Driver;
 
 namespace Infrastructure.MongoDB.Repositories
 {
-    public class GeoLocationsRepository : IGeoLocationsRepository
+    public class GeoLocationsRepository : MongoDBRepository, IGeoLocationsRepository
     {
         private readonly IMongoCollection<GeoLocation> _geoLocationsCollection;
 
@@ -18,25 +18,47 @@ namespace Infrastructure.MongoDB.Repositories
                 InitGeoLocation();
             }
         }
-        
+
         public async Task<GeoLocation> FindByPlace(string place)
         {
-            var filter = Builders<GeoLocation>.Filter.Eq("Place", place);
-            return await _geoLocationsCollection.Find(filter).SingleOrDefaultAsync();
+            var filter = Builders<GeoLocation>.Filter.Eq( ge => ge.Place, place);
+            var options = SetCollationPrimary<FindOptions>(new FindOptions());
+            return await _geoLocationsCollection.Find(filter, options).SingleOrDefaultAsync();
         }
 
         public async Task<GeoLocation> FindByPlaceAndRegion(string region, string place)
         {
             var filter = Builders<GeoLocation>.Filter.And(
-                Builders<GeoLocation>.Filter.Eq("Region", region.ToUpper()),
-                Builders<GeoLocation>.Filter.Eq("Place", place.ToUpper())
+                Builders<GeoLocation>.Filter.Eq(ge => ge.Region, region),
+                Builders<GeoLocation>.Filter.Eq(ge => ge.Place, place)
                 );
-            return await _geoLocationsCollection.Find(filter).FirstOrDefaultAsync();
+            var options = SetCollationPrimary<FindOptions>(new FindOptions());
+            return await _geoLocationsCollection.Find(filter, options).FirstOrDefaultAsync();
         }
 
-        public async Task<List<GeoLocation>> GetAll()
+        public async Task<List<GeoLocation>> GetAll() => await _geoLocationsCollection
+                .Find(Builders<GeoLocation>.Filter.Empty)
+                .Sort(Builders<GeoLocation>.Sort.Ascending(g => g.Place))
+                .ToListAsync();
+
+        public async Task Create(GeoLocation geoLocation)
         {
-            return await _geoLocationsCollection.Find(FilterDefinition<GeoLocation>.Empty).ToListAsync();
+            geoLocation.Id = ObjectId.GenerateNewId().ToString();
+            await _geoLocationsCollection.InsertOneAsync(geoLocation);
+        }
+
+        public async Task<int> Delete(string id, string place)
+        {
+            var filterBuilder = Builders<GeoLocation>.Filter;
+
+            var filter = filterBuilder.And(
+                filterBuilder.Eq(g => g.Id, id),
+                filterBuilder.Eq(g => g.Place, place)
+            );
+
+            var options = SetCollationPrimary<DeleteOptions>(new DeleteOptions());
+            var deleteResult = await _geoLocationsCollection.DeleteOneAsync(filter, options);
+            return (int)deleteResult.DeletedCount;
         }
 
         private void InitGeoLocation()
@@ -62,6 +84,12 @@ namespace Infrastructure.MongoDB.Repositories
                 {
                     Id = ObjectId.GenerateNewId().ToString(),
                     Place = "OYO",
+                    Region = "OYO"
+                },
+                new()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Place = "OSUN",
                     Region = "OYO"
                 },
                 new()
@@ -186,5 +214,6 @@ namespace Infrastructure.MongoDB.Repositories
                 }
             });
         }
+
     }
 }

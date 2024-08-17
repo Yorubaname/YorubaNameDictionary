@@ -1,5 +1,5 @@
 using Application.Services;
-using Core.Dto.Request;
+using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Website.Pages.Shared;

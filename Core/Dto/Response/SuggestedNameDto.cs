@@ -1,6 +1,4 @@
-﻿using Core.Dto.Request;
-
-namespace Core.Dto.Response;
+﻿namespace Core.Dto.Response;
 
 public record SuggestedNameDto
 {
