@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Application.Mappers;
 using Application.Validation;
+using FluentValidation;
 
 namespace Api.Controllers;
 
@@ -16,9 +17,9 @@ namespace Api.Controllers;
 public class SuggestedNameController : ControllerBase
 {
     private readonly SuggestedNameService _suggestedNameService;
-    private readonly CreateSuggestedNameValidator _suggestedNameValidator;
+    private readonly IValidator<CreateSuggestedNameDto> _suggestedNameValidator;
 
-    public SuggestedNameController(SuggestedNameService suggestedNameService, CreateSuggestedNameValidator suggestedNameValidator)
+    public SuggestedNameController(SuggestedNameService suggestedNameService, IValidator<CreateSuggestedNameDto> suggestedNameValidator)
     {
         _suggestedNameService = suggestedNameService;
         _suggestedNameValidator = suggestedNameValidator;
