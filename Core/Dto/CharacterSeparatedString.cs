@@ -8,7 +8,7 @@
 
         public CharacterSeparatedString(string? value)
         {
-            this.value = value ?? string.Empty;
+            this.value = value?.Trim() ?? string.Empty;
         }
 
         public override string ToString()

@@ -16,9 +16,9 @@ public static class SuggestedNameMapper
         return new SuggestedName
         {
             Id = ObjectId.GenerateNewId().ToString(),
-            Name = request.Name,
-            Email = request.Email,
-            Details = request.Details,
+            Name = request.Name.Trim(),
+            Email = request.Email?.Trim(),
+            Details = request.Details?.Trim(),
             GeoLocation = request.GeoLocation.Select(x => new GeoLocation
             {
                 Place = x.Place,

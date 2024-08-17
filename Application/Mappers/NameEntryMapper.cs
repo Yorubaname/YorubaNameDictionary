@@ -29,7 +29,7 @@ namespace Application.Mappers
         {
             return new NameEntry
             {
-                Name = request.Name,
+                Name = request.Name.Trim(),
                 Pronunciation = request.Pronunciation?.Trim(),
                 Meaning = request.Meaning.Trim(),
                 ExtendedMeaning = request.ExtendedMeaning?.Trim(),

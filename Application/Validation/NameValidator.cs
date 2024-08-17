@@ -1,13 +1,9 @@
-﻿using Core.Dto;
-using Core.Dto.Request;
+﻿using Core.Dto.Request;
 using FluentValidation;
 namespace Application.Validation
 {
     public class NameValidator : AbstractValidator<NameDto>
     {
-
-      
-
         public NameValidator(GeoLocationValidator geoLocationValidator, EmbeddedVideoValidator embeddedVideoValidator, EtymologyValidator etymologyValidator)
         {
             RuleLevelCascadeMode = CascadeMode.Stop;
