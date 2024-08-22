@@ -13,7 +13,6 @@ namespace Application.Services
             _mediator = mediator;
         }
 
-
         public async Task PublishEvent<T>(T theEvent)
         {
             var adapterClassName = typeof(T).Name + "Adapter";
@@ -24,7 +23,7 @@ namespace Application.Services
                 throw new InvalidOperationException("Adapter type not found for " + typeof(T).FullName);
             }
 
-            var adapterEvent = Activator.CreateInstance(adapterType, theEvent);
+            var adapterEvent = Activator.CreateInstance(adapterType, theEvent)!;
             await _mediator.Publish(adapterEvent);
         }
     }

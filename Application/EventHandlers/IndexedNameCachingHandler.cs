@@ -4,11 +4,11 @@ using MediatR;
 
 namespace Application.EventHandlers
 {
-    public class NameIndexedEventHandler : INotificationHandler<NameIndexedAdapter>
+    public class IndexedNameCachingHandler : INotificationHandler<NameIndexedAdapter>
     {
         public IRecentIndexesCache _recentIndexesCache;
 
-        public NameIndexedEventHandler(IRecentIndexesCache recentIndexesCache) 
+        public IndexedNameCachingHandler(IRecentIndexesCache recentIndexesCache) 
         {
             _recentIndexesCache = recentIndexesCache;
         }
