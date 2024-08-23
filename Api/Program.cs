@@ -10,14 +10,19 @@ using Core.Enums;
 using Core.Events;
 using Core.StringObjectConverters;
 using FluentValidation;
+using Infrastructure;
 using Infrastructure.MongoDB;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi.Models;
 using MySqlConnector;
+using System.Collections.Concurrent;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-var Configuration = builder.Configuration;
+var configuration = builder.Configuration;
+configuration.AddEnvironmentVariables("YND_");
+
 string DevCORSAllowAll = "AllowAllForDev";
 var services = builder.Services;
 
@@ -81,27 +86,35 @@ services.AddSwaggerGen(c =>
                 }
             });
 });
-var mongoDbSettings = Configuration.GetSection("MongoDB");
+var mongoDbSettings = configuration.GetSection("MongoDB");
 services.InitializeDatabase(mongoDbSettings.GetValue<string>("ConnectionString"), mongoDbSettings.GetValue<string>("DatabaseName"));
 
 builder.Services.AddTransient(x =>
   new MySqlConnection(builder.Configuration.GetSection("MySQL:ConnectionString").Value));
 
-services.AddScoped<NameEntryService>();
-services.AddScoped<GeoLocationsService>();
-services.AddScoped<NameEntryFeedbackService>();
-services.AddScoped<IEventPubService, EventPubService>();
-services.AddScoped<SearchService>();
-services.AddScoped<SuggestedNameService>();
-services.AddScoped<UserService>();
+services.AddSingleton<NameEntryService>();
+services.AddSingleton<GeoLocationsService>();
+services.AddSingleton<NameEntryFeedbackService>();
+services.AddSingleton<IEventPubService, EventPubService>();
+services.AddSingleton<SearchService>();
+services.AddSingleton<SuggestedNameService>();
+services.AddSingleton<UserService>();
 services.AddScoped<GeoLocationValidator>();
 services.AddScoped<EmbeddedVideoValidator>();
 services.AddScoped<EtymologyValidator>();
 services.AddScoped<SqlToMongoMigrator>();
 services.AddSingleton<IRecentIndexesCache, RecentIndexesCache>();
 services.AddSingleton<IRecentSearchesCache, RecentSearchesCache>();
+
+//Validation
 services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+
 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ExactNameSearchedAdapter).Assembly));
+
+// Twitter integration configuration
+services.AddSingleton<ConcurrentQueue<PostPublishedNameCommand>>();
+services.AddTwitterClient(configuration);
+services.AddHostedService<NamePostingService>();
 
 
 var app = builder.Build();
