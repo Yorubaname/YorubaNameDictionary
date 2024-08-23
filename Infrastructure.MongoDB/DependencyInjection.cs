@@ -10,14 +10,14 @@ namespace Infrastructure.MongoDB
         public static void InitializeDatabase(this IServiceCollection services, string connectionString, string databaseName)
         {
             services.AddSingleton<IMongoClient, MongoClient>(s => new MongoClient(connectionString));
-            services.AddScoped(s => s.GetRequiredService<IMongoClient>().GetDatabase(databaseName));
+            services.AddSingleton(s => s.GetRequiredService<IMongoClient>().GetDatabase(databaseName));
 
-            services.AddScoped<INameEntryRepository, NameEntryRepository>();
-            services.AddScoped<IGeoLocationsRepository, GeoLocationsRepository>();
-            services.AddScoped<INameEntryFeedbackRepository, NameEntryFeedbackRepository>();
-            services.AddScoped<ISuggestedNameRepository, SuggestedNameRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IEtymologyRepository, EtymologyRepository>();
+            services.AddSingleton<INameEntryRepository, NameEntryRepository>();
+            services.AddSingleton<IGeoLocationsRepository, GeoLocationsRepository>();
+            services.AddSingleton<INameEntryFeedbackRepository, NameEntryFeedbackRepository>();
+            services.AddSingleton<ISuggestedNameRepository, SuggestedNameRepository>();
+            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IEtymologyRepository, EtymologyRepository>();
         }
     }
 }

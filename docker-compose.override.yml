@@ -14,6 +14,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - Twitter__ConsumerKey=${YND_Twitter__ConsumerKey}
+      - Twitter__ConsumerSecret=${YND_Twitter__ConsumerSecret}
+      - Twitter__AccessToken=${YND_Twitter__AccessToken}
+      - Twitter__AccessTokenSecret=${YND_Twitter__AccessTokenSecret}
     ports:
       - "51515:80"
     volumes:
