@@ -23,7 +23,7 @@ jobs:
     secrets: inherit
     with:
       project-name: Api
-      dotnet-version: '6.0.x'
+      dotnet-version: '8.0.x'
       service-name: ${{ needs.fetch-vars.outputs.service_name }}
       service-path: ${{ needs.fetch-vars.outputs.service_path }}
       environment: staging
