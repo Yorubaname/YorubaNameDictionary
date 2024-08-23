@@ -7,14 +7,17 @@ namespace Infrastructure
 {
     public static class DependencyInjection
     {
+        private const string ConfigSectionName = "Twitter";
+
         public static IServiceCollection AddTwitterClient(this IServiceCollection services, IConfiguration configuration)
         {
-            var twitterConfig = configuration.GetRequiredSection("Twitter").Get<TwitterConfig>()!;
+            var config = configuration.GetRequiredSection(ConfigSectionName);
 
-            services.AddSingleton(twitterConfig);
+            services.Configure<TwitterConfig>(config);
 
             services.AddSingleton<ITwitterClient>(provider =>
             {
+                var twitterConfig = config.Get<TwitterConfig>()!;
                 return new TwitterClient(
                     twitterConfig.ConsumerKey,
                     twitterConfig.ConsumerSecret,

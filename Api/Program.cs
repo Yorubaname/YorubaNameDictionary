@@ -21,6 +21,7 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+configuration.AddEnvironmentVariables("YND_");
 
 string DevCORSAllowAll = "AllowAllForDev";
 var services = builder.Services;
