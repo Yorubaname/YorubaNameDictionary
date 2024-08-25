@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Core.Dto.Response;
 using Core.Entities.NameEntry;
 using Core.Enums;
 using Core.Repositories;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using Test.Integration.NameController.Data;
 using Xunit;
 
@@ -19,11 +19,13 @@ public class NameControllerTest : IAsyncLifetime
 {
     private readonly HttpClient _client;
     private readonly BootStrappedApiFactory _bootStrappedApiFactory;
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
     
     public NameControllerTest(BootStrappedApiFactory bootStrappedApiFactory)
     {
         _bootStrappedApiFactory = bootStrappedApiFactory;
         _client = _bootStrappedApiFactory.HttpClient;
+        _jsonSerializerOptions = _bootStrappedApiFactory.JsonSerializerOptions;
     }
 
     [Theory]
@@ -38,7 +40,7 @@ public class NameControllerTest : IAsyncLifetime
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
-        var nameEntryDtos = JsonConvert.DeserializeObject<NameEntryDto[]>(responseContent);
+        var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         Assert.Equal(seed.Count(), nameEntryDtos!.Length);
@@ -61,7 +63,7 @@ public class NameControllerTest : IAsyncLifetime
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
-        var nameEntryDtos = JsonConvert.DeserializeObject<NameEntryDto[]>(responseContent);
+        var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         Assert.Equal(filteredSeed.Count, nameEntryDtos!.Length);
@@ -84,7 +86,7 @@ public class NameControllerTest : IAsyncLifetime
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
-        var nameEntryDtos = JsonConvert.DeserializeObject<NameEntryDto[]>(responseContent);
+        var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         Assert.Equal(expectedCount, nameEntryDtos!.Length);
@@ -107,7 +109,7 @@ public class NameControllerTest : IAsyncLifetime
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
-        var nameEntryDtos = JsonConvert.DeserializeObject<NameEntryDto[]>(responseContent);
+        var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         Assert.Equal(expectedData.Count, nameEntryDtos!.Length);
@@ -131,7 +133,7 @@ public class NameControllerTest : IAsyncLifetime
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
-        var nameEntryDtos = JsonConvert.DeserializeObject<NameEntryDto[]>(responseContent);
+        var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         Assert.Equal(expectedCount, nameEntryDtos!.Length);
@@ -154,7 +156,7 @@ public class NameControllerTest : IAsyncLifetime
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
-        var nameEntryDtos = JsonConvert.DeserializeObject<NameEntryDto[]>(responseContent);
+        var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         Assert.Equal(filteredSeed.Count, nameEntryDtos!.Length);
@@ -178,7 +180,7 @@ public class NameControllerTest : IAsyncLifetime
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
-        var nameEntryDtos = JsonConvert.DeserializeObject<NameEntryDto[]>(responseContent);
+        var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         Assert.Equal(expectedCount, nameEntryDtos!.Length);
@@ -202,7 +204,7 @@ public class NameControllerTest : IAsyncLifetime
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
-        var nameEntryDtos = JsonConvert.DeserializeObject<NameEntryDto[]>(responseContent);
+        var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         Assert.Equal(expectedCount, nameEntryDtos!.Length);

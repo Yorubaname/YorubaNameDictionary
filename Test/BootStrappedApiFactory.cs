@@ -1,12 +1,16 @@
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Api;
 using Core.Repositories;
+using Core.StringObjectConverters;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using Infrastructure.MongoDB.Repositories;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +18,7 @@ using MongoDB.Driver;
 using Xunit;
 namespace Test;
 
-public abstract class BootStrappedApiFactory : WebApplicationFactory <IApiMarker>, IAsyncLifetime
+public class BootStrappedApiFactory : WebApplicationFactory <IApiMarker>, IAsyncLifetime
 {
     private const int HostPort = 27018;
     private const int ContainerPort = 27017;
@@ -22,7 +26,14 @@ public abstract class BootStrappedApiFactory : WebApplicationFactory <IApiMarker
     private const string MongoDbPassword = "password";
     private const string MongoDbUsername = "admin";
     public HttpClient HttpClient { get; private set; } = default!;
-    
+
+    public JsonSerializerOptions JsonSerializerOptions { get; init; }
+
+    public BootStrappedApiFactory()
+    {
+        JsonSerializerOptions = JsonSerializerOptionsProvider.GetJsonSerializerOptionsWithCustomConverters();
+    }
+
     private readonly IContainer _testDbContainer =
         new ContainerBuilder()
             .WithImage("mongo:latest")
@@ -41,8 +52,8 @@ public abstract class BootStrappedApiFactory : WebApplicationFactory <IApiMarker
         builder.ConfigureTestServices(x =>
         {
             x.AddSingleton<IMongoClient, MongoClient>(s => new MongoClient( $"mongodb://{MongoDbUsername}:{MongoDbPassword}@localhost:{HostPort}"));
-            x.AddScoped(s => s.GetRequiredService<IMongoClient>().GetDatabase(MongoDbDatabaseName));
-            x.AddScoped<INameEntryRepository, NameEntryRepository>();
+            x.AddSingleton(s => s.GetRequiredService<IMongoClient>().GetDatabase(MongoDbDatabaseName));
+            x.AddSingleton<INameEntryRepository, NameEntryRepository>();
         });
     }
 
