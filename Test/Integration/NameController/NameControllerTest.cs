@@ -11,6 +11,7 @@ using Core.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Test.Integration.NameController.Data;
 using Xunit;
+using FluentAssertions;
 
 namespace Test.Integration.NameController;
 
@@ -20,7 +21,7 @@ public class NameControllerTest : IAsyncLifetime
     private readonly HttpClient _client;
     private readonly BootStrappedApiFactory _bootStrappedApiFactory;
     private readonly JsonSerializerOptions _jsonSerializerOptions;
-    
+
     public NameControllerTest(BootStrappedApiFactory bootStrappedApiFactory)
     {
         _bootStrappedApiFactory = bootStrappedApiFactory;
@@ -36,18 +37,21 @@ public class NameControllerTest : IAsyncLifetime
         // Arrange
         var nameEntryRepository = scope.ServiceProvider.GetRequiredService<INameEntryRepository>();
         await nameEntryRepository.Create(seed);
+
         var url = "/api/v1/Names?all=true";
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
         var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-        Assert.Equal(seed.Count(), nameEntryDtos!.Length);
-        for (int i = 0; i < seed.Count; i++)
-        {
-            Assert.Equal(seed[i].Name, nameEntryDtos[i].Name);
-        }
+        Assert.Equal(seed.Count, nameEntryDtos!.Length);
+        nameEntryDtos
+            .Select(dto => dto.Name)
+            .Should()
+            .Equal(seed.Select(s => s.Name));
+
     }
 
     [Theory]
@@ -60,19 +64,21 @@ public class NameControllerTest : IAsyncLifetime
         var filteredSeed = seed.Where(x => x.State == state).ToList();
         await nameEntryRepository.Create(seed);
         var url = $"/api/v1/Names?state={state}";
+
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
         var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         Assert.Equal(filteredSeed.Count, nameEntryDtos!.Length);
-        for (int i = 0; i < filteredSeed.Count; i++)
-        {
-            Assert.Equal(filteredSeed[i].Name, nameEntryDtos[i].Name);
-        }
+        nameEntryDtos
+            .Select(dto => dto.Name)
+            .Should()
+            .Equal(filteredSeed.Select(s => s.Name));
     }
-    
+
     [Theory]
     [ClassData(typeof(NamesCountTestData))]
     public async Task TestGetAllNamesEndpointProvidingOnlyCount(List<NameEntry> seed, int count)
@@ -81,19 +87,20 @@ public class NameControllerTest : IAsyncLifetime
         // Arrange
         var nameEntryRepository = scope.ServiceProvider.GetRequiredService<INameEntryRepository>();
         await nameEntryRepository.Create(seed);
-        var expectedCount = seed.Count > count ? count : seed.Count;
         var url = $"/api/v1/Names?count={count}";
+
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
-        var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
+        var namesResponse = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-        Assert.Equal(expectedCount, nameEntryDtos!.Length);
-        for (int i = 0; i < expectedCount; i++)
-        {
-            Assert.Equal(seed[i].Name, nameEntryDtos[i].Name);
-        }
+        Assert.Equal(count, namesResponse!.Length);
+        namesResponse
+            .Select(dto => dto.Name)
+            .Should()
+            .BeSubsetOf(seed.Select(s => s.Name));
     }
 
     [Theory]
@@ -106,19 +113,21 @@ public class NameControllerTest : IAsyncLifetime
         await nameEntryRepository.Create(seed);
         var expectedData = seed.Where(x => x.CreatedBy == creator).ToList();
         var url = $"/api/v1/Names?submittedBy={creator}";
+
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
         var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         Assert.Equal(expectedData.Count, nameEntryDtos!.Length);
-        for (int i = 0; i < expectedData.Count(); i++)
-        {
-            Assert.Equal(expectedData[i].Name, nameEntryDtos[i].Name);
-        }
+        nameEntryDtos
+            .Select(dto => dto.Name)
+            .Should()
+            .Equal(expectedData.Select(ed => ed.Name));
     }
-    
+
     [Theory]
     [ClassData(typeof(NamesStateAndCountTestData))]
     public async Task TestGetAllNamesEndpointProvidingOnlyStateAndCount(List<NameEntry> seed, State state, int count)
@@ -130,19 +139,22 @@ public class NameControllerTest : IAsyncLifetime
         var expectedCount = filteredSeed.Count > count ? count : filteredSeed.Count;
         await nameEntryRepository.Create(seed);
         var url = $"/api/v1/Names?state={state}&count={count}";
+
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
-        var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
+        var namesResponse = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-        Assert.Equal(expectedCount, nameEntryDtos!.Length);
-        for (int i = 0; i < expectedCount; i++)
-        {
-            Assert.Equal(filteredSeed[i].Name, nameEntryDtos[i].Name);
-        }
+        Assert.Equal(expectedCount, namesResponse!.Length);
+        namesResponse
+            .Select(dto => dto.Name)
+            .Should()
+            .BeEquivalentTo(filteredSeed.Select(s => s.Name), options => options.WithStrictOrdering());
+
     }
-    
+
     [Theory]
     [ClassData(typeof(NamesStateAndSubmittedByTestData))]
     public async Task TestGetAllNamesEndpointProvidingOnlyStateAndSubmittedBy(List<NameEntry> seed, State state, string submittedBy)
@@ -153,19 +165,21 @@ public class NameControllerTest : IAsyncLifetime
         var filteredSeed = seed.Where(x => x.State == state && x.CreatedBy == submittedBy).ToList();
         await nameEntryRepository.Create(seed);
         var url = $"/api/v1/Names?state={state}&submittedBy={submittedBy}";
+
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
-        var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
+        var namesResponse = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-        Assert.Equal(filteredSeed.Count, nameEntryDtos!.Length);
-        for (int i = 0; i < filteredSeed.Count; i++)
-        {
-            Assert.Equal(filteredSeed[i].Name, nameEntryDtos[i].Name);
-        }
+        Assert.Equal(filteredSeed.Count, namesResponse!.Length);
+        namesResponse
+            .Select(dto => dto.Name)
+            .Should()
+            .BeEquivalentTo(filteredSeed.Select(s => s.Name), options => options.WithStrictOrdering());
     }
-    
+
     [Theory]
     [ClassData(typeof(NamesCountAndSubmittedByTestData))]
     public async Task TestGetAllNamesEndpointProvidingOnlyCountAndSubmittedBy(List<NameEntry> seed, int count, string submittedBy)
@@ -177,19 +191,21 @@ public class NameControllerTest : IAsyncLifetime
         var expectedCount = filteredSeed.Count > count ? count : filteredSeed.Count;
         await nameEntryRepository.Create(seed);
         var url = $"/api/v1/Names?count={count}&submittedBy={submittedBy}";
+
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
-        var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
+        var namesResponse = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-        Assert.Equal(expectedCount, nameEntryDtos!.Length);
-        for (int i = 0; i < expectedCount; i++)
-        {
-            Assert.Equal(filteredSeed[i].Name, nameEntryDtos[i].Name);
-        }
+        Assert.Equal(expectedCount, namesResponse!.Length);
+        namesResponse
+            .Select(dto => dto.Name)
+            .Should()
+            .BeEquivalentTo(filteredSeed.Select(s => s.Name), options => options.WithStrictOrdering());
     }
-    
+
     [Theory]
     [ClassData(typeof(NamesStateCountAndSubmittedByTestData))]
     public async Task TestGetAllNamesEndpointProvidingOnlyState_CountAndSubmittedBy(List<NameEntry> seed, State state, int count, string submittedBy)
@@ -201,17 +217,19 @@ public class NameControllerTest : IAsyncLifetime
         var expectedCount = filteredSeed.Count > count ? count : filteredSeed.Count;
         await nameEntryRepository.Create(seed);
         var url = $"/api/v1/Names?state={state}&count={count}&submittedBy={submittedBy}";
+
         // Act
         var result = await _client.GetAsync(url);
         var responseContent = await result.Content.ReadAsStringAsync();
-        var nameEntryDtos = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
+        var namesResponse = JsonSerializer.Deserialize<NameEntryDto[]>(responseContent, _jsonSerializerOptions);
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-        Assert.Equal(expectedCount, nameEntryDtos!.Length);
-        for (int i = 0; i < expectedCount; i++)
-        {
-            Assert.Equal(filteredSeed[i].Name, nameEntryDtos[i].Name);
-        }
+        Assert.Equal(expectedCount, namesResponse!.Length);
+        namesResponse
+            .Select(dto => dto.Name)
+            .Should()
+            .BeEquivalentTo(filteredSeed.Select(s => s.Name), options => options.WithStrictOrdering());
     }
 
     public Task InitializeAsync()
@@ -225,5 +243,5 @@ public class NameControllerTest : IAsyncLifetime
         var nameEntryRepository = scope.ServiceProvider.GetRequiredService<INameEntryRepository>();
         await nameEntryRepository.DeleteAll();
     }
-} 
+}
 

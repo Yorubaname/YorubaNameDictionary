@@ -1,20 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
-using Core.Entities;
+using System.Linq;
+using AutoFixture;
 using Core.Entities.NameEntry;
-using Core.Entities.NameEntry.Collections;
 using Core.Enums;
-
 namespace Test.Integration.NameController.Data;
 
 public class NamesCountTestData : IEnumerable<object[]>
 {
+    private readonly IFixture _fixture;
+    private readonly List<string> _nameSequence = new List<string> { "Ibironke", "Aderonke", "Olumide", "Akinwale", "Oluwaseun" };
+    private int _nameIndex = 0;
+
+    public NamesCountTestData()
+    {
+        _fixture = new Fixture();
+        // Customize other properties if necessary
+        _fixture.Customize<NameEntry>(c => c
+            .With(ne => ne.State, State.PUBLISHED)
+            .With(ne => ne.Modified, (NameEntry?)default)
+            .With(ne => ne.Duplicates, [])
+            .Do(ne => ne.Name = GetNextName())); // Generate names from a sequence
+    }
+
     public IEnumerator<object[]> GetEnumerator()
     {
-        yield return new object[] {NameEntries(), 2 };
-        yield return new object[] {NameEntries(), 4 };
-        yield return new object[] {NameEntries(), 3 };
-        yield return new object[] {NameEntries(), 5 };
+        yield return new object[] { CreateNameEntries(5), 2 };
+        yield return new object[] { CreateNameEntries(5), 4 };
+        yield return new object[] { CreateNameEntries(5), 3 };
+        yield return new object[] { CreateNameEntries(5), 5 };
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -22,50 +36,16 @@ public class NamesCountTestData : IEnumerable<object[]>
         return GetEnumerator();
     }
 
-    private List<NameEntry> NameEntries()
+    private List<NameEntry> CreateNameEntries(int count)
     {
-        return new List<NameEntry>
-        {
-            new NameEntry
-            {
-                Name = "Ibironke",
-                Meaning = "The man of valor",
-                Morphology = new List<string> { "He", "Ho" },
-                Media = new List<string> { "Me", "Dia" },
-                State = State.PUBLISHED,
-                Etymology = new List<Etymology>
-                {
-                    new Etymology(part: "Part1", meaning: "Meaning 1")
-                },
-                Videos = new List<EmbeddedVideo>
-                {
-                    new EmbeddedVideo(videoId: "Video ID 1", caption: "Caption 1")
-                },
-                GeoLocation = new List<GeoLocation>
-                {
-                    new GeoLocation(place: "Lagos", region: "South-West")
-                }
-            },
-            new NameEntry
-            {
-                Name = "Aderonke",
-                Meaning = "The man of valor",
-                Morphology = new List<string> { "He", "Ho" },
-                Media = new List<string> { "Me", "Dia" },
-                State = State.PUBLISHED,
-                Etymology = new List<Etymology>
-                {
-                    new Etymology(part: "Part1", meaning: "Meaning 1")
-                },
-                Videos = new List<EmbeddedVideo>
-                {
-                    new EmbeddedVideo(videoId: "Video ID 1", caption: "Caption 1")
-                },
-                GeoLocation = new List<GeoLocation>
-                {
-                    new GeoLocation(place: "Lagos", region: "South-West")
-                }
-            }
-        };
+        // Create a list of NameEntries with the specified count
+        return _fixture.CreateMany<NameEntry>(count).ToList();
+    }
+
+    private string GetNextName()
+    {
+        var name = _nameSequence[_nameIndex % _nameSequence.Count];
+        _nameIndex++;
+        return name;
     }
 }
