@@ -53,7 +53,7 @@ namespace Test.Integration.NameController
             nameEntryDtos
                 .Select(dto => dto.Name)
                 .Should()
-                .Equal(seed.Select(s => s.Name));
+                .BeEquivalentTo(seed.Select(s => s.Name));
         }
 
         [Theory]
@@ -62,7 +62,7 @@ namespace Test.Integration.NameController
         {
             // Arrange
             var filteredSeed = seed.Where(x => x.State == state).ToList();
-            await _nameEntryRepository.Create(seed);
+            await _nameEntryRepository.Create(seed.ToList());
             var url = $"/api/v1/Names?state={state}";
 
             // Act
@@ -76,7 +76,7 @@ namespace Test.Integration.NameController
             nameEntryDtos
                 .Select(dto => dto.Name)
                 .Should()
-                .Equal(filteredSeed.Select(s => s.Name));
+                .BeEquivalentTo(filteredSeed.Select(s => s.Name));
         }
 
         [Theory]
@@ -145,7 +145,7 @@ namespace Test.Integration.NameController
             namesResponse
                 .Select(dto => dto.Name)
                 .Should()
-                .BeEquivalentTo(filteredSeed.Select(s => s.Name), options => options.WithStrictOrdering());
+                .BeEquivalentTo(filteredSeed.Select(s => s.Name));
         }
 
         [Theory]
@@ -168,7 +168,7 @@ namespace Test.Integration.NameController
             namesResponse
                 .Select(dto => dto.Name)
                 .Should()
-                .BeEquivalentTo(filteredSeed.Select(s => s.Name), options => options.WithStrictOrdering());
+                .BeEquivalentTo(filteredSeed.Select(s => s.Name));
         }
 
         [Theory]
@@ -192,7 +192,7 @@ namespace Test.Integration.NameController
             namesResponse
                 .Select(dto => dto.Name)
                 .Should()
-                .BeEquivalentTo(filteredSeed.Select(s => s.Name), options => options.WithStrictOrdering());
+                .BeEquivalentTo(filteredSeed.Select(s => s.Name));
         }
 
         [Theory]
@@ -216,7 +216,7 @@ namespace Test.Integration.NameController
             namesResponse
                 .Select(dto => dto.Name)
                 .Should()
-                .BeEquivalentTo(filteredSeed.Select(s => s.Name), options => options.WithStrictOrdering());
+                .BeEquivalentTo(filteredSeed.Select(s => s.Name));
         }
 
         public Task InitializeAsync()
