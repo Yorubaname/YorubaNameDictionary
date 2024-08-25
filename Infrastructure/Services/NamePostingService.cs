@@ -25,7 +25,7 @@ namespace Infrastructure.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var tweetIntervalMs = _twitterConfig.TweetIntervalSeconds * 1000;
+            var tweetIntervalMs = (int)(_twitterConfig.TweetIntervalSeconds * 1000);
             while (!stoppingToken.IsCancellationRequested)
             {
                 if (!_nameQueue.TryDequeue(out var indexedName))
