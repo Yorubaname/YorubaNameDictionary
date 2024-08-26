@@ -6,8 +6,9 @@
         string AccessToken,
         string AccessTokenSecret,
         string NameUrlPrefix,
-        string TweetTemplate)
+        string TweetTemplate,
+        decimal TweetIntervalSeconds)
     {
-        public TwitterConfig() : this("", "", "", "", "", "") { }
+        public TwitterConfig() : this("", "", "", "", "", "", default) { }
     }
 }
