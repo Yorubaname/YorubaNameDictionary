@@ -34,16 +34,16 @@ namespace Infrastructure.Services
                     continue;
                 }
 
-                string? tweetText = await BuildTweet(indexedName.Name);
-
-                if (string.IsNullOrWhiteSpace(tweetText))
-                {
-                    _logger.LogWarning(TweetComposeFailure, indexedName.Name);
-                    continue;
-                }
-
                 try
                 {
+                    string? tweetText = await BuildTweet(indexedName.Name);
+
+                    if (string.IsNullOrWhiteSpace(tweetText))
+                    {
+                        _logger.LogWarning(TweetComposeFailure, indexedName.Name);
+                        continue;
+                    }
+
                     var tweet = await _twitterApiClient.PostTweet(tweetText);
                     if (tweet != null)
                     {
@@ -53,7 +53,6 @@ namespace Infrastructure.Services
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Failed to tweet name: {name} to Twitter.", indexedName.Name);
-                    _nameQueue.Enqueue(indexedName);
                 }
 
                 await Task.Delay(tweetIntervalMs, stoppingToken);
