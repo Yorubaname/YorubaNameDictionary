@@ -26,9 +26,8 @@ namespace Infrastructure
                     twitterConfig.AccessTokenSecret
                 );
             });
-
+          
             services.AddSingleton<ITwitterClientV2, TwitterClientV2>();
-
             return services;
         }
     }
