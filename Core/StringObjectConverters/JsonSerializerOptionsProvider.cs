@@ -1,8 +1,7 @@
-﻿using Core.StringObjectConverters;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Website.Utilities
+namespace Core.StringObjectConverters
 {
     public static class JsonSerializerOptionsProvider
     {

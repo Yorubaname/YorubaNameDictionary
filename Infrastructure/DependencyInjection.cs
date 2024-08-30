@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Configuration;
+using Infrastructure.Twitter;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tweetinvi;
@@ -25,7 +26,8 @@ namespace Infrastructure
                     twitterConfig.AccessTokenSecret
                 );
             });
-
+          
+            services.AddSingleton<ITwitterClientV2, TwitterClientV2>();
             return services;
         }
     }
