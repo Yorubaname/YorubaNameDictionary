@@ -22,20 +22,20 @@ namespace Infrastructure.Services
         private readonly ILogger<NamePostingService> _logger = logger;
         private readonly NameEntryService _nameEntryService = nameEntryService;
         private readonly TwitterConfig _twitterConfig = twitterConfig.Value;
+        private readonly PeriodicTimer _postingTimer = new (TimeSpan.FromSeconds(twitterConfig.Value.TweetIntervalSeconds));
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var tweetIntervalMs = (int)(_twitterConfig.TweetIntervalSeconds * 1000);
-            while (!stoppingToken.IsCancellationRequested)
+            do
             {
-                if (!_nameQueue.TryDequeue(out var indexedName))
-                {
-                    await Task.Delay(tweetIntervalMs, stoppingToken);
-                    continue;
-                }
-
+                PostPublishedNameCommand? indexedName = null;
                 try
                 {
+                    if (!_nameQueue.TryDequeue(out indexedName))
+                    {
+                        continue;
+                    }
+
                     string? tweetText = await BuildTweet(indexedName.Name);
 
                     if (string.IsNullOrWhiteSpace(tweetText))
@@ -52,11 +52,15 @@ namespace Infrastructure.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to tweet name: {name} to Twitter.", indexedName.Name);
+                    _logger.LogError(ex, "Failed to tweet name: `{name}` to Twitter.", indexedName!.Name);
                 }
+            } while (!stoppingToken.IsCancellationRequested && await _postingTimer.WaitForNextTickAsync(stoppingToken));
+        }
 
-                await Task.Delay(tweetIntervalMs, stoppingToken);
-            }
+        public override async Task StopAsync(CancellationToken stoppingToken)
+        {
+            _postingTimer.Dispose();
+            await base.StopAsync(stoppingToken);
         }
 
         private async Task<string?> BuildTweet(string name)
@@ -68,6 +72,5 @@ namespace Infrastructure.Services
                                 .Replace("{meaning}", nameEntry.Meaning.TrimEnd('.'))
                                 .Replace("{link}", link);
         }
-
     }
 }
