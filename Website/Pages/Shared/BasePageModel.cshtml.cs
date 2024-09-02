@@ -18,7 +18,7 @@ namespace Website.Pages.Shared
         {
             base.OnPageHandlerExecuting(context);
 
-            var host = HttpUtility.UrlEncode($"{Request.Scheme}://{Request.Host}");
+            var host = $"{Request.Scheme}://{Request.Host}";
 
             // Some of the strings below should be internationalized.
             ViewData["Description"] = "YorubaNames";

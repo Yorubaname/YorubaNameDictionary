@@ -31,7 +31,7 @@ namespace Website.Pages
             }
 
             ViewData["SocialTitle"] = name.Name;
-            ViewData["SocialPath"] = $"/entries/{nameEntry}";
+            ViewData["SocialPath"] = $"/entries/{HttpUtility.UrlEncode(name.Name)}";
             ViewData["SocialDescription"] = name.Meaning;
 
             Name = name;
