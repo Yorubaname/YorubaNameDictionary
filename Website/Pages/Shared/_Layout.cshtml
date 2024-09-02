@@ -8,18 +8,18 @@
     <meta name="description" content="@ViewData["Description"]">
 
     <meta property="og:title" content="@ViewData["SocialTitle"]">
-    <meta property="og:url" content="@ViewData["SocialURL"]">
+    <meta property="og:url" content="@ViewData["BaseURL"]@ViewData["SocialPath"]">
     <meta property="og:description" content="@ViewData["SocialDescription"]">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="~/img/yn-logo-brown-black.png">
+    <meta property="og:image" content="@ViewData["BaseURL"]/img/yn-logo-drum-only.png">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="YorubaNames">
-    <meta name="twitter:url" content="http://www.yorubaname.com">
-    <meta name="twitter:description" content="Over 10,000 Yoruba names and still growing...">
-    <meta name="twitter:site" content="@@Yorubanames">
-    <meta name="twitter:creator" content="@@Yorubanames">
-    <meta name="twitter:image" content="~/img/yn-logo-brown-black.png">
+    <meta name="twitter:title" content="@ViewData["SocialTitle"]">
+    <meta name="twitter:url" content="@ViewData["BaseURL"]@ViewData["SocialPath"]">
+    <meta name="twitter:description" content="@ViewData["SocialDescription"]">
+    <meta name="twitter:site" content="@@YorubaNames">
+    <meta name="twitter:creator" content="@@YorubaNames">
+    <meta name="twitter:image" content="@ViewData["BaseURL"]/img/yn-logo-drum-only.png">
 
     <link href="~/img/favicon.png" rel="shortcut icon">
     <link href="~/css/bootstrap.min.css" rel="stylesheet">
