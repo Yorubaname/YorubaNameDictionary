@@ -30,10 +30,9 @@ namespace Website.Pages
                 return Redirect($"/entries?q={HttpUtility.UrlEncode(nameEntry)}");
             }
 
-            var encodedName = HttpUtility.UrlEncode(name.Name);
-            ViewData["SocialTitle"] = encodedName;
-            ViewData["SocialPath"] = $"/entries/{encodedName}";
-            ViewData["SocialDescription"] = HttpUtility.UrlEncode(name.Meaning);
+            ViewData["SocialTitle"] = name.Name;
+            ViewData["SocialPath"] = $"/entries/{HttpUtility.UrlEncode(name.Name)}";
+            ViewData["SocialDescription"] = name.Meaning;
 
             Name = name;
             Letters = YorubaAlphabetService.YorubaAlphabet;
