@@ -43,7 +43,7 @@ namespace Infrastructure.Services
                         _logger.LogWarning(TweetComposeFailure, indexedName.Name);
                         continue;
                     }
-
+                    
                     var tweet = await _twitterApiClient.PostTweet(tweetText);
                     if (tweet != null)
                     {
