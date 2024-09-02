@@ -17,7 +17,6 @@ namespace Website.Pages
 
         public NameEntryDto Name { get; set; } = new NameEntryDto();
         public List<string> Letters { get; private set; } = [];
-        public string Host { get; set; } = string.Empty;
 
         public string[] MostPopularNames { get; set; } = [];
 
@@ -31,9 +30,12 @@ namespace Website.Pages
                 return Redirect($"/entries?q={HttpUtility.UrlEncode(nameEntry)}");
             }
 
+            ViewData["SocialTitle"] = name.Name;
+            ViewData["SocialPath"] = $"/entries/{nameEntry}";
+            ViewData["SocialDescription"] = name.Meaning;
+
             Name = name;
             Letters = YorubaAlphabetService.YorubaAlphabet;
-            Host = HttpUtility.UrlEncode($"{Request.Scheme}://{Request.Host}");
 
             var searchActivity = await _apiService.GetRecentStats();
             MostPopularNames = searchActivity.MostPopular;
