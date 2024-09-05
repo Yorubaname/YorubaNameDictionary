@@ -1,25 +1,20 @@
 ﻿using Application.Events;
 using MediatR;
-using System.Collections.Concurrent;
 
 namespace Application.EventHandlers
 {
     public class PostPublishedNameCommandHandler : INotificationHandler<PostPublishedNameCommand>
     {
-        private readonly ConcurrentQueue<PostPublishedNameCommand> _nameQueue;
+        private readonly IEventsQueue _eventsQueue;
 
-        public PostPublishedNameCommandHandler(ConcurrentQueue<PostPublishedNameCommand> nameQueue)
+        public PostPublishedNameCommandHandler(IEventsQueue eventsQueue)
         {
-            _nameQueue = nameQueue;
+            _eventsQueue = eventsQueue;
         }
 
-        public Task Handle(PostPublishedNameCommand notification, CancellationToken cancellationToken)
+        public async Task Handle(PostPublishedNameCommand notification, CancellationToken cancellationToken)
         {
-            // Enqueue the indexed name for processing by the BackgroundService
-            _nameQueue.Enqueue(notification);
-
-            // Return a completed task, so it doesn't block the main thread
-            return Task.CompletedTask;
+            await _eventsQueue.QueueEvent(notification);
         }
     }
 }

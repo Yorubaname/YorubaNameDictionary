@@ -112,7 +112,7 @@ services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ExactNameSearchedAdapter).Assembly));
 
 // Twitter integration configuration
-services.AddSingleton<ConcurrentQueue<PostPublishedNameCommand>>();
+services.AddSingleton<IEventsQueue, InMemoryEventsQueue>();
 services.AddTwitterClient(configuration);
 services.AddHostedService<NamePostingService>();
 

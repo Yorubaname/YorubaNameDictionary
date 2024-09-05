@@ -5,19 +5,18 @@ using Infrastructure.Twitter;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Collections.Concurrent;
 
 namespace Infrastructure.Services
 {
     public class NamePostingService(
-        ConcurrentQueue<PostPublishedNameCommand> nameQueue,
+        IEventsQueue eventsQueue,
         ITwitterClientV2 twitterApiClient,
         ILogger<NamePostingService> logger,
         NameEntryService nameEntryService,
         IOptions<TwitterConfig> twitterConfig) : BackgroundService
     {
         private const string TweetComposeFailure = "Failed to build tweet for name: {name}. It was not found in the database.";
-        private readonly ConcurrentQueue<PostPublishedNameCommand> _nameQueue = nameQueue;
+        private readonly IEventsQueue _eventsQueue = eventsQueue;
         private readonly ITwitterClientV2 _twitterApiClient = twitterApiClient;
         private readonly ILogger<NamePostingService> _logger = logger;
         private readonly NameEntryService _nameEntryService = nameEntryService;
@@ -31,7 +30,8 @@ namespace Infrastructure.Services
                 PostPublishedNameCommand? indexedName = null;
                 try
                 {
-                    if (!_nameQueue.TryDequeue(out indexedName))
+                    indexedName = await _eventsQueue.Pop<PostPublishedNameCommand>();
+                    if (indexedName == null)
                     {
                         continue;
                     }
