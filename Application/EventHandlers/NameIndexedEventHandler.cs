@@ -20,7 +20,7 @@ namespace Application.EventHandlers
         public async Task Handle(NameIndexedAdapter notification, CancellationToken cancellationToken)
         {
             await _recentIndexesCache.Stack(notification.Name);
-            await _mediator.Publish(new PostPublishedNameCommand(notification.Name), cancellationToken);
+            await _mediator.Publish(new PostPublishedNameCommand(notification.Name, notification.Meaning), cancellationToken);
         }
     }
 }

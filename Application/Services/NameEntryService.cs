@@ -114,7 +114,7 @@ namespace Application.Domain
             await _nameEntryRepository.Update(originalName, nameEntry);
 
             // TODO Later: Use the outbox pattern to enforce event publishing after the DB update (https://www.youtube.com/watch?v=032SfEBFIJs&t=913s).
-            await _eventPubService.PublishEvent(new NameIndexed(nameEntry.Name));
+            await _eventPubService.PublishEvent(new NameIndexed(nameEntry.Name, nameEntry.Meaning));
         }
 
         public async Task<NameEntry?> UpdateNameWithUnpublish(NameEntry nameEntry)
