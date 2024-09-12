@@ -26,7 +26,8 @@ namespace Infrastructure.Hangfire
                         BackupStrategy = new CollectionMongoBackupStrategy()
                     },
                     Prefix = "hangfire.mongo",
-                    CheckConnection = true
+                    CheckConnection = true,
+                    CheckQueuedJobsStrategy = CheckQueuedJobsStrategy.TailNotificationsCollection
                 })
             );
 
