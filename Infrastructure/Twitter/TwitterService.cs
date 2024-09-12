@@ -2,6 +2,7 @@
 using Application.Config;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
 
 namespace Infrastructure.Twitter
 {
@@ -25,10 +26,13 @@ namespace Infrastructure.Twitter
 
         public async Task PostTweet(string text)
         {
-            var tweet = await _twitterApiClient.PostTweet(text);
-            if (tweet != null)
+            if (!Debugger.IsAttached)
             {
-                _logger.LogInformation("Tweet was posted successfully with ID: {tweetId}", tweet.Id);
+                var tweet = await _twitterApiClient.PostTweet(text);
+                if (tweet != null)
+                {
+                    _logger.LogInformation("Tweet was posted successfully with ID: {tweetId}", tweet.Id);
+                }
             }
         }
     }

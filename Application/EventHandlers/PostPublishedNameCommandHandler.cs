@@ -13,8 +13,13 @@ namespace Application.EventHandlers
         private readonly IMemoryCache _cache;
         private readonly ITwitterService _twitterService;
         private readonly TwitterConfig _twitterConfig;
-        private readonly SemaphoreSlim _semaphore = new(1, 1);
+        private static readonly SemaphoreSlim _semaphore;
         private const string LastTweetPublishedKey = "LastTweetPublished";
+
+        static PostPublishedNameCommandHandler()
+        {
+            _semaphore = new(1, 1);
+        }
 
         public PostPublishedNameCommandHandler(
             ITwitterService twitterService,
