@@ -36,22 +36,27 @@ namespace Application.EventHandlers
             var theTweet = await _twitterService.BuildNameTweet(notification.Name, notification.Meaning);
 
             await _semaphore.WaitAsync(cancellationToken);
-
-            var foundLastPublished = _cache.TryGetValue(LastTweetPublishedKey, out DateTimeOffset lastTweetPublished);
-            var nextTweetTime = lastTweetPublished.AddSeconds(_twitterConfig.TweetIntervalSeconds);
-            
-            if(foundLastPublished && nextTweetTime > DateTimeOffset.Now)
+            try
             {
-                BackgroundJob.Schedule(() => _twitterService.PostTweet(theTweet), nextTweetTime);
-            }
-            else
-            {
-                nextTweetTime = DateTimeOffset.Now;
-                BackgroundJob.Enqueue(() => _twitterService.PostTweet(theTweet));
-            }
+                var foundLastPublished = _cache.TryGetValue(LastTweetPublishedKey, out DateTimeOffset lastTweetPublished);
+                var nextTweetTime = lastTweetPublished.AddSeconds(_twitterConfig.TweetIntervalSeconds);
 
-            _cache.Set(LastTweetPublishedKey, nextTweetTime);
-            _semaphore.Release();
+                if (foundLastPublished && nextTweetTime > DateTimeOffset.Now)
+                {
+                    BackgroundJob.Schedule(() => _twitterService.PostTweet(theTweet), nextTweetTime);
+                }
+                else
+                {
+                    nextTweetTime = DateTimeOffset.Now;
+                    BackgroundJob.Enqueue(() => _twitterService.PostTweet(theTweet));
+                }
+
+                _cache.Set(LastTweetPublishedKey, nextTweetTime);
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
         }
     }
 }
