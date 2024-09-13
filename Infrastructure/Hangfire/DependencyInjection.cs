@@ -39,6 +39,7 @@ namespace Infrastructure.Hangfire
             });
             return services;
         }
+
         public static void UseHangfireDashboard(this IApplicationBuilder app, string dashboardPath)
         {
             app.UseHangfireDashboard(dashboardPath, new DashboardOptions
