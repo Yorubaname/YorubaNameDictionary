@@ -21,6 +21,20 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
     {
         _nameEntryCollection = database.GetCollection<NameEntry>("NameEntries");
         _eventPubService = eventPubService;
+
+        CreateIndexes();
+    }
+
+    private void CreateIndexes()
+    {
+        var indexKeys = Builders<NameEntry>.IndexKeys.Ascending(x => x.Name);
+        var indexOptions = new CreateIndexOptions
+        {
+            Unique = true,
+            Name = "IX_NameEntries_Name_Unique", 
+            Background = true
+        };
+        _nameEntryCollection.Indexes.CreateOne(new CreateIndexModel<NameEntry>(indexKeys, indexOptions));
     }
 
     public async Task<NameEntry> FindById(string id)

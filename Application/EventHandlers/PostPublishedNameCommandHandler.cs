@@ -1,25 +1,23 @@
 ﻿using Application.Events;
+using Application.Services;
 using MediatR;
-using System.Collections.Concurrent;
 
 namespace Application.EventHandlers
 {
     public class PostPublishedNameCommandHandler : INotificationHandler<PostPublishedNameCommand>
     {
-        private readonly ConcurrentQueue<PostPublishedNameCommand> _nameQueue;
+        private readonly ITwitterService _twitterService;
 
-        public PostPublishedNameCommandHandler(ConcurrentQueue<PostPublishedNameCommand> nameQueue)
+        public PostPublishedNameCommandHandler(
+            ITwitterService twitterService)
         {
-            _nameQueue = nameQueue;
+            _twitterService = twitterService;
+
         }
 
-        public Task Handle(PostPublishedNameCommand notification, CancellationToken cancellationToken)
+        public async Task Handle(PostPublishedNameCommand notification, CancellationToken cancellationToken)
         {
-            // Enqueue the indexed name for processing by the BackgroundService
-            _nameQueue.Enqueue(notification);
-
-            // Return a completed task, so it doesn't block the main thread
-            return Task.CompletedTask;
+            await _twitterService.PostNewNameAsync(notification.Name, notification.Meaning, cancellationToken);
         }
     }
 }
