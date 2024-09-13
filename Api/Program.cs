@@ -12,15 +12,13 @@ using Core.StringObjectConverters;
 using FluentValidation;
 using Infrastructure.Twitter;
 using Infrastructure.MongoDB;
-using Infrastructure.Hangfire;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi.Models;
 using MySqlConnector;
 using System.Text.Json.Serialization;
 using Hangfire;
-using Hangfire.AspNetCore;
-using Hangfire.Dashboard;
 using Api.Utilities;
+using Infrastructure.Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -140,9 +138,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseHangfireDashboard("/backJobMonitor", new DashboardOptions
-{
-    Authorization = [new HangfireAuthFilter()]
-});
+app.UseHangfireDashboard("/backJobMonitor");
 
 app.Run();

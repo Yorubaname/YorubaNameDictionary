@@ -1,9 +1,11 @@
 ﻿using Hangfire;
-using Microsoft.Extensions.DependencyInjection;
 using Hangfire.Mongo;
 using MongoDB.Driver;
 using Hangfire.Mongo.Migration.Strategies;
 using Hangfire.Mongo.Migration.Strategies.Backup;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using Api.Utilities;
 
 namespace Infrastructure.Hangfire
 {
@@ -36,6 +38,13 @@ namespace Infrastructure.Hangfire
                 serverOptions.ServerName = "Hangfire.Mongo server 1";
             });
             return services;
+        }
+        public static void UseHangfireDashboard(this IApplicationBuilder app, string dashboardPath)
+        {
+            app.UseHangfireDashboard(dashboardPath, new DashboardOptions
+            {
+                Authorization = [new HangfireAuthFilter()]
+            });
         }
     }
 }
