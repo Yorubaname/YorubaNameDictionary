@@ -1,10 +1,10 @@
 ﻿using Application.Services;
-using Application.Config;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using Microsoft.Extensions.Caching.Memory;
 using Hangfire;
+using Infrastructure.Config;
 
 namespace Infrastructure.Twitter
 {

@@ -1,4 +1,4 @@
-﻿using Application.Config;
+﻿using Infrastructure.Config;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tweetinvi;
