@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using Microsoft.Extensions.Caching.Memory;
 using Hangfire;
-using Infrastructure.Config;
+using Infrastructure.Configuration;
 
 namespace Infrastructure.Twitter
 {

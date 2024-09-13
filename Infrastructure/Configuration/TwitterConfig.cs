@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Config
+﻿namespace Infrastructure.Configuration
 {
     public record TwitterConfig(
         string ConsumerKey,
