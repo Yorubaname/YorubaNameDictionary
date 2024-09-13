@@ -20,9 +20,8 @@ namespace Application.Services
             IUserRepository userRepository,
             IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
-            UrlEncoder encoder,
-            ISystemClock clock)
-            : base(options, logger, encoder, clock)
+            UrlEncoder encoder)
+            : base(options, logger, encoder)
         {
             _userRepository = userRepository;
             _logger = logger.CreateLogger<BasicAuthenticationHandler>();
@@ -30,12 +29,12 @@ namespace Application.Services
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            if (!Request.Headers.ContainsKey("Authorization"))
+            if (!Request.Headers.TryGetValue("Authorization", out Microsoft.Extensions.Primitives.StringValues value))
                 return await Task.FromResult(AuthenticateResult.Fail("Missing Authorization Header"));
 
             try
             {
-                (string username, string password) = DecodeBasicAuthToken(Request.Headers["Authorization"]);
+                (string username, string password) = DecodeBasicAuthToken(value!);
 
                 var matchingUser = await AuthenticateUser(username, password);
                 if (matchingUser == null)

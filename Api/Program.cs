@@ -17,7 +17,6 @@ using Microsoft.OpenApi.Models;
 using MySqlConnector;
 using System.Text.Json.Serialization;
 using Hangfire;
-using Api.Utilities;
 using Infrastructure.Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
