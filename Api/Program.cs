@@ -10,14 +10,14 @@ using Core.Enums;
 using Core.Events;
 using Core.StringObjectConverters;
 using FluentValidation;
-using Infrastructure;
+using Infrastructure.Twitter;
 using Infrastructure.MongoDB;
-using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi.Models;
 using MySqlConnector;
-using System.Collections.Concurrent;
 using System.Text.Json.Serialization;
+using Hangfire;
+using Infrastructure.Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -86,7 +86,7 @@ services.AddSwaggerGen(c =>
                 }
             });
 });
-var mongoDbSettings = configuration.GetSection("MongoDB");
+var mongoDbSettings = configuration.GetRequiredSection("MongoDB");
 services.InitializeDatabase(mongoDbSettings.GetValue<string>("ConnectionString"), mongoDbSettings.GetValue<string>("DatabaseName"));
 
 builder.Services.AddTransient(x =>
@@ -112,9 +112,11 @@ services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ExactNameSearchedAdapter).Assembly));
 
 // Twitter integration configuration
-services.AddSingleton<ConcurrentQueue<PostPublishedNameCommand>>();
+services.AddSingleton<ITwitterService, TwitterService>();
 services.AddTwitterClient(configuration);
-services.AddHostedService<NamePostingService>();
+
+builder.Services.AddMemoryCache();
+builder.Services.SetupHangfire(configuration.GetRequiredSection("MongoDB:ConnectionString").Value!);
 
 
 var app = builder.Build();
@@ -134,5 +136,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHangfireDashboard("/backJobMonitor");
 
 app.Run();

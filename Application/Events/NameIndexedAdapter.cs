@@ -5,7 +5,7 @@ namespace Application.Events;
 
 public record NameIndexedAdapter : NameIndexed, INotification
 {
-    public NameIndexedAdapter(NameIndexed theEvent) : base(theEvent.Name)
+    public NameIndexedAdapter(NameIndexed theEvent) : base(theEvent.Name, theEvent.Meaning)
     {
     }
 }

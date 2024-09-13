@@ -1,12 +1,11 @@
 ﻿using Infrastructure.Configuration;
-using Infrastructure.Twitter;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tweetinvi;
 
-namespace Infrastructure
+namespace Infrastructure.Twitter
 {
-    public static class DependencyInjection
+    public static partial class DependencyInjection
     {
         private const string ConfigSectionName = "Twitter";
 
@@ -26,7 +25,7 @@ namespace Infrastructure
                     twitterConfig.AccessTokenSecret
                 );
             });
-          
+
             services.AddSingleton<ITwitterClientV2, TwitterClientV2>();
             return services;
         }

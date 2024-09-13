@@ -2,7 +2,7 @@
 
 namespace Application.Events
 {
-    public record PostPublishedNameCommand(string Name) : INotification
+    public record PostPublishedNameCommand(string Name, string Meaning) : INotification
     {
     }
 }
