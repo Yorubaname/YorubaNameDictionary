@@ -7,7 +7,6 @@ namespace Api.Utilities
         public bool Authorize(DashboardContext context)
         {
             return context.GetHttpContext().Request.Host.Host == "localhost";
-            //return context.Request.;
         }
     }
 }
