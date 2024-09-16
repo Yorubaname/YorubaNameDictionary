@@ -9,7 +9,7 @@ namespace Infrastructure.Redis
         private readonly IDatabase _cache;
         private const string RecentSearchesKey = "recent_searches";
         private const string PopularSearchesKey = "popular_searches";
-        private const int MaxSearchToReturn = 5;
+        private const int MaxItemsToReturn = 5;
         private const int MaxRecentSearches = 10;
         private const int MaxPopularSearches = 1000; // Use a large number to ensure that items have time to get promoted.
 
@@ -21,13 +21,13 @@ namespace Infrastructure.Redis
 
         public async Task<IEnumerable<string>> Get()
         {
-            var results = await _cache.SortedSetRangeByRankAsync(RecentSearchesKey, 0, MaxSearchToReturn -1, Order.Descending);
+            var results = await _cache.SortedSetRangeByRankAsync(RecentSearchesKey, 0, MaxItemsToReturn -1, Order.Descending);
             return results.Select(r => r.ToString());
         }
 
         public async Task<IEnumerable<string>> GetMostPopular()
         {
-            var results = await _cache.SortedSetRangeByRankAsync(PopularSearchesKey, 0, MaxSearchToReturn -1, Order.Descending);
+            var results = await _cache.SortedSetRangeByRankAsync(PopularSearchesKey, 0, MaxItemsToReturn -1, Order.Descending);
             return results.Select(r => r.ToString());
         }
 
@@ -41,8 +41,6 @@ namespace Infrastructure.Redis
 
         public async Task Stack(string item)
         {
-            string searchTerm = item.ToString();
-
             // Use a Redis transaction to ensure atomicity of both operations
             var transaction = _cache.CreateTransaction();
 
@@ -51,8 +49,8 @@ namespace Infrastructure.Redis
             _ = transaction.SortedSetRemoveRangeByRankAsync(RecentSearchesKey, 0, -(MaxRecentSearches + 1));
 
             // TODO: Do a periodic caching, like daily where the most popular items from the previous period are brought forward into the next day
-            var currentScore = (await _cache.SortedSetScoreAsync(PopularSearchesKey, searchTerm)) ?? 0;
-            _ = transaction.SortedSetAddAsync(PopularSearchesKey, searchTerm, (int)currentScore + 1 + GetNormalizedTimestamp());
+            var currentScore = (await _cache.SortedSetScoreAsync(PopularSearchesKey, item)) ?? 0;
+            _ = transaction.SortedSetAddAsync(PopularSearchesKey, item, (int)currentScore + 1 + GetNormalizedTimestamp());
             _ = transaction.SortedSetRemoveRangeByRankAsync(PopularSearchesKey, 0, -(MaxPopularSearches + 1));
 
             // Execute the transaction

@@ -8,8 +8,8 @@ namespace Infrastructure.Redis
         private readonly IConnectionMultiplexer _redis;
         private readonly IDatabase _cache;
         private const string Key = "recent_indexes";
-        private const int MaxSearchToReturn = 5;
-        private const int MaxRecentSearches = 10;
+        private const int MaxItemsToReturn = 5;
+        private const int MaxItemsToStore = 10;
 
         public RedisRecentIndexesCache(IConnectionMultiplexer connectionMultiplexer)
         {
@@ -19,7 +19,7 @@ namespace Infrastructure.Redis
 
         public async Task<IEnumerable<string>> Get()
         {
-            var results = await _cache.SortedSetRangeByRankAsync(Key, 0, MaxSearchToReturn -1, Order.Descending);
+            var results = await _cache.SortedSetRangeByRankAsync(Key, 0, MaxItemsToReturn -1, Order.Descending);
             return results.Select(r => r.ToString());
         }
 
@@ -32,14 +32,12 @@ namespace Infrastructure.Redis
 
         public async Task Stack(string item)
         {
-            string searchTerm = item.ToString();
-
             // Use a Redis transaction to ensure atomicity of both operations
             var transaction = _cache.CreateTransaction();
 
             // Add the search term to the front of the Redis list
             _ = transaction.SortedSetAddAsync(Key, item, DateTime.UtcNow.Ticks);
-            _ = transaction.SortedSetRemoveRangeByRankAsync(Key, 0, -(MaxRecentSearches + 1));
+            _ = transaction.SortedSetRemoveRangeByRankAsync(Key, 0, -(MaxItemsToStore + 1));
 
             // Execute the transaction
             bool committed = await transaction.ExecuteAsync();
