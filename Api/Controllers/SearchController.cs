@@ -55,9 +55,9 @@ namespace Api.Controllers
             var matches = await _searchService.Search(searchTerm);
 
             // TODO: Check if the comparison here removes takes diacrits into consideration
-            if (matches.Count() == 1 && matches.First().Name.ToLower() == searchTerm.ToLower())
+            if (matches.Count() == 1 && matches.First().Name.Equals(searchTerm, StringComparison.CurrentCultureIgnoreCase))
             {
-                await _eventPubService.PublishEvent(new ExactNameSearched(searchTerm));
+                await _eventPubService.PublishEvent(new ExactNameSearched(matches.First().Name));
             }
 
             return Ok(matches.MapToDtoCollection());
@@ -96,7 +96,7 @@ namespace Api.Controllers
 
             if(nameEntry != null)
             {
-                await _eventPubService.PublishEvent(new ExactNameSearched(searchTerm));
+                await _eventPubService.PublishEvent(new ExactNameSearched(nameEntry.Name));
             }
 
             return Ok(nameEntry);
