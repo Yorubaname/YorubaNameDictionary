@@ -69,6 +69,7 @@ namespace Infrastructure.Twitter
             }
         }
 
+        [AutomaticRetry(Attempts = 3)]
         public async Task SendTweetAsync(string tweetText)
         {
             if (!Debugger.IsAttached) // To prevent tweets from getting posted while testing. Could be better, but...
