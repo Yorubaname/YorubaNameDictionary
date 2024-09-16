@@ -1,23 +1,19 @@
 ﻿using Core.Cache;
+using Infrastructure.Configuration;
+using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 
 namespace Infrastructure.Redis
 {
-    public class RedisRecentSearchesCache : IRecentSearchesCache
+    public class RedisRecentSearchesCache(
+        IConnectionMultiplexer connectionMultiplexer,
+        IOptions<RedisConfig> redisConfig) : RedisCache(connectionMultiplexer, redisConfig), IRecentSearchesCache
     {
-        private readonly IConnectionMultiplexer _redis;
-        private readonly IDatabase _cache;
         private const string RecentSearchesKey = "recent_searches";
         private const string PopularSearchesKey = "popular_searches";
         private const int MaxItemsToReturn = 5;
         private const int MaxRecentSearches = 10;
         private const int MaxPopularSearches = 1000; // Use a large number to ensure that items have time to get promoted.
-
-        public RedisRecentSearchesCache(IConnectionMultiplexer connectionMultiplexer)
-        {
-            _redis = connectionMultiplexer;
-            _cache = _redis.GetDatabase();
-        }
 
         public async Task<IEnumerable<string>> Get()
         {

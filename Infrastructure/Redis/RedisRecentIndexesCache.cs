@@ -1,25 +1,21 @@
 ﻿using Core.Cache;
+using Infrastructure.Configuration;
+using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 
 namespace Infrastructure.Redis
 {
-    public class RedisRecentIndexesCache : IRecentIndexesCache
+    public class RedisRecentIndexesCache(
+        IConnectionMultiplexer connectionMultiplexer,
+        IOptions<RedisConfig> redisConfig) : RedisCache(connectionMultiplexer, redisConfig), IRecentIndexesCache
     {
-        private readonly IConnectionMultiplexer _redis;
-        private readonly IDatabase _cache;
         private const string Key = "recent_indexes";
         private const int MaxItemsToReturn = 5;
         private const int MaxItemsToStore = 10;
 
-        public RedisRecentIndexesCache(IConnectionMultiplexer connectionMultiplexer)
-        {
-            _redis = connectionMultiplexer;
-            _cache = _redis.GetDatabase();
-        }
-
         public async Task<IEnumerable<string>> Get()
         {
-            var results = await _cache.SortedSetRangeByRankAsync(Key, 0, MaxItemsToReturn -1, Order.Descending);
+            var results = await _cache.SortedSetRangeByRankAsync(Key, 0, MaxItemsToReturn - 1, Order.Descending);
             return results.Select(r => r.ToString());
         }
 

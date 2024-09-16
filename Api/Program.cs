@@ -128,7 +128,7 @@ services.AddTwitterClient(configuration);
 
 builder.Services.AddMemoryCache();
 builder.Services.SetupHangfire(Guard.Against.NullOrEmpty(configuration.GetRequiredSection("MongoDB:ConnectionString").Value));
-builder.Services.SetupRedis(Guard.Against.NullOrEmpty(configuration.GetConnectionString("Redis")));
+builder.Services.SetupRedis(configuration);
 
 
 var app = builder.Build();
