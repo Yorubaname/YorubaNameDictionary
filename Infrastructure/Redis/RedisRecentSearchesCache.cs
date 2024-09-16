@@ -11,7 +11,7 @@ namespace Infrastructure.Redis
         private const string PopularSearchesKey = "popular_searches";
         private const int MaxSearchToReturn = 5;
         private const int MaxRecentSearches = 10;
-        private const int MaxPopularSearches = 100; // This number is chosen to ensure that the set does not grow infinitely and to give newly added items time to get promoted.
+        private const int MaxPopularSearches = 1000; // Use a large number to ensure that items have time to get promoted.
 
         public RedisRecentSearchesCache(IConnectionMultiplexer connectionMultiplexer)
         {
