@@ -114,7 +114,7 @@ services.AddScoped<GeoLocationValidator>();
 services.AddScoped<EmbeddedVideoValidator>();
 services.AddScoped<EtymologyValidator>();
 services.AddScoped<SqlToMongoMigrator>();
-services.AddSingleton<IRecentIndexesCache, RecentIndexesCache>();
+services.AddSingleton<IRecentIndexesCache, RedisRecentIndexesCache>();
 services.AddSingleton<IRecentSearchesCache, RedisRecentSearchesCache>();
 
 //Validation

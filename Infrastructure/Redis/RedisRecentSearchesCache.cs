@@ -11,7 +11,7 @@ namespace Infrastructure.Redis
         private const string PopularSearchesKey = "popular_searches";
         private const int MaxSearchToReturn = 5;
         private const int MaxRecentSearches = 10;
-        private const int MaxPopularSearches = 500;
+        private const int MaxPopularSearches = 100; // This number is chosen to ensure that the set does not grow infinitely and to give newly added items time to get promoted.
 
         public RedisRecentSearchesCache(IConnectionMultiplexer connectionMultiplexer)
         {
@@ -50,10 +50,10 @@ namespace Infrastructure.Redis
             _ = transaction.SortedSetAddAsync(RecentSearchesKey, item, DateTime.UtcNow.Ticks);
             _ = transaction.SortedSetRemoveRangeByRankAsync(RecentSearchesKey, 0, -(MaxRecentSearches + 1));
 
-            // Increment the search term's frequency in the specific sorted set
             // TODO: Do a periodic caching, like daily where the most popular items from the previous period are brought forward into the next day
-            _ = transaction.SortedSetIncrementAsync(PopularSearchesKey, searchTerm, 1);
-            _ = transaction.SortedSetRemoveRangeByRankAsync(RecentSearchesKey, 0, -(MaxPopularSearches + 1));
+            var currentScore = (await _cache.SortedSetScoreAsync(PopularSearchesKey, searchTerm)) ?? 0;
+            _ = transaction.SortedSetAddAsync(PopularSearchesKey, searchTerm, (int)currentScore + 1 + GetNormalizedTimestamp());
+            _ = transaction.SortedSetRemoveRangeByRankAsync(PopularSearchesKey, 0, -(MaxPopularSearches + 1));
 
             // Execute the transaction
             bool committed = await transaction.ExecuteAsync();
@@ -61,6 +61,13 @@ namespace Infrastructure.Redis
             {
                 throw new Exception("Redis Transaction failed");
             }
+        }
+
+        static double GetNormalizedTimestamp()
+        {
+            // This can be improved by addressing the time-cycle reset problem.
+            long unixTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            return (unixTimestamp % 1000000) / 1000000.0;
         }
     }
 }
