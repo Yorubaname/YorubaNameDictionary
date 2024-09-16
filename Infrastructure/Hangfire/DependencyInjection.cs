@@ -6,6 +6,7 @@ using Hangfire.Mongo.Migration.Strategies.Backup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Api.Utilities;
+using Ardalis.GuardClauses;
 
 namespace Infrastructure.Hangfire
 {
@@ -20,7 +21,7 @@ namespace Infrastructure.Hangfire
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
-                .UseMongoStorage(mongoClient, mongoUrlBuilder.DatabaseName, new MongoStorageOptions
+                .UseMongoStorage(mongoClient, Guard.Against.NullOrEmpty(mongoUrlBuilder.DatabaseName), new MongoStorageOptions
                 {
                     MigrationOptions = new MongoMigrationOptions
                     {
