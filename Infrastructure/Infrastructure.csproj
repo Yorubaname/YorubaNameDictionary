@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ardalis.GuardClauses" Version="4.6.0" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
     <PackageReference Include="Hangfire.Mongo" Version="1.10.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />

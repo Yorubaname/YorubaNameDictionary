@@ -9,9 +9,9 @@ namespace Infrastructure.Redis
         private readonly IDatabase _cache;
         private const string RecentSearchesKey = "recent_searches";
         private const string PopularSearchesKey = "popular_searches";
-        private const int MaxRecentSearchToReturn = 5;
+        private const int MaxSearchToReturn = 5;
         private const int MaxRecentSearches = 10;
-        private const int MaxPopularSearches = 10;
+        private const int MaxPopularSearches = 500;
 
         public RedisRecentSearchesCache(IConnectionMultiplexer connectionMultiplexer)
         {
@@ -21,13 +21,13 @@ namespace Infrastructure.Redis
 
         public async Task<IEnumerable<string>> Get()
         {
-            var results = await _cache.SortedSetRangeByRankAsync(RecentSearchesKey, 0, -1, Order.Descending);
-            return results.Take(MaxRecentSearchToReturn).Select(r => r.ToString());
+            var results = await _cache.SortedSetRangeByRankAsync(RecentSearchesKey, 0, MaxSearchToReturn -1, Order.Descending);
+            return results.Select(r => r.ToString());
         }
 
         public async Task<IEnumerable<string>> GetMostPopular()
         {
-            var results = await _cache.SortedSetRangeByRankAsync(PopularSearchesKey, 0, -1, Order.Descending);
+            var results = await _cache.SortedSetRangeByRankAsync(PopularSearchesKey, 0, MaxSearchToReturn -1, Order.Descending);
             return results.Select(r => r.ToString());
         }
 
@@ -51,14 +51,15 @@ namespace Infrastructure.Redis
             _ = transaction.SortedSetRemoveRangeByRankAsync(RecentSearchesKey, 0, -(MaxRecentSearches + 1));
 
             // Increment the search term's frequency in the specific sorted set
+            // TODO: Do a periodic caching, like daily where the most popular items from the previous period are brought forward into the next day
             _ = transaction.SortedSetIncrementAsync(PopularSearchesKey, searchTerm, 1);
-            _ = transaction.SortedSetRemoveRangeByRankAsync(PopularSearchesKey, 0, -(MaxPopularSearches + 1));
+            _ = transaction.SortedSetRemoveRangeByRankAsync(RecentSearchesKey, 0, -(MaxPopularSearches + 1));
 
             // Execute the transaction
             bool committed = await transaction.ExecuteAsync();
             if (!committed)
             {
-                throw new Exception("Transaction failed");
+                throw new Exception("Redis Transaction failed");
             }
         }
     }
