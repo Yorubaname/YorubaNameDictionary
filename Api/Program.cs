@@ -18,6 +18,8 @@ using MySqlConnector;
 using System.Text.Json.Serialization;
 using Hangfire;
 using Infrastructure.Hangfire;
+using Infrastructure.Redis;
+using Ardalis.GuardClauses;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -44,8 +46,15 @@ services.AddAuthentication("BasicAuthentication")
 services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole(Role.ADMIN.ToString()));
-    options.AddPolicy("AdminAndLexicographers", policy => policy.RequireRole(Role.ADMIN.ToString(), Role.PRO_LEXICOGRAPHER.ToString(), Role.BASIC_LEXICOGRAPHER.ToString()));
-    options.AddPolicy("AdminAndProLexicographers", policy => policy.RequireRole(Role.ADMIN.ToString(), Role.PRO_LEXICOGRAPHER.ToString()));
+    options.AddPolicy("AdminAndLexicographers", policy => policy.RequireRole(
+        Role.ADMIN.ToString(),
+        Role.PRO_LEXICOGRAPHER.ToString(),
+        Role.BASIC_LEXICOGRAPHER.ToString()
+        ));
+    options.AddPolicy("AdminAndProLexicographers", policy => policy.RequireRole(
+        Role.ADMIN.ToString(),
+        Role.PRO_LEXICOGRAPHER.ToString()
+        ));
 });
 
 services.AddControllers().AddJsonOptions(options =>
@@ -87,10 +96,12 @@ services.AddSwaggerGen(c =>
             });
 });
 var mongoDbSettings = configuration.GetRequiredSection("MongoDB");
-services.InitializeDatabase(mongoDbSettings.GetValue<string>("ConnectionString"), mongoDbSettings.GetValue<string>("DatabaseName"));
+services.InitializeDatabase(
+    Guard.Against.NullOrEmpty(mongoDbSettings.GetValue<string>("ConnectionString")),
+    Guard.Against.NullOrEmpty(mongoDbSettings.GetValue<string>("DatabaseName")));
 
 builder.Services.AddTransient(x =>
-  new MySqlConnection(builder.Configuration.GetSection("MySQL:ConnectionString").Value));
+  new MySqlConnection(Guard.Against.NullOrEmpty(configuration.GetSection("MySQL:ConnectionString").Value)));
 
 services.AddSingleton<NameEntryService>();
 services.AddSingleton<GeoLocationsService>();
@@ -103,8 +114,8 @@ services.AddScoped<GeoLocationValidator>();
 services.AddScoped<EmbeddedVideoValidator>();
 services.AddScoped<EtymologyValidator>();
 services.AddScoped<SqlToMongoMigrator>();
-services.AddSingleton<IRecentIndexesCache, RecentIndexesCache>();
-services.AddSingleton<IRecentSearchesCache, RecentSearchesCache>();
+services.AddSingleton<IRecentIndexesCache, RedisRecentIndexesCache>();
+services.AddSingleton<IRecentSearchesCache, RedisRecentSearchesCache>();
 
 //Validation
 services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
@@ -116,7 +127,8 @@ services.AddSingleton<ITwitterService, TwitterService>();
 services.AddTwitterClient(configuration);
 
 builder.Services.AddMemoryCache();
-builder.Services.SetupHangfire(configuration.GetRequiredSection("MongoDB:ConnectionString").Value!);
+builder.Services.SetupHangfire(Guard.Against.NullOrEmpty(configuration.GetRequiredSection("MongoDB:ConnectionString").Value));
+builder.Services.SetupRedis(configuration);
 
 
 var app = builder.Build();
@@ -137,6 +149,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseHangfireDashboard("/backJobMonitor");
+if (app.Environment.IsDevelopment())
+{
+    app.UseHangfireDashboard("/backJobMonitor");
+}
 
 app.Run();
