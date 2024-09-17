@@ -1,5 +1,4 @@
 using Api.ExceptionHandler;
-using Application.Cache;
 using Application.Domain;
 using Application.Events;
 using Application.Migrator;
@@ -126,7 +125,6 @@ services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ExactNameSear
 services.AddSingleton<ITwitterService, TwitterService>();
 services.AddTwitterClient(configuration);
 
-builder.Services.AddMemoryCache();
 builder.Services.SetupHangfire(Guard.Against.NullOrEmpty(configuration.GetRequiredSection("MongoDB:ConnectionString").Value));
 builder.Services.SetupRedis(configuration);
 

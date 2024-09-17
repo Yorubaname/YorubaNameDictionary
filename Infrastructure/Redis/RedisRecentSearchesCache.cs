@@ -11,9 +11,14 @@ namespace Infrastructure.Redis
     {
         private const string RecentSearchesKey = "recent_searches";
         private const string PopularSearchesKey = "popular_searches";
+        private static readonly DateTime StartDate;
         private const int MaxItemsToReturn = 5;
         private const int MaxRecentSearches = 10;
-        private const int MaxPopularSearches = 1000; // Use a large number to ensure that items have time to get promoted.
+
+        static RedisRecentSearchesCache()
+        {
+            StartDate = new(2024, 9, 17); // Do not change
+        }
 
         public async Task<IEnumerable<string>> Get()
         {
@@ -46,8 +51,7 @@ namespace Infrastructure.Redis
 
             // TODO: Do a periodic caching, like daily where the most popular items from the previous period are brought forward into the next day
             var currentScore = (await _cache.SortedSetScoreAsync(PopularSearchesKey, item)) ?? 0;
-            _ = transaction.SortedSetAddAsync(PopularSearchesKey, item, (int)currentScore + 1 + GetNormalizedTimestamp());
-            _ = transaction.SortedSetRemoveRangeByRankAsync(PopularSearchesKey, 0, -(MaxPopularSearches + 1));
+            _ = transaction.SortedSetAddAsync(PopularSearchesKey, item, (int)++currentScore + GetNormalizedTimestamp());
 
             // Execute the transaction
             bool committed = await transaction.ExecuteAsync();
@@ -59,9 +63,8 @@ namespace Infrastructure.Redis
 
         static double GetNormalizedTimestamp()
         {
-            // This can be improved by addressing the time-cycle reset problem.
-            long unixTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            return (unixTimestamp % 1000000) / 1000000.0;
+            TimeSpan timeSinceStartDate = DateTime.Now - StartDate;
+            return timeSinceStartDate.TotalSeconds / 10_000_000_000; // It will take over 100 years for this value to grow to 1.
         }
     }
 }

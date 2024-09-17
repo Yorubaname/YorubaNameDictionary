@@ -1,6 +1,6 @@
 ﻿namespace Core.Cache
 {
-    public interface IRecentIndexesCache : ICache<string>
+    public interface IRecentIndexesCache : ISetBasedCache<string>
     {
     }
 }
