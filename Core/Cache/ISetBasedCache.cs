@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Cache
 {
-    public interface ICache<T>
+    public interface ISetBasedCache<T>
     {
         Task<IEnumerable<T>> Get();
         Task Stack(T item);

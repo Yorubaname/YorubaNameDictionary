@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
-using Microsoft.Extensions.Caching.Memory;
 using Hangfire;
 using Infrastructure.Configuration;
+using Core.Cache;
 
 namespace Infrastructure.Twitter
 {
@@ -12,13 +12,13 @@ namespace Infrastructure.Twitter
         ITwitterClientV2 twitterApiClient,
         ILogger<TwitterService> logger,
         IOptions<TwitterConfig> twitterConfig,
-        IMemoryCache cache,
+        ISimpleCache cache,
         IBackgroundJobClientV2 backgroundJobClient) : ITwitterService
     {
         private readonly ITwitterClientV2 _twitterApiClient = twitterApiClient;
         private readonly ILogger<TwitterService> _logger = logger;
         private readonly TwitterConfig _twitterConfig = twitterConfig.Value;
-        private readonly IMemoryCache _memoryCache = cache;
+        private readonly ISimpleCache _simpleCache = cache;
         private readonly IBackgroundJobClientV2 _backgroundJobClient = backgroundJobClient;
         private static readonly SemaphoreSlim _semaphore;
         private const string LastTweetPublishedKey = "LastTweetPublished";
@@ -48,10 +48,10 @@ namespace Infrastructure.Twitter
             await _semaphore.WaitAsync(cancellationToken); // We want to be scheduling only one tweet at a time.
             try
             {
-                var foundLastPublished = _memoryCache.TryGetValue(LastTweetPublishedKey, out DateTimeOffset lastTweetPublished);
+                var lastTweetPublished = await _simpleCache.GetAsync<DateTimeOffset>(LastTweetPublishedKey);
                 var nextTweetTime = lastTweetPublished.AddSeconds(_twitterConfig.TweetIntervalSeconds);
 
-                if (foundLastPublished && nextTweetTime > DateTimeOffset.Now)
+                if (lastTweetPublished != default && nextTweetTime > DateTimeOffset.Now)
                 {
                     _backgroundJobClient.Schedule(() => SendTweetAsync(tweetText), nextTweetTime);
                 }
@@ -61,7 +61,7 @@ namespace Infrastructure.Twitter
                     _backgroundJobClient.Enqueue(() => SendTweetAsync(tweetText));
                 }
 
-                _memoryCache.Set(LastTweetPublishedKey, nextTweetTime);
+                await _simpleCache.SetAsync(LastTweetPublishedKey, nextTweetTime);
             }
             finally
             {

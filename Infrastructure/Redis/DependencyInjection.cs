@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using Core.Cache;
 using Infrastructure.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ namespace Infrastructure.Redis
             services.Configure<RedisConfig>(configuration.GetRequiredSection(SectionName));
             var redisConnectionString = Guard.Against.NullOrEmpty(configuration.GetConnectionString(SectionName));
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString));
+            services.AddSingleton<ISimpleCache, SimpleRedisCache>();
             return services;
         }
     }
