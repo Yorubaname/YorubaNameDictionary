@@ -13,7 +13,6 @@ namespace Infrastructure.Redis
         private const string PopularSearchesKey = "popular_searches";
         private const int MaxItemsToReturn = 5;
         private const int MaxRecentSearches = 10;
-        private const int MaxPopularSearches = 1000; // Use a large number to ensure that items have time to get promoted.
 
         public async Task<IEnumerable<string>> Get()
         {
@@ -47,7 +46,6 @@ namespace Infrastructure.Redis
             // TODO: Do a periodic caching, like daily where the most popular items from the previous period are brought forward into the next day
             var currentScore = (await _cache.SortedSetScoreAsync(PopularSearchesKey, item)) ?? 0;
             _ = transaction.SortedSetAddAsync(PopularSearchesKey, item, (int)currentScore + 1 + GetNormalizedTimestamp());
-            _ = transaction.SortedSetRemoveRangeByRankAsync(PopularSearchesKey, 0, -(MaxPopularSearches + 1));
 
             // Execute the transaction
             bool committed = await transaction.ExecuteAsync();
