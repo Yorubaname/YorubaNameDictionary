@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Core.Dto.Response
+﻿namespace Core.Dto.Response
 {
     public record CreateUserDto
     {

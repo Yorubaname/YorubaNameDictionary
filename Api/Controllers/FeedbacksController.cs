@@ -2,7 +2,6 @@
 using Application.Domain;
 using Application.Services;
 using Core.Dto.Response;
-using Core.Entities.NameEntry.Collections;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
