@@ -19,7 +19,7 @@ namespace Application.Mappers
         {
             return names.Select(nameEntry => new NameEntryMiniDto
             {
-                Name = nameEntry.Name,
+                Name = nameEntry.Title,
                 Meaning = nameEntry.Meaning,
                 SubmittedBy = nameEntry.CreatedBy
             }).ToArray();
@@ -29,7 +29,7 @@ namespace Application.Mappers
         {
             return new NameEntry
             {
-                Name = request.Name.Trim(),
+                Title = request.Name.Trim(),
                 Pronunciation = request.Pronunciation?.Trim(),
                 Meaning = request.Meaning.Trim(),
                 ExtendedMeaning = request.ExtendedMeaning?.Trim(),
@@ -68,7 +68,7 @@ namespace Application.Mappers
                 State = nameEntry.State,
                 CreatedAt = nameEntry.CreatedAt,
                 UpdatedAt = nameEntry.UpdatedAt,
-                Name = nameEntry.Name
+                Name = nameEntry.Title
             };
         }
     }

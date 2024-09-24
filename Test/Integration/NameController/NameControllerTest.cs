@@ -53,7 +53,7 @@ namespace Test.Integration.NameController
             nameEntryDtos
                 .Select(dto => dto.Name)
                 .Should()
-                .BeEquivalentTo(seed.Select(s => s.Name));
+                .BeEquivalentTo(seed.Select(s => s.Title));
         }
 
         [Theory]
@@ -76,7 +76,7 @@ namespace Test.Integration.NameController
             nameEntryDtos
                 .Select(dto => dto.Name)
                 .Should()
-                .BeEquivalentTo(filteredSeed.Select(s => s.Name));
+                .BeEquivalentTo(filteredSeed.Select(s => s.Title));
         }
 
         [Theory]
@@ -98,7 +98,7 @@ namespace Test.Integration.NameController
             namesResponse
                 .Select(dto => dto.Name)
                 .Should()
-                .BeSubsetOf(seed.Select(s => s.Name));
+                .BeSubsetOf(seed.Select(s => s.Title));
         }
 
         [Theory]
@@ -121,7 +121,7 @@ namespace Test.Integration.NameController
             nameEntryDtos
                 .Select(dto => dto.Name)
                 .Should()
-                .Equal(expectedData.Select(ed => ed.Name));
+                .Equal(expectedData.Select(ed => ed.Title));
         }
 
         [Theory]
@@ -145,7 +145,7 @@ namespace Test.Integration.NameController
             namesResponse
                 .Select(dto => dto.Name)
                 .Should()
-                .BeEquivalentTo(filteredSeed.Select(s => s.Name));
+                .BeEquivalentTo(filteredSeed.Select(s => s.Title));
         }
 
         [Theory]
@@ -168,7 +168,7 @@ namespace Test.Integration.NameController
             namesResponse
                 .Select(dto => dto.Name)
                 .Should()
-                .BeEquivalentTo(filteredSeed.Select(s => s.Name));
+                .BeEquivalentTo(filteredSeed.Select(s => s.Title));
         }
 
         [Theory]
@@ -192,7 +192,7 @@ namespace Test.Integration.NameController
             namesResponse
                 .Select(dto => dto.Name)
                 .Should()
-                .BeEquivalentTo(filteredSeed.Select(s => s.Name));
+                .BeEquivalentTo(filteredSeed.Select(s => s.Title));
         }
 
         [Theory]
@@ -216,7 +216,7 @@ namespace Test.Integration.NameController
             namesResponse
                 .Select(dto => dto.Name)
                 .Should()
-                .BeEquivalentTo(filteredSeed.Select(s => s.Name));
+                .BeEquivalentTo(filteredSeed.Select(s => s.Title));
         }
 
         public Task InitializeAsync()

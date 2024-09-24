@@ -27,7 +27,7 @@ namespace Application.Services
             var namesContainingQuery = await _namesRepository.FindNameEntryByNameContainingAndState(query, State.PUBLISHED);
             namesResult.UnionWith(namesContainingQuery);
 
-            return new HashSet<string>(namesResult.Select(n => n.Name));
+            return new HashSet<string>(namesResult.Select(n => n.Title));
         }
 
         public async Task<NameEntryDto?> GetName(string searchTerm)

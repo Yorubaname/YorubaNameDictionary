@@ -27,7 +27,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     private void CreateIndexes()
     {
-        var indexKeys = Builders<NameEntry>.IndexKeys.Ascending(x => x.Name);
+        var indexKeys = Builders<NameEntry>.IndexKeys.Ascending(x => x.Title);
         var indexOptions = new CreateIndexOptions
         {
             Unique = true,
@@ -121,7 +121,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
     {
         var options = SetCollationPrimary<FindOptions>(new FindOptions());
         return await _nameEntryCollection
-                            .Find(ne => ne.Name == name && ne.State == state, options)
+                            .Find(ne => ne.Title == name && ne.State == state, options)
                             .SingleOrDefaultAsync();
     }
 
@@ -134,7 +134,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
     {
         var regexFilters = searchTerms.Select(term =>
         {
-            return Builders<NameEntry>.Filter.Regex(ne => ne.Name, 
+            return Builders<NameEntry>.Filter.Regex(ne => ne.Title, 
                 new BsonRegularExpression($"^{term.ReplaceYorubaVowelsWithPattern()}", "i"));
         });
 
@@ -163,7 +163,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task<HashSet<NameEntry>> FindNameEntryByMeaningContainingAndState(string name, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Name, 
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Title, 
             new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i"))
                                     & Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var result = await _nameEntryCollection.Find(filter).ToListAsync();
@@ -172,7 +172,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task<HashSet<NameEntry>> FindNameEntryByNameContainingAndState(string name, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Name, 
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Title, 
             new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i")) &
              Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var result = await _nameEntryCollection.Find(filter).ToListAsync();
@@ -189,7 +189,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task<NameEntry?> Update(string originalName, NameEntry newEntry)
     {
-        var filter = Builders<NameEntry>.Filter.Eq(ne => ne.Name, originalName);
+        var filter = Builders<NameEntry>.Filter.Eq(ne => ne.Title, originalName);
         var updateStatement = GenerateUpdateStatement(newEntry);
 
         var options = new FindOneAndUpdateOptions<NameEntry>
@@ -203,9 +203,9 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         {
             await _eventPubService.PublishEvent(new NonExistingNameUpdateAttempted(originalName));
         }
-        else if (originalName != newEntry.Name)
+        else if (originalName != newEntry.Title)
         {
-            await _eventPubService.PublishEvent(new NameEntryNameUpdated(originalName, newEntry.Name));
+            await _eventPubService.PublishEvent(new NameEntryNameUpdated(originalName, newEntry.Title));
         }
 
         return updated;
@@ -232,7 +232,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
             filter &= filterBuilder.Eq(ne => ne.CreatedBy, submittedBy.Trim());
         }
 
-        var projection = Builders<NameEntry>.Projection.Include(ne => ne.Name).Exclude(ne => ne.Id);
+        var projection = Builders<NameEntry>.Projection.Include(ne => ne.Title).Exclude(ne => ne.Id);
 
         var names = await _nameEntryCollection
                             .Find(filter)
@@ -282,7 +282,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
     private static UpdateDefinition<NameEntry> GenerateUpdateStatement(NameEntry newEntry)
     {
         var statement = Builders<NameEntry>.Update
-                    .Set(ne => ne.Name, newEntry.Name)
+                    .Set(ne => ne.Title, newEntry.Title)
                     .Set(ne => ne.State, newEntry.State)
                     .Set(ne => ne.Pronunciation, newEntry.Pronunciation)
                     .Set(ne => ne.IpaNotation, newEntry.IpaNotation)

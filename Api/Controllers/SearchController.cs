@@ -55,9 +55,9 @@ namespace Api.Controllers
             var matches = await _searchService.Search(searchTerm);
 
             // TODO: Check if the comparison here removes takes diacrits into consideration
-            if (matches.Count() == 1 && matches.First().Name.Equals(searchTerm, StringComparison.CurrentCultureIgnoreCase))
+            if (matches.Count() == 1 && matches.First().Title.Equals(searchTerm, StringComparison.CurrentCultureIgnoreCase))
             {
-                await _eventPubService.PublishEvent(new ExactNameSearched(matches.First().Name));
+                await _eventPubService.PublishEvent(new ExactNameSearched(matches.First().Title));
             }
 
             return Ok(matches.MapToDtoCollection());
@@ -207,7 +207,7 @@ namespace Api.Controllers
                 await _nameEntryService.PublishName(nameEntry, User!.Identity!.Name!);
             }
 
-            var successMessage = $"The following names were successfully indexed: {string.Join(',', entriesToIndex.Select(x => x.Name))}";
+            var successMessage = $"The following names were successfully indexed: {string.Join(',', entriesToIndex.Select(x => x.Title))}";
             return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict(successMessage));
         }
 
@@ -255,7 +255,7 @@ namespace Api.Controllers
                 {
                     entry.State = State.UNPUBLISHED;
                     await _nameEntryService.UpdateName(entry);
-                    unpublishedNames.Add(entry.Name);
+                    unpublishedNames.Add(entry.Title);
                 }
             }
 

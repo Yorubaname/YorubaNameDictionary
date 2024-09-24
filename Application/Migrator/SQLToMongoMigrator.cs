@@ -100,7 +100,7 @@ namespace Application.Migrator
             List<NameEntry> documentsToInsert = name_entry.Select(s => new NameEntry()
             {
                 Id = ObjectId.GenerateNewId().ToString(),
-                Name = s.name,
+                Title = s.name,
                 ExtendedMeaning = s.extended_meaning,
                 FamousPeople = new CommaSeparatedString(s.famous_people),
                 IpaNotation = s.ipa_notation,

@@ -41,10 +41,10 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
     public async Task<List<FeedbackDto>> FindByNameAsync(string name)
     {
         var theName = await _nameEntryCollection
-            .Find(entry => entry.Name.ToLower() == name.ToLower())
+            .Find(entry => entry.Title.ToLower() == name.ToLower())
             .SingleOrDefaultAsync();
 
-        var feedbacksForName = theName?.Feedbacks?.Select(f => new FeedbackDto(f.Id, theName.Name, f.Content!, f.CreatedAt))
+        var feedbacksForName = theName?.Feedbacks?.Select(f => new FeedbackDto(f.Id, theName.Title, f.Content!, f.CreatedAt))
             .OrderByDescending(x => x.SubmittedAt)
             .ToList();
 
@@ -53,7 +53,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
 
     public async Task AddFeedbackByNameAsync(string name, string feedbackContent)
     {
-        var filter = Builders<NameEntry>.Filter.Where(x => x.Name.ToLower() == name.ToLower());
+        var filter = Builders<NameEntry>.Filter.Where(x => x.Title.ToLower() == name.ToLower());
 
         var nameFeedback = new Feedback
         {
@@ -69,7 +69,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
 
     public async Task DeleteAllFeedbackForNameAsync(string name)
     {
-        var filter = Builders<NameEntry>.Filter.Where(x => x.Name.ToLower() == name.ToLower());
+        var filter = Builders<NameEntry>.Filter.Where(x => x.Title.ToLower() == name.ToLower());
         var update = Builders<NameEntry>.Update.Set(entry => entry.Feedbacks, new List<Feedback>());
 
         await _nameEntryCollection.UpdateOneAsync(filter, update);
@@ -77,7 +77,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
 
     public async Task<bool> DeleteFeedbackAsync(string name, string feedbackId)
     {
-        var filter = Builders<NameEntry>.Filter.Where(x => x.Name.ToLower() == name.ToLower());
+        var filter = Builders<NameEntry>.Filter.Where(x => x.Title.ToLower() == name.ToLower());
         var entry = await _nameEntryCollection.Find(filter).FirstOrDefaultAsync();
 
         if (entry != null && entry.Feedbacks.Any(feedback => feedback.Id == feedbackId))
@@ -96,7 +96,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
         var filter = Builders<NameEntry>.Filter.ElemMatch(entry => entry.Feedbacks, feedback => feedback.Id == feedbackId);
         var projectionDefinition = Builders<NameEntry>
             .Projection
-            .Include(entry => entry.Name)
+            .Include(entry => entry.Title)
             .ElemMatch(entry => entry.Feedbacks, feedback => feedback.Id == feedbackId);
 
         var nameEntry = await _nameEntryCollection.Find(filter)
@@ -104,7 +104,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
             .FirstOrDefaultAsync();
 
         var theMatch = nameEntry?.Feedbacks?.FirstOrDefault(feedback => feedback.Id == feedbackId);
-        return theMatch == null ? null : new FeedbackDto(theMatch.Id, nameEntry!.Name, theMatch!.Content!, theMatch.CreatedAt);
+        return theMatch == null ? null : new FeedbackDto(theMatch.Id, nameEntry!.Title, theMatch!.Content!, theMatch.CreatedAt);
     }
 
 }

@@ -27,7 +27,7 @@ namespace Application.Domain
 
         public async Task Create(NameEntry entry)
         {
-            var name = entry.Name;
+            var name = entry.Title;
 
             var existingName = await _nameEntryRepository.FindByName(name);
             if (existingName != null)
@@ -75,7 +75,7 @@ namespace Application.Domain
 
         public async Task<NameEntry?> UpdateName(NameEntry nameEntry)
         {
-            return await _nameEntryRepository.Update(nameEntry.Name, nameEntry);
+            return await _nameEntryRepository.Update(nameEntry.Title, nameEntry);
         }
 
         public async Task PublishName(NameEntry nameEntry, string username)
@@ -86,12 +86,12 @@ namespace Application.Domain
             }
 
             NameEntry? updates = nameEntry.Modified;
-            string originalName = nameEntry.Name;
+            string originalName = nameEntry.Title;
 
             if (updates != null)
             {
                 // Copy latest updates to the main object as part of the publish operation.
-                nameEntry.Name = updates.Name;
+                nameEntry.Title = updates.Title;
                 nameEntry.Pronunciation = updates.Pronunciation;
                 nameEntry.IpaNotation = updates.IpaNotation;
                 nameEntry.Meaning = updates.Meaning;
@@ -114,7 +114,7 @@ namespace Application.Domain
             await _nameEntryRepository.Update(originalName, nameEntry);
 
             // TODO Later: Use the outbox pattern to enforce event publishing after the DB update (https://www.youtube.com/watch?v=032SfEBFIJs&t=913s).
-            await _eventPubService.PublishEvent(new NameIndexed(nameEntry.Name, nameEntry.Meaning));
+            await _eventPubService.PublishEvent(new NameIndexed(nameEntry.Title, nameEntry.Meaning));
         }
 
         public async Task<NameEntry?> UpdateNameWithUnpublish(NameEntry nameEntry)
@@ -155,7 +155,7 @@ namespace Application.Domain
                 }
                 else
                 {
-                    await _eventPubService.PublishEvent(new NonExistingNameUpdateAttempted(nameEntry.Name));
+                    await _eventPubService.PublishEvent(new NonExistingNameUpdateAttempted(nameEntry.Title));
                 }
             }
             return updatedNames;

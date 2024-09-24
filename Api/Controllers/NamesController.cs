@@ -177,7 +177,7 @@ namespace Api.Controllers
         public async Task<IActionResult> DeleteNamesBatch(string[] names)
         {
 
-            var foundNames = (await _nameEntryService.LoadNames(names))?.Select(f => f.Name)?.ToArray();
+            var foundNames = (await _nameEntryService.LoadNames(names))?.Select(f => f.Title)?.ToArray();
 
             if (foundNames is null || foundNames.Length == 0)
             {

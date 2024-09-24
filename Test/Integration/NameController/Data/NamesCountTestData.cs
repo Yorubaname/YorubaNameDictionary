@@ -20,7 +20,7 @@ public class NamesCountTestData : IEnumerable<object[]>
             .With(ne => ne.State, State.PUBLISHED)
             .With(ne => ne.Modified, (NameEntry?)default)
             .With(ne => ne.Duplicates, [])
-            .Do(ne => ne.Name = GetNextName()));
+            .Do(ne => ne.Title = GetNextName()));
     }
 
     public IEnumerator<object[]> GetEnumerator()
