@@ -1,7 +1,7 @@
 ﻿using Core.Dto.Response;
-using Core.Entities.NameEntry;
-using Core.Enums;
+using Core.Entities;
 using System.Linq.Expressions;
+using YorubaOrganization.Core.Enums;
 
 namespace Core.Repositories
 {

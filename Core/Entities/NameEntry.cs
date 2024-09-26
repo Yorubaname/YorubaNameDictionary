@@ -1,6 +1,6 @@
-﻿using Core.Core.Entities;
+﻿using YorubaOrganization.Core.Entities;
 
-namespace Core.Entities.NameEntry;
+namespace Core.Entities;
 
 public class NameEntry : DictionaryEntry<NameEntry>
 {
@@ -9,13 +9,11 @@ public class NameEntry : DictionaryEntry<NameEntry>
 
     // I leave the following fields here because we will need to copy the values over into the new type during migration.
     // They should be deprecated eventually.
-    public List<string> Media { get; set; }
     public List<string> FamousPeople { get; set; }
-    public List<string> Variants { get; set; }
 
     protected override void InitializeLists()
     {
         base.InitializeLists();
-        Variants = [];
+        FamousPeople = [];
     }
 }

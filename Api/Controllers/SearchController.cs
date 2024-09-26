@@ -4,13 +4,13 @@ using Application.Mappers;
 using Application.Services;
 using Core.Cache;
 using Core.Dto.Response;
-using Core.Entities.NameEntry;
-using Core.Enums;
+using Core.Entities;
 using Core.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using YorubaOrganization.Core.Enums;
 
 namespace Api.Controllers
 {
@@ -92,7 +92,7 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(NameEntryDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> SearchOne(string searchTerm)
         {
-            NameEntryDto nameEntry = await _searchService.GetName(searchTerm);
+            var nameEntry = await _searchService.GetName(searchTerm);
 
             if(nameEntry != null)
             {

@@ -5,7 +5,6 @@ using Application.Migrator;
 using Application.Services;
 using Application.Validation;
 using Core.Cache;
-using Core.Enums;
 using Core.Events;
 using Core.StringObjectConverters;
 using FluentValidation;
@@ -19,6 +18,7 @@ using Hangfire;
 using Infrastructure.Hangfire;
 using Infrastructure.Redis;
 using Ardalis.GuardClauses;
+using YorubaOrganization.Core.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;

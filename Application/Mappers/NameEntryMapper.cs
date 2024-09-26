@@ -2,9 +2,9 @@
 using Core.Dto.Request;
 using Core.Dto.Response;
 using Core.Entities;
-using Core.Entities.NameEntry;
-using Core.Entities.NameEntry.Collections;
-using Core.Enums;
+using YorubaOrganization.Core.Entities;
+using YorubaOrganization.Core.Entities.Partials;
+using YorubaOrganization.Core.Enums;
 
 namespace Application.Mappers
 {
@@ -34,7 +34,7 @@ namespace Application.Mappers
                 Meaning = request.Meaning.Trim(),
                 ExtendedMeaning = request.ExtendedMeaning?.Trim(),
                 Morphology = request.Morphology ?? new List<string>(),
-                Media = request.Media ?? new List<string>(),
+                MediaLinks = request.MediaLinks,
                 State = request.State ?? State.NEW,
                 Etymology = request.Etymology.Select(et => new Etymology(et.Part, et.Meaning)).ToList(),
                 Videos = request.Videos.Select(ev => new EmbeddedVideo(ev.VideoId, ev.Caption)).ToList(),
@@ -42,7 +42,7 @@ namespace Application.Mappers
                 GeoLocation = request.GeoLocation.Select(ge => new GeoLocation(ge.Place, ge.Region)).ToList(),
                 FamousPeople = request.FamousPeople ?? new List<string>(),
                 Syllables = request.Syllables ?? new List<string>(),
-                Variants = request.Variants ?? new List<string>(),
+                VariantsV2 =request.VariantsV2,
                 CreatedBy = request.SubmittedBy,
                 UpdatedBy = request.SubmittedBy
             };
@@ -54,14 +54,14 @@ namespace Application.Mappers
             {
                 Pronunciation = nameEntry.Pronunciation,
                 IpaNotation = nameEntry.IpaNotation,
-                Variants = (CommaSeparatedString)nameEntry.Variants,
+                Variants = (CommaSeparatedString)nameEntry.VariantsV2.Select(v => v.Title).ToList(),
                 Syllables = (HyphenSeparatedString)nameEntry.Syllables,
                 Meaning = nameEntry.Meaning,
                 ExtendedMeaning = nameEntry.ExtendedMeaning,
                 Morphology = (CommaSeparatedString)nameEntry.Morphology,
                 GeoLocation = nameEntry.GeoLocation.Select(ge => new GeoLocationDto(ge.Id, ge.Place, ge.Region)).ToList(),
                 FamousPeople = (CommaSeparatedString)nameEntry.FamousPeople,
-                Media = (CommaSeparatedString)nameEntry.Media,
+                Media = (CommaSeparatedString)nameEntry.MediaLinks.Select(m => m.Url).ToList(),
                 SubmittedBy = nameEntry.CreatedBy,
                 Etymology = nameEntry.Etymology.Select(et => new EtymologyDto(et.Part, et.Meaning)).ToList(),
                 Videos = nameEntry.Videos.Select(v => new EmbeddedVideoDto(v.VideoId, v.Caption)).ToList(),

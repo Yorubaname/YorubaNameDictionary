@@ -1,4 +1,4 @@
-﻿namespace Core.Enums
+﻿namespace YorubaOrganization.Core.Enums
 {
     public enum Role
     {

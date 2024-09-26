@@ -1,4 +1,4 @@
-﻿namespace Core.Entities
+﻿namespace YorubaOrganization.Core.Entities
 {
     public class GeoLocation : BaseEntity
     {

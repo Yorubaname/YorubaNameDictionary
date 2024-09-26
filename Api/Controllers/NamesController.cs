@@ -4,12 +4,12 @@ using Application.Domain;
 using Application.Mappers;
 using Core.Dto.Request;
 using Core.Dto.Response;
-using Core.Entities.NameEntry;
-using Core.Enums;
+using Core.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using YorubaOrganization.Core.Enums;
 
 namespace Api.Controllers
 {

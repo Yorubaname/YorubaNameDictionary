@@ -1,4 +1,6 @@
-﻿namespace Core.Entities.NameEntry.Collections;
+﻿using YorubaOrganization.Core.Entities;
+
+namespace YorubaOrganization.Core.Entities.Partials;
 
 public class Etymology : BaseEntity
 {

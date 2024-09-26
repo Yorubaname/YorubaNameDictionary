@@ -1,4 +1,6 @@
-﻿namespace Core.Entities.NameEntry.Collections
+﻿using YorubaOrganization.Core.Entities;
+
+namespace YorubaOrganization.Core.Entities.Partials
 {
     /// <summary>
     /// Feedback from anonymous website users. 

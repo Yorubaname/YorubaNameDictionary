@@ -1,9 +1,9 @@
-﻿namespace Core.Entities
+﻿namespace YorubaOrganization.Core.Entities
 {
     public abstract class BaseEntity
     {
-        public BaseEntity() 
-        { 
+        public BaseEntity()
+        {
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = CreatedAt;
         }

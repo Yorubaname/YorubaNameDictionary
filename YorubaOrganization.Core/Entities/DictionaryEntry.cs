@@ -1,12 +1,9 @@
-﻿using Core.Core.Entities.Parts;
-using Core.Entities;
-using Core.Entities.NameEntry;
-using Core.Entities.NameEntry.Collections;
-using Core.Enums;
+﻿using YorubaOrganization.Core.Entities.Partials;
+using YorubaOrganization.Core.Enums;
 
-namespace Core.Core.Entities
+namespace YorubaOrganization.Core.Entities
 {
-    public abstract class DictionaryEntry<T> : BaseEntity, IComparable<T> where T: DictionaryEntry<T>
+    public abstract class DictionaryEntry<T> : BaseEntity, IComparable<T> where T : DictionaryEntry<T>
     {
         /// <summary>
         /// <para>I make this abstract because I want to be able to add attributes to it in child classes.</para>

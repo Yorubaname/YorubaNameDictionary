@@ -1,5 +1,4 @@
 using Core.Dto.Response;
-using Core.Entities.NameEntry;
 using Core.Repositories;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -10,8 +9,9 @@ using Test.Integration.NameController.Data;
 using Xunit;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using Core.Enums;
 using FluentAssertions;
+using Core.Entities;
+using YorubaOrganization.Core.Enums;
 
 namespace Test.Integration.NameController
 {

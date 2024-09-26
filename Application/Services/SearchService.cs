@@ -1,8 +1,8 @@
 ﻿using Application.Mappers;
 using Core.Dto.Response;
-using Core.Entities.NameEntry;
-using Core.Enums;
+using Core.Entities;
 using Core.Repositories;
+using YorubaOrganization.Core.Enums;
 
 namespace Application.Services
 {

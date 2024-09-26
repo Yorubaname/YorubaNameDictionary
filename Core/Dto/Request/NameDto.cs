@@ -1,4 +1,5 @@
-﻿using Core.Enums;
+﻿using YorubaOrganization.Core.Entities.Partials;
+using YorubaOrganization.Core.Enums;
 
 namespace Core.Dto.Request
 {
@@ -19,6 +20,21 @@ namespace Core.Dto.Request
         public HyphenSeparatedString? Syllables { get; set; }
 
         public CommaSeparatedString? Variants { get; set; }
+
+        public List<Variant> VariantsV2 { 
+            get
+            {
+                return Variants == null ? [] : ((List<string>)Variants).Select(s => new Variant(s)).ToList();
+            }
+        }
+
+        public List<MediaLink> MediaLinks
+        {
+            get
+            {
+                return Media == null ? [] : ((List<string>)Media).Select(s => new MediaLink(s)).ToList();
+            }
+        }
 
         public CommaSeparatedString? Morphology { get; set; }
 

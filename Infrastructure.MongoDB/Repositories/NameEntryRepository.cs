@@ -1,12 +1,12 @@
 ﻿using Core.Dto.Response;
-using Core.Entities.NameEntry;
-using Core.Enums;
+using Core.Entities;
 using Core.Events;
 using Core.Repositories;
 using Core.Utilities;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Linq.Expressions;
+using YorubaOrganization.Core.Enums;
 
 namespace Infrastructure.MongoDB.Repositories;
 
@@ -182,7 +182,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
     public async Task<HashSet<NameEntry>> FindNameEntryByVariantsContainingAndState(string name, State state)
     {
         var regex = new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i");
-        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Variants, regex) & Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.VariantsV2, regex) & Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var result = await _nameEntryCollection.Find(filter).ToListAsync();
         return new HashSet<NameEntry>(result);
     }
@@ -289,16 +289,15 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
                     .Set(ne => ne.Meaning, newEntry.Meaning)
                     .Set(ne => ne.ExtendedMeaning, newEntry.ExtendedMeaning)
                     .Set(ne => ne.Morphology, newEntry.Morphology)
-                    .Set(ne => ne.Media, newEntry.Media)
+                    .Set(ne => ne.MediaLinks, newEntry.MediaLinks)
                     .Set(ne => ne.State, newEntry.State)
                     .Set(ne => ne.Etymology, newEntry.Etymology)
                     .Set(ne => ne.Videos, newEntry.Videos)
                     .Set(ne => ne.GeoLocation, newEntry.GeoLocation)
                     .Set(ne => ne.FamousPeople, newEntry.FamousPeople)
                     .Set(ne => ne.Syllables, newEntry.Syllables)
-                    .Set(ne => ne.Variants, newEntry.Variants)
+                    .Set(ne => ne.VariantsV2, newEntry.VariantsV2)
                     .Set(ne => ne.Modified, newEntry.Modified)
-                    .Set(ne => ne.Duplicates, newEntry.Duplicates)
                     .CurrentDate(ne => ne.UpdatedAt);
 
         if (!string.IsNullOrWhiteSpace(newEntry.UpdatedBy))

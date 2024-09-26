@@ -1,4 +1,4 @@
-﻿namespace Core.Entities.NameEntry.Collections;
+﻿namespace YorubaOrganization.Core.Entities.Partials;
 
 public class EmbeddedVideo : BaseEntity
 {

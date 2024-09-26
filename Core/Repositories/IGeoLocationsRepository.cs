@@ -1,4 +1,4 @@
-﻿using Core.Entities;
+﻿using YorubaOrganization.Core.Entities;
 
 namespace Core.Repositories
 {

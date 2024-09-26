@@ -2,10 +2,10 @@
 using Application.Services;
 using Core.Dto.Request;
 using Core.Dto.Response;
-using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using YorubaOrganization.Core.Entities;
 
 namespace Api.Controllers
 {

@@ -1,10 +1,10 @@
 ﻿using Application.Exceptions;
 using Core.Dto.Response;
-using Core.Entities.NameEntry;
-using Core.Enums;
+using Core.Entities;
 using Core.Events;
 using Core.Repositories;
 using Microsoft.Extensions.Logging;
+using YorubaOrganization.Core.Enums;
 
 namespace Application.Domain
 {
@@ -97,14 +97,15 @@ namespace Application.Domain
                 nameEntry.Meaning = updates.Meaning;
                 nameEntry.ExtendedMeaning = updates.ExtendedMeaning;
                 nameEntry.Morphology = updates.Morphology;
-                nameEntry.Media = updates.Media;
+                nameEntry.MediaLinks = updates.MediaLinks;
                 nameEntry.State = updates.State;
                 nameEntry.Etymology = updates.Etymology;
                 nameEntry.Videos = updates.Videos;
                 nameEntry.GeoLocation = updates.GeoLocation;
                 nameEntry.FamousPeople = updates.FamousPeople;
                 nameEntry.Syllables = updates.Syllables;
-                nameEntry.Variants = updates.Variants;
+                nameEntry.VariantsV2 = updates.VariantsV2;
+                nameEntry.MediaLinks = updates.MediaLinks;
                 nameEntry.UpdatedBy = username;
 
                 nameEntry.Modified = null;

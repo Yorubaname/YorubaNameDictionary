@@ -1,4 +1,6 @@
-﻿namespace Core.Entities
+﻿using YorubaOrganization.Core.Entities;
+
+namespace Core.Entities
 {
     public class User : BaseEntity
     {

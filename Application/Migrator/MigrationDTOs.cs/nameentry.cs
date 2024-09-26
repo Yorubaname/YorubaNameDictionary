@@ -1,5 +1,5 @@
-﻿using Core.Entities;
-using Core.Entities.NameEntry.Collections;
+﻿using YorubaOrganization.Core.Entities;
+using YorubaOrganization.Core.Entities.Partials;
 
 namespace Application.Migrator.MigrationDTOs.cs
 {

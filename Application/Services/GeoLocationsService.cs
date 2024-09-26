@@ -1,6 +1,6 @@
 ﻿using Application.Exceptions;
-using Core.Entities;
 using Core.Repositories;
+using YorubaOrganization.Core.Entities;
 
 namespace Application.Services
 {

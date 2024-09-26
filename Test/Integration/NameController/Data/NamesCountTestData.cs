@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
-using Core.Entities.NameEntry;
-using Core.Enums;
+using Core.Entities;
+using YorubaOrganization.Core.Enums;
 namespace Test.Integration.NameController.Data;
 
 public class NamesCountTestData : IEnumerable<object[]>

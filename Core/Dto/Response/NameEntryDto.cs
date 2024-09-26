@@ -1,5 +1,5 @@
 ﻿using Core.Dto.Request;
-using Core.Enums;
+using YorubaOrganization.Core.Enums;
 
 namespace Core.Dto.Response
 {

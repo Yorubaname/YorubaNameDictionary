@@ -1,9 +1,9 @@
 ﻿using Core.Dto.Response;
-using Core.Entities.NameEntry;
-using Core.Entities.NameEntry.Collections;
+using Core.Entities;
 using Core.Repositories;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using YorubaOrganization.Core.Entities.Partials;
 
 namespace Infrastructure.MongoDB.Repositories;
 
