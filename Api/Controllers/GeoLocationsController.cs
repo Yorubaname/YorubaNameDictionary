@@ -1,10 +1,10 @@
 ﻿using Api.Utilities;
 using Application.Services;
-using Core.Dto.Request;
-using Core.Dto.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using YorubaOrganization.Core.Dto.Request;
+using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Entities;
 
 namespace Api.Controllers

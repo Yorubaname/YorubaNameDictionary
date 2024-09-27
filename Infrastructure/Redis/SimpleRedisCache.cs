@@ -1,8 +1,8 @@
 ﻿using Ardalis.GuardClauses;
-using Core.Cache;
 using Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
+using YorubaOrganization.Core.Cache;
 namespace Infrastructure.Redis
 {
     public class SimpleRedisCache(IConnectionMultiplexer connectionMultiplexer, IOptions<RedisConfig> redisConfig) :

@@ -1,15 +1,16 @@
-﻿using Core.Dto.Response;
-using Core.Entities;
-using Core.Events;
+﻿using Core.Entities;
 using Core.Repositories;
 using Core.Utilities;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Linq.Expressions;
+using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Enums;
+using YorubaOrganization.Core.Events;
 
 namespace Infrastructure.MongoDB.Repositories;
 
+// TODO Now: Refactor this into a central class that can be reused across different entities
 public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 {
     private readonly IMongoCollection<NameEntry> _nameEntryCollection;
@@ -31,7 +32,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         var indexOptions = new CreateIndexOptions
         {
             Unique = true,
-            Name = "IX_NameEntries_Name_Unique", 
+            Name = "IX_NameEntries_Title_Unique",
             Background = true
         };
         _nameEntryCollection.Indexes.CreateOne(new CreateIndexModel<NameEntry>(indexKeys, indexOptions));
@@ -68,14 +69,14 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task Delete(string name)
     {
-        var filter = Builders<NameEntry>.Filter.Eq("Name", name);
+        var filter = Builders<NameEntry>.Filter.Eq(e => e.Title, name);
         var options = SetCollationPrimary<DeleteOptions>(new DeleteOptions());
 
         await _nameEntryCollection.DeleteOneAsync(filter, options);
     }
     public async Task DeleteMany(string[] names)
     {
-        var filter = Builders<NameEntry>.Filter.In("Name", names);
+        var filter = Builders<NameEntry>.Filter.In(e => e.Title, names);
         var options = SetCollationPrimary<DeleteOptions>(new DeleteOptions());
 
         await _nameEntryCollection.DeleteManyAsync(filter, options);
@@ -85,7 +86,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
     {
         var filter = Builders<NameEntry>
             .Filter
-            .And(Builders<NameEntry>.Filter.Eq("Name", name), Builders<NameEntry>.Filter.Eq("State", state));
+            .And(Builders<NameEntry>.Filter.Eq(e => e.Title, name), Builders<NameEntry>.Filter.Eq("State", state));
 
         var options = SetCollationPrimary<DeleteOptions>(new DeleteOptions());
 
@@ -103,7 +104,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task<NameEntry?> FindByName(string name)
     {
-        var filter = Builders<NameEntry>.Filter.Eq("Name", name);
+        var filter = Builders<NameEntry>.Filter.Eq(e => e.Title, name);
         var options = SetCollationPrimary<FindOptions>(new FindOptions());
 
         return await _nameEntryCollection.Find(filter, options).SingleOrDefaultAsync();
@@ -111,7 +112,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task<List<NameEntry>> FindByNames(string[] names)
     {
-        var filter = Builders<NameEntry>.Filter.In("Name", names);
+        var filter = Builders<NameEntry>.Filter.In(e => e.Title, names);
         var options = SetCollationPrimary<FindOptions>(new FindOptions());
 
         return await _nameEntryCollection.Find(filter, options).ToListAsync();
@@ -127,14 +128,14 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task<HashSet<NameEntry>> FindByNameStartingWithAndState(string searchTerm, State state)
     {
-        return await FindByNameStartingWithAnyAndState(new string[] { searchTerm }, state);
+        return await FindByNameStartingWithAnyAndState([searchTerm], state);
     }
 
     public async Task<HashSet<NameEntry>> FindByNameStartingWithAnyAndState(IEnumerable<string> searchTerms, State state)
     {
         var regexFilters = searchTerms.Select(term =>
         {
-            return Builders<NameEntry>.Filter.Regex(ne => ne.Title, 
+            return Builders<NameEntry>.Filter.Regex(ne => ne.Title,
                 new BsonRegularExpression($"^{term.ReplaceYorubaVowelsWithPattern()}", "i"));
         });
 
@@ -154,7 +155,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task<HashSet<NameEntry>> FindNameEntryByExtendedMeaningContainingAndState(string name, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.ExtendedMeaning, 
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.ExtendedMeaning,
             new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i")) &
             Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var result = await _nameEntryCollection.Find(filter).ToListAsync();
@@ -163,7 +164,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task<HashSet<NameEntry>> FindNameEntryByMeaningContainingAndState(string name, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Title, 
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Title,
             new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i"))
                                     & Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var result = await _nameEntryCollection.Find(filter).ToListAsync();
@@ -172,7 +173,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
     public async Task<HashSet<NameEntry>> FindNameEntryByNameContainingAndState(string name, State state)
     {
-        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Title, 
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Title,
             new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i")) &
              Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var result = await _nameEntryCollection.Find(filter).ToListAsync();
@@ -201,11 +202,11 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
 
         if (updated == null)
         {
-            await _eventPubService.PublishEvent(new NonExistingNameUpdateAttempted(originalName));
+            await _eventPubService.PublishEvent(new NonExistingEntryUpdateAttempted(originalName));
         }
         else if (originalName != newEntry.Title)
         {
-            await _eventPubService.PublishEvent(new NameEntryNameUpdated(originalName, newEntry.Title));
+            await _eventPubService.PublishEvent(new EntryTitleUpdated(originalName, newEntry.Title));
         }
 
         return updated;
@@ -268,14 +269,14 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         return names;
     }
 
-    public async Task<NamesMetadataDto> GetMetadata()
+    public async Task<MetadataResponse> GetMetadata()
     {
-        return new NamesMetadataDto
+        return new MetadataResponse
         {
-            TotalNames = await _nameEntryCollection.CountDocumentsAsync(FilterDefinition<NameEntry>.Empty),
-            TotalNewNames = await _nameEntryCollection.CountDocumentsAsync(Builders<NameEntry>.Filter.Eq(x => x.State, State.NEW)),
-            TotalModifiedNames = await _nameEntryCollection.CountDocumentsAsync(Builders<NameEntry>.Filter.Eq(x => x.State, State.MODIFIED)),
-            TotalPublishedNames = await _nameEntryCollection.CountDocumentsAsync(Builders<NameEntry>.Filter.Eq(x => x.State, State.PUBLISHED))
+            TotalEntries = await _nameEntryCollection.CountDocumentsAsync(FilterDefinition<NameEntry>.Empty),
+            TotalNewEntries = await _nameEntryCollection.CountDocumentsAsync(Builders<NameEntry>.Filter.Eq(x => x.State, State.NEW)),
+            TotalModifiedEntries = await _nameEntryCollection.CountDocumentsAsync(Builders<NameEntry>.Filter.Eq(x => x.State, State.MODIFIED)),
+            TotalPublishedEntries = await _nameEntryCollection.CountDocumentsAsync(Builders<NameEntry>.Filter.Eq(x => x.State, State.PUBLISHED))
         };
     }
 

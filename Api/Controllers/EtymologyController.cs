@@ -1,5 +1,5 @@
-﻿using Core.Repositories;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using YorubaOrganization.Core.Repositories;
 
 namespace Api.Controllers
 {

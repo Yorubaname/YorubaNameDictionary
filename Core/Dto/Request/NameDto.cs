@@ -1,4 +1,6 @@
-﻿using YorubaOrganization.Core.Entities.Partials;
+﻿using YorubaOrganization.Core.Dto;
+using YorubaOrganization.Core.Dto.Request;
+using YorubaOrganization.Core.Entities.Partials;
 using YorubaOrganization.Core.Enums;
 
 namespace Core.Dto.Request

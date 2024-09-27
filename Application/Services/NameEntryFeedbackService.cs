@@ -1,5 +1,6 @@
-﻿using Core.Dto.Response;
-using Core.Repositories;
+﻿using Core.Repositories;
+using YorubaOrganization.Core.Dto.Response;
+using YorubaOrganization.Core.Repositories;
 
 namespace Application.Services
 {
@@ -12,12 +13,12 @@ namespace Application.Services
             _nameEntryFeedbackRepository = nameEntryFeedbackRepository;
         }
 
-        public async Task<List<FeedbackDto>> FindAllAsync()
+        public async Task<List<NameFeedbackDto>> FindAllAsync()
         {
             return await _nameEntryFeedbackRepository.FindAllAsync();
         }
 
-        public async Task<List<FeedbackDto>> FindByNameAsync(string name)
+        public async Task<List<NameFeedbackDto>> FindByNameAsync(string name)
         {
             return await _nameEntryFeedbackRepository.FindByNameAsync(name);
         }
@@ -32,7 +33,7 @@ namespace Application.Services
             await _nameEntryFeedbackRepository.DeleteAllFeedbackForNameAsync(name);
         }
 
-        public async Task<FeedbackDto> GetFeedbackByIdAsync(string feedbackId)
+        public async Task<NameFeedbackDto> GetFeedbackByIdAsync(string feedbackId)
         {
             return await _nameEntryFeedbackRepository.GetFeedbackByIdAsync(feedbackId);
         }

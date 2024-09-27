@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Application.Mappers;
 using FluentValidation;
+using YorubaOrganization.Core.Dto.Response;
 
 namespace Api.Controllers;
 

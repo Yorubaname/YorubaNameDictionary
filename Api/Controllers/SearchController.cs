@@ -2,7 +2,6 @@
 using Application.Domain;
 using Application.Mappers;
 using Application.Services;
-using Core.Cache;
 using Core.Dto.Response;
 using Core.Entities;
 using Core.Events;
@@ -10,7 +9,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using YorubaOrganization.Core.Cache;
+using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Enums;
+using YorubaOrganization.Core.Events;
 
 namespace Api.Controllers
 {
@@ -57,7 +59,7 @@ namespace Api.Controllers
             // TODO: Check if the comparison here removes takes diacrits into consideration
             if (matches.Count() == 1 && matches.First().Title.Equals(searchTerm, StringComparison.CurrentCultureIgnoreCase))
             {
-                await _eventPubService.PublishEvent(new ExactNameSearched(matches.First().Title));
+                await _eventPubService.PublishEvent(new ExactEntrySearched(matches.First().Title));
             }
 
             return Ok(matches.MapToDtoCollection());
@@ -96,7 +98,7 @@ namespace Api.Controllers
 
             if(nameEntry != null)
             {
-                await _eventPubService.PublishEvent(new ExactNameSearched(nameEntry.Name));
+                await _eventPubService.PublishEvent(new ExactEntrySearched(nameEntry.Name));
             }
 
             return Ok(nameEntry);
@@ -170,7 +172,7 @@ namespace Api.Controllers
                 return BadRequest(ResponseHelper.GetResponseDict($"{name} is already indexed"));
             }
 
-            await _nameEntryService.PublishName(nameEntry, User!.Identity!.Name!);
+            await _nameEntryService.PublishEntry(nameEntry, User!.Identity!.Name!);
             return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict($"{name} has been published"));
         }
 
@@ -204,7 +206,7 @@ namespace Api.Controllers
             foreach (var nameEntry in entriesToIndex)
             {
                 // TODO Later: The names should be updated in one batch instead of one-by-one.
-                await _nameEntryService.PublishName(nameEntry, User!.Identity!.Name!);
+                await _nameEntryService.PublishEntry(nameEntry, User!.Identity!.Name!);
             }
 
             var successMessage = $"The following names were successfully indexed: {string.Join(',', entriesToIndex.Select(x => x.Title))}";

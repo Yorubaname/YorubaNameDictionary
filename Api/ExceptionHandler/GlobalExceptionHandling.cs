@@ -1,9 +1,9 @@
 ﻿namespace Api.ExceptionHandler
 {
     using Api.Utilities;
-    using Application.Exceptions;
     using System.Net;
     using System.Text.Json;
+    using YorubaOrganization.Application.Exceptions;
 
     public class GlobalExceptionHandlingMiddleware
     {

@@ -1,7 +1,7 @@
-﻿using Core.Repositories;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using YorubaOrganization.Core.Entities;
+using YorubaOrganization.Core.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories
 {

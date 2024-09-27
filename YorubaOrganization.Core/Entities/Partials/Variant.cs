@@ -3,6 +3,6 @@
     public class Variant(string title, GeoLocation? geoLocation = null)
     {
         public string Title { get; set; } = title;
-        public GeoLocation? Geolocation { get; set; } = geoLocation;
+        public GeoLocation? GeoLocation { get; set; } = geoLocation;
     }
 }

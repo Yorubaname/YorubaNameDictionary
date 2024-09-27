@@ -1,5 +1,4 @@
-﻿using Api.Model.In;
-using Api.Utilities;
+﻿using Api.Utilities;
 using Application.Domain;
 using Application.Mappers;
 using Core.Dto.Request;
@@ -8,6 +7,7 @@ using Core.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using System.Net;
 using YorubaOrganization.Core.Enums;
 
@@ -63,13 +63,18 @@ namespace Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("meta")]
-        [ProducesResponseType(typeof(NamesMetadataDto[]), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(NamesMetadataDto), (int)HttpStatusCode.OK)]
         [AllowAnonymous]
         public async Task<IActionResult> GetMetaData()
         {
             var metaData = await _nameEntryService.GetMetadata();
-
-            return Ok(metaData);
+            return Ok(new NamesMetadataDto
+            {
+                TotalNames = metaData.TotalEntries,
+                TotalPublishedNames = metaData.TotalPublishedEntries,
+                TotalModifiedNames = metaData.TotalModifiedEntries,
+                TotalNewNames = metaData.TotalNewEntries
+            });
         }
 
         /// <summary>

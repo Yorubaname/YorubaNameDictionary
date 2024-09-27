@@ -1,6 +1,4 @@
-﻿using Core.Dto.Request;
-
-namespace Api.Model.In
+﻿namespace Core.Dto.Request
 {
     public class CreateNameDto : NameDto
     {

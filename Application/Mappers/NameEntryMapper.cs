@@ -1,7 +1,9 @@
-﻿using Core.Dto;
-using Core.Dto.Request;
+﻿using Core.Dto.Request;
 using Core.Dto.Response;
 using Core.Entities;
+using YorubaOrganization.Core.Dto;
+using YorubaOrganization.Core.Dto.Request;
+using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Entities;
 using YorubaOrganization.Core.Entities.Partials;
 using YorubaOrganization.Core.Enums;

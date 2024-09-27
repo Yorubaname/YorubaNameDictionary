@@ -5,9 +5,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\YorubaOrganization.Core\YorubaOrganization.Core.csproj" />
+    <Compile Remove="Enums\**" />
+    <EmbeddedResource Remove="Enums\**" />
+    <None Remove="Enums\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Enums\" />
+    <ProjectReference Include="..\YorubaOrganization.Core\YorubaOrganization.Core.csproj" />
   </ItemGroup>
 </Project>

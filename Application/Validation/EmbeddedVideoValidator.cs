@@ -1,5 +1,5 @@
-﻿using Core.Dto.Request;
-using FluentValidation;
+﻿using FluentValidation;
+using YorubaOrganization.Core.Dto.Request;
 
 namespace Application.Validation
 {

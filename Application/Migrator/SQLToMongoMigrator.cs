@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MySqlConnector;
+using YorubaOrganization.Core.Dto;
 using YorubaOrganization.Core.Entities;
 using YorubaOrganization.Core.Entities.Partials;
 using YorubaOrganization.Core.Enums;

@@ -2,6 +2,7 @@
 using Core.Dto.Response;
 using Core.Entities;
 using Core.Repositories;
+using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Enums;
 
 namespace Application.Services

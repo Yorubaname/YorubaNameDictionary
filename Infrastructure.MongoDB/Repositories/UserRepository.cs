@@ -1,9 +1,9 @@
-﻿using Core.Dto.Request;
-using Core.Dto.Response;
-using Core.Entities;
-using Core.Repositories;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using YorubaOrganization.Core.Dto.Request;
+using YorubaOrganization.Core.Dto.Response;
+using YorubaOrganization.Core.Entities;
+using YorubaOrganization.Core.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories
 {

@@ -1,7 +1,7 @@
-﻿using Core.Cache;
-using Infrastructure.Configuration;
+﻿using Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
+using YorubaOrganization.Core.Cache;
 
 namespace Infrastructure.Redis
 {

@@ -4,8 +4,6 @@ using Application.Events;
 using Application.Migrator;
 using Application.Services;
 using Application.Validation;
-using Core.Cache;
-using Core.Events;
 using Core.StringObjectConverters;
 using FluentValidation;
 using Infrastructure.Twitter;
@@ -19,6 +17,8 @@ using Infrastructure.Hangfire;
 using Infrastructure.Redis;
 using Ardalis.GuardClauses;
 using YorubaOrganization.Core.Enums;
+using YorubaOrganization.Core.Events;
+using YorubaOrganization.Core.Cache;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -119,7 +119,11 @@ services.AddSingleton<IRecentSearchesCache, RedisRecentSearchesCache>();
 //Validation
 services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
 
-services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ExactNameSearchedAdapter).Assembly));
+services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(ExactEntrySearched).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(PostPublishedNameCommand).Assembly);
+});
 
 // Twitter integration configuration
 services.AddSingleton<ITwitterService, TwitterService>();
