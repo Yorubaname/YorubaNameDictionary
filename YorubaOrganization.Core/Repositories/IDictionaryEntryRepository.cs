@@ -30,8 +30,6 @@ namespace YorubaOrganization.Core.Repositories
 
         Task<HashSet<T>> FindEntryByMeaningContainingAndState(string title, State state);
 
-        Task<HashSet<T>> FindEntryByExtendedMeaningContainingAndState(string title, State state);
-
         Task<T?> FindByTitleAndState(string title, State state);
 
         Task<int> CountByState(State state);

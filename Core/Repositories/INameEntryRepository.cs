@@ -1,9 +1,11 @@
 ﻿using Core.Entities;
+using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Repositories;
 
 namespace Core.Repositories
 {
     public interface INameEntryRepository : IDictionaryEntryRepository<NameEntry>
     {
+        Task<HashSet<NameEntry>> FindEntryByExtendedMeaningContainingAndState(string title, State state);
     }
 }
