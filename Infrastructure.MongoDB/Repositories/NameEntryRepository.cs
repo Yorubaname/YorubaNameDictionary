@@ -26,13 +26,8 @@ public sealed class NameEntryRepository : DictionaryEntryRepository<NameEntry>, 
         return new HashSet<NameEntry>(result);
     }
 
-    protected override UpdateDefinition<NameEntry> GenerateCustomUpdateStatement(NameEntry newEntry)
-    {
-        var statement = Builders<NameEntry>.Update
+    protected override UpdateDefinition<NameEntry> GenerateCustomUpdateStatement(NameEntry newEntry) => Builders<NameEntry>.Update
                     .Set(ne => ne.Meaning, newEntry.Meaning)
                     .Set(ne => ne.ExtendedMeaning, newEntry.ExtendedMeaning)
                     .Set(ne => ne.FamousPeople, newEntry.FamousPeople);
-
-        return statement;
-    }
 }
