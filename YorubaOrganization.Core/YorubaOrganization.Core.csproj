@@ -4,10 +4,18 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>YorubaOrganization.Core</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>YorubaName.com</Authors>
+    <Description>Core/domain layer that is reusable in dictionary projects.</Description>
+    <Copyright>YorubaName.com © 2024</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Yorubaname/YorubaNameDictionary</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+    <PackageReference Include="MediatR.Contracts" Version="2.*" />
   </ItemGroup>
 
 </Project>
