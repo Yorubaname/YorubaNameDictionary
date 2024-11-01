@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Core.Utilities
+namespace YorubaOrganization.Core.Utilities
 {
     public static class DiacriticsNormalizer
     {
@@ -64,7 +64,7 @@ namespace Core.Utilities
 
         public static string ReplaceYorubaVowelsWithPattern(this string term)
         {
-            term = RemoveDiacriticsAndSimplify(term);
+            term = term.RemoveDiacriticsAndSimplify();
 
             return string.Concat(term.Select(c =>
                 vowelPatterns.TryGetValue(c, out var pattern) ? pattern : Regex.Escape(c.ToString())

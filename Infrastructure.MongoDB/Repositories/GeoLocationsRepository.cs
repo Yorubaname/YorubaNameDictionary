@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using YorubaOrganization.Core.Entities;
 using YorubaOrganization.Core.Repositories;
+using YorubaOrganization.Infrastructure.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories
 {

@@ -5,10 +5,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.23.1" />
+    <PackageReference Include="MongoDB.Driver" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\YorubaOrganization.Infrastructure\YorubaOrganization.Infrastructure.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 </Project>

@@ -19,6 +19,7 @@ using Ardalis.GuardClauses;
 using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Events;
 using YorubaOrganization.Core.Cache;
+using Application.EventHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -121,8 +122,8 @@ services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
 
 services.AddMediatR(cfg =>
 {
-    cfg.RegisterServicesFromAssembly(typeof(ExactEntrySearched).Assembly);
-    cfg.RegisterServicesFromAssembly(typeof(PostPublishedNameCommand).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(PostPublishedNameCommandHandler).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(ExactEntrySearchedEventHandler).Assembly);
 });
 
 // Twitter integration configuration

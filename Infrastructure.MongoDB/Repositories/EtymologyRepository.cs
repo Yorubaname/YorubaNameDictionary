@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using YorubaOrganization.Core.Entities.Partials;
 using YorubaOrganization.Core.Events;
 using YorubaOrganization.Core.Repositories;
+using YorubaOrganization.Infrastructure.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories;
 

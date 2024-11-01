@@ -1,10 +1,11 @@
 ﻿using Core.Entities;
 using Core.Repositories;
-using Core.Utilities;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Events;
+using YorubaOrganization.Core.Utilities;
+using YorubaOrganization.Infrastructure.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories;
 
