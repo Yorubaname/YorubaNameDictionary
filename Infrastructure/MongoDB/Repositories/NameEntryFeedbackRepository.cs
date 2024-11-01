@@ -4,7 +4,6 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Entities.Partials;
-using YorubaOrganization.Core.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories;
 
