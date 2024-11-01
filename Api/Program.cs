@@ -7,7 +7,6 @@ using Application.Validation;
 using Core.StringObjectConverters;
 using FluentValidation;
 using Infrastructure.Twitter;
-using Infrastructure.MongoDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi.Models;
 using MySqlConnector;
@@ -20,6 +19,7 @@ using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Events;
 using YorubaOrganization.Core.Cache;
 using Application.EventHandlers;
+using Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
