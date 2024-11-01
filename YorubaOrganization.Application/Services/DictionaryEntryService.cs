@@ -30,7 +30,7 @@ namespace YorubaOrganization.Application.Services
         {
             var title = entry.Title;
 
-            T? existingEntry = await _entryRepository.FindByName(title);
+            T? existingEntry = await _entryRepository.FindByTitle(title);
             if (existingEntry != null)
             {
                 existingEntry.Duplicates.Add(entry);
@@ -189,7 +189,7 @@ namespace YorubaOrganization.Application.Services
 
         public virtual async Task<IEnumerable<T>> GetAllEntries(State? state, string? submittedBy)
         {
-            return await _entryRepository.GetAllNames(state, submittedBy);
+            return await _entryRepository.GetAllEntries(state, submittedBy);
         }
 
         public virtual async Task<List<T>> List(State? state, string? submittedBy, int pageNumber, int pageSize)
@@ -199,12 +199,12 @@ namespace YorubaOrganization.Application.Services
 
         public virtual async Task<T?> LoadEntry(string title)
         {
-            return await _entryRepository.FindByName(title);
+            return await _entryRepository.FindByTitle(title);
         }
 
         public virtual async Task<List<T>> LoadEntries(string[] titles)
         {
-            return await _entryRepository.FindByNames(titles);
+            return await _entryRepository.FindByTitles(titles);
         }
 
         public virtual async Task Delete(string title)
@@ -219,7 +219,7 @@ namespace YorubaOrganization.Application.Services
         }
 
         public virtual async Task<T?> FindByTitleAndState(string title, State state) =>
-            await _entryRepository.FindByNameAndState(title, state);
+            await _entryRepository.FindByTitleAndState(title, state);
 
         public virtual async Task DeleteEntriesBatch(string[] titles)
         {

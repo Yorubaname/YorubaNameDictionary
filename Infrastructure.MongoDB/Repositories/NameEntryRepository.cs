@@ -82,7 +82,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         await _nameEntryCollection.DeleteManyAsync(filter, options);
     }
 
-    public async Task<bool> DeleteByNameAndState(string name, State state)
+    public async Task<bool> DeleteByTitleAndState(string name, State state)
     {
         var filter = Builders<NameEntry>
             .Filter
@@ -102,7 +102,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         return new HashSet<NameEntry>(allEntries);
     }
 
-    public async Task<NameEntry?> FindByName(string name)
+    public async Task<NameEntry?> FindByTitle(string name)
     {
         var filter = Builders<NameEntry>.Filter.Eq(e => e.Title, name);
         var options = SetCollationPrimary<FindOptions>(new FindOptions());
@@ -110,7 +110,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         return await _nameEntryCollection.Find(filter, options).SingleOrDefaultAsync();
     }
 
-    public async Task<List<NameEntry>> FindByNames(string[] names)
+    public async Task<List<NameEntry>> FindByTitles(string[] names)
     {
         var filter = Builders<NameEntry>.Filter.In(e => e.Title, names);
         var options = SetCollationPrimary<FindOptions>(new FindOptions());
@@ -118,7 +118,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         return await _nameEntryCollection.Find(filter, options).ToListAsync();
     }
 
-    public async Task<NameEntry?> FindByNameAndState(string name, State state)
+    public async Task<NameEntry?> FindByTitleAndState(string name, State state)
     {
         var options = SetCollationPrimary<FindOptions>(new FindOptions());
         return await _nameEntryCollection
@@ -126,12 +126,12 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
                             .SingleOrDefaultAsync();
     }
 
-    public async Task<HashSet<NameEntry>> FindByNameStartingWithAndState(string searchTerm, State state)
+    public async Task<HashSet<NameEntry>> FindByTitleStartingWithAndState(string searchTerm, State state)
     {
-        return await FindByNameStartingWithAnyAndState([searchTerm], state);
+        return await FindByTitleStartingWithAnyAndState([searchTerm], state);
     }
 
-    public async Task<HashSet<NameEntry>> FindByNameStartingWithAnyAndState(IEnumerable<string> searchTerms, State state)
+    public async Task<HashSet<NameEntry>> FindByTitleStartingWithAnyAndState(IEnumerable<string> searchTerms, State state)
     {
         var regexFilters = searchTerms.Select(term =>
         {
@@ -153,7 +153,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         return await _nameEntryCollection.Find(ne => ne.State == state).ToListAsync();
     }
 
-    public async Task<HashSet<NameEntry>> FindNameEntryByExtendedMeaningContainingAndState(string name, State state)
+    public async Task<HashSet<NameEntry>> FindEntryByExtendedMeaningContainingAndState(string name, State state)
     {
         var filter = Builders<NameEntry>.Filter.Regex(ne => ne.ExtendedMeaning,
             new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i")) &
@@ -162,7 +162,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         return new HashSet<NameEntry>(result);
     }
 
-    public async Task<HashSet<NameEntry>> FindNameEntryByMeaningContainingAndState(string name, State state)
+    public async Task<HashSet<NameEntry>> FindEntryByMeaningContainingAndState(string name, State state)
     {
         var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Title,
             new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i"))
@@ -171,7 +171,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         return new HashSet<NameEntry>(result);
     }
 
-    public async Task<HashSet<NameEntry>> FindNameEntryByNameContainingAndState(string name, State state)
+    public async Task<HashSet<NameEntry>> FindEntryByTitleContainingAndState(string name, State state)
     {
         var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Title,
             new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i")) &
@@ -180,7 +180,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         return new HashSet<NameEntry>(result);
     }
 
-    public async Task<HashSet<NameEntry>> FindNameEntryByVariantsContainingAndState(string name, State state)
+    public async Task<HashSet<NameEntry>> FindEntryByVariantsContainingAndState(string name, State state)
     {
         var regex = new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i");
         var filter = Builders<NameEntry>.Filter.Regex(ne => ne.VariantsV2, regex) & Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
@@ -218,7 +218,7 @@ public class NameEntryRepository : MongoDBRepository, INameEntryRepository
         return (int)count;
     }
 
-    public async Task<IEnumerable<NameEntry>> GetAllNames(State? state, string? submittedBy)
+    public async Task<IEnumerable<NameEntry>> GetAllEntries(State? state, string? submittedBy)
     {
         var filterBuilder = Builders<NameEntry>.Filter;
         var filter = filterBuilder.Empty;

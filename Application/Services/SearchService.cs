@@ -22,10 +22,10 @@ namespace Application.Services
 
             if(query.Length > 1)
             {
-                namesResult = await _namesRepository.FindByNameStartingWithAndState(query, State.PUBLISHED);
+                namesResult = await _namesRepository.FindByTitleStartingWithAndState(query, State.PUBLISHED);
             }
 
-            var namesContainingQuery = await _namesRepository.FindNameEntryByNameContainingAndState(query, State.PUBLISHED);
+            var namesContainingQuery = await _namesRepository.FindEntryByTitleContainingAndState(query, State.PUBLISHED);
             namesResult.UnionWith(namesContainingQuery);
 
             return new HashSet<string>(namesResult.Select(n => n.Title));
@@ -33,7 +33,7 @@ namespace Application.Services
 
         public async Task<NameEntryDto?> GetName(string searchTerm)
         {
-            var result = await _namesRepository.FindByNameAndState(searchTerm, State.PUBLISHED);
+            var result = await _namesRepository.FindByTitleAndState(searchTerm, State.PUBLISHED);
             return result?.MapToDto();
         }
 
@@ -49,23 +49,23 @@ namespace Application.Services
 
         public async Task<IEnumerable<NameEntry>> Search(string searchTerm)
         {
-            var exactFound = await _namesRepository.FindByNameAndState(searchTerm, State.PUBLISHED);
+            var exactFound = await _namesRepository.FindByTitleAndState(searchTerm, State.PUBLISHED);
             if (exactFound != null)
             {
                 return new NameEntry[] { exactFound };
             }
 
-            var startingWithSearchTerm = await _namesRepository.FindByNameStartingWithAndState(searchTerm, State.PUBLISHED);
+            var startingWithSearchTerm = await _namesRepository.FindByTitleStartingWithAndState(searchTerm, State.PUBLISHED);
             if (startingWithSearchTerm.Any())
             {
                 return startingWithSearchTerm;
             }
 
             var possibleFound = new HashSet<NameEntry>();
-            possibleFound.UnionWith(await _namesRepository.FindNameEntryByNameContainingAndState(searchTerm, State.PUBLISHED));
-            possibleFound.UnionWith(await _namesRepository.FindNameEntryByVariantsContainingAndState(searchTerm, State.PUBLISHED));
-            possibleFound.UnionWith(await _namesRepository.FindNameEntryByMeaningContainingAndState(searchTerm, State.PUBLISHED));
-            possibleFound.UnionWith(await _namesRepository.FindNameEntryByExtendedMeaningContainingAndState(searchTerm, State.PUBLISHED));
+            possibleFound.UnionWith(await _namesRepository.FindEntryByTitleContainingAndState(searchTerm, State.PUBLISHED));
+            possibleFound.UnionWith(await _namesRepository.FindEntryByVariantsContainingAndState(searchTerm, State.PUBLISHED));
+            possibleFound.UnionWith(await _namesRepository.FindEntryByMeaningContainingAndState(searchTerm, State.PUBLISHED));
+            possibleFound.UnionWith(await _namesRepository.FindEntryByExtendedMeaningContainingAndState(searchTerm, State.PUBLISHED));
 
             return possibleFound;
 
@@ -73,7 +73,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<NameEntry>> SearchByStartsWith(string searchTerm)
         {
-            return await _namesRepository.FindByNameStartingWithAndState(searchTerm, State.PUBLISHED);
+            return await _namesRepository.FindByTitleStartingWithAndState(searchTerm, State.PUBLISHED);
         }
     }
 }
