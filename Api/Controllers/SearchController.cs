@@ -160,7 +160,7 @@ namespace Api.Controllers
         [Authorize(Policy = "AdminAndProLexicographers")]
         public async Task<IActionResult> PublishName([FromRoute] string name)
         {
-            var nameEntry = await _nameEntryService.LoadName(name);
+            var nameEntry = await _nameEntryService.LoadEntry(name);
             if (nameEntry == null)
             {
                 return BadRequest(ResponseHelper.GetResponseDict($"{name} not found in the repository so not indexed"));
@@ -191,7 +191,7 @@ namespace Api.Controllers
             // TODO Later: Optimize by fetching all names in one database call instead of one-by-one.
             foreach (var name in names)
             {
-                var entry = await _nameEntryService.LoadName(name);
+                var entry = await _nameEntryService.LoadEntry(name);
                 if (entry != null && entry.State != State.PUBLISHED)
                 {
                     entriesToIndex.Add(entry);
@@ -222,7 +222,7 @@ namespace Api.Controllers
         [Authorize(Policy = "AdminAndProLexicographers")]
         public async Task<IActionResult> UnpublishName([FromRoute] string name)
         {
-            var entry = await _nameEntryService.FindByNameAndState(name, State.PUBLISHED);
+            var entry = await _nameEntryService.FindByTitleAndState(name, State.PUBLISHED);
 
             if (entry == null)
             {
@@ -230,7 +230,7 @@ namespace Api.Controllers
             }
 
             entry.State = State.NEW;
-            await _nameEntryService.UpdateName(entry);
+            await _nameEntryService.Update(entry);
             return Ok(ResponseHelper.GetResponseDict($"{name} removed from index."));
         }
 
@@ -247,7 +247,7 @@ namespace Api.Controllers
 
             foreach (var name in names)
             {
-                var entry = await _nameEntryService.FindByNameAndState(name, State.PUBLISHED);
+                var entry = await _nameEntryService.FindByTitleAndState(name, State.PUBLISHED);
 
                 if (entry == null)
                 {
@@ -256,7 +256,7 @@ namespace Api.Controllers
                 else
                 {
                     entry.State = State.UNPUBLISHED;
-                    await _nameEntryService.UpdateName(entry);
+                    await _nameEntryService.Update(entry);
                     unpublishedNames.Add(entry.Title);
                 }
             }

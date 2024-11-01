@@ -31,7 +31,7 @@ namespace Application.Domain
             // TODO Later: Update all names in one batch
             foreach (var nameEntry in nameEntries)
             {
-                var updated = await UpdateNameWithUnpublish(nameEntry);
+                var updated = await UpdateEntryWithUnpublish(nameEntry);
 
                 if (updated != null)
                 {

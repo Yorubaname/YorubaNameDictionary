@@ -63,7 +63,7 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> Create([FromBody] CreateNameFeedbackDto model)
         {
-            var nameEntry = await _nameEntryService.LoadName(model.Name);
+            var nameEntry = await _nameEntryService.LoadEntry(model.Name);
 
             if (nameEntry == null)
             {
@@ -90,7 +90,7 @@ namespace Api.Controllers
                 return BadRequest("Name parameter is required.");
             }
 
-            var nameEntry = await _nameEntryService.LoadName(name);
+            var nameEntry = await _nameEntryService.LoadEntry(name);
 
             if (nameEntry == null)
             {
@@ -121,7 +121,7 @@ namespace Api.Controllers
                 return BadRequest("Name parameter is required.");
             }
 
-            var nameEntry = await _nameEntryService.LoadName(name);
+            var nameEntry = await _nameEntryService.LoadEntry(name);
 
             if (nameEntry == null)
             {

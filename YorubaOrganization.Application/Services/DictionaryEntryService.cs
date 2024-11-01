@@ -16,30 +16,30 @@ namespace YorubaOrganization.Application.Services
         private readonly ILogger<DictionaryEntryService<T>> _logger;
 
         public DictionaryEntryService(
-            IDictionaryEntryRepository<T> nameEntryRepository,
+            IDictionaryEntryRepository<T> entryRepository,
             IEventPubService eventPubService,
             ILogger<DictionaryEntryService<T>> logger
             )
         {
-            _entryRepository = nameEntryRepository;
+            _entryRepository = entryRepository;
             _eventPubService = eventPubService;
             _logger = logger;
         }
 
         public virtual async Task Create(T entry)
         {
-            var name = entry.Title;
+            var title = entry.Title;
 
-            var existingName = await _entryRepository.FindByName(name);
-            if (existingName != null)
+            T? existingEntry = await _entryRepository.FindByName(title);
+            if (existingEntry != null)
             {
-                existingName.Duplicates.Add(entry);
-                await UpdateName(existingName);
-                _logger.LogWarning("Someone attempted to create a new name over existing name: {name}.", name);
+                existingEntry.Duplicates.Add(entry);
+                await Update(existingEntry);
+                _logger.LogWarning("Someone attempted to create a new entry over existing entry: {title}.", title);
                 return;
             }
 
-            await CreateOrUpdateName(entry);
+            await CreateOrUpdate(entry);
         }
 
         public virtual async Task BulkCreate(List<T> entries)
@@ -51,9 +51,9 @@ namespace YorubaOrganization.Application.Services
             }
         }
 
-        public virtual async Task<T> CreateOrUpdateName(T entry)
+        public virtual async Task<T> CreateOrUpdate(T entry)
         {
-            var updated = await UpdateNameWithUnpublish(entry);
+            var updated = await UpdateEntryWithUnpublish(entry);
 
             if (updated == null)
             {
@@ -63,20 +63,20 @@ namespace YorubaOrganization.Application.Services
             return updated ?? entry;
         }
 
-        public virtual async Task<List<T>> SaveNames(List<T> entries)
+        public virtual async Task<List<T>> SaveEntries(List<T> entries)
         {
-            var savedNames = new List<T>();
+            var savedEntries = new List<T>();
             foreach (var entry in entries)
             {
-                savedNames.Add(await CreateOrUpdateName(entry));
+                savedEntries.Add(await CreateOrUpdate(entry));
                 // TODO Later: Ensure that removing batched writes to database here will not cause problems
             }
-            return savedNames;
+            return savedEntries;
         }
 
-        public virtual async Task<T?> UpdateName(T nameEntry)
+        public virtual async Task<T?> Update(T entry)
         {
-            return await _entryRepository.Update(nameEntry.Title, nameEntry);
+            return await _entryRepository.Update(entry.Title, entry);
         }
 
 
@@ -86,11 +86,11 @@ namespace YorubaOrganization.Application.Services
         {
             if (string.IsNullOrEmpty(username))
             {
-                throw new ClientException("Unexpected. User must be logged in to publish a name!");
+                throw new ClientException("Unexpected. User must be logged in to publish an entry!");
             }
 
             T? updates = entry.Modified;
-            string originalName = entry.Title;
+            string originalTitle = entry.Title;
 
             if (updates != null)
             {
@@ -116,7 +116,7 @@ namespace YorubaOrganization.Application.Services
             }
 
             entry.State = State.PUBLISHED;
-            await _entryRepository.Update(originalName, entry);
+            await _entryRepository.Update(originalTitle, entry);
         }
 
         private void CopyProperties<TSource, TTarget>(TSource source, TTarget target, params Expression<Func<TSource, object>>[] properties)
@@ -148,15 +148,15 @@ namespace YorubaOrganization.Application.Services
         }
 
 
-        public virtual async Task<T?> UpdateNameWithUnpublish(T nameEntry)
+        public virtual async Task<T?> UpdateEntryWithUnpublish(T entry)
         {
-            if (nameEntry.State == State.PUBLISHED)
+            if (entry.State == State.PUBLISHED)
             {
-                // Unpublish name if it is currently published since it is awaiting some changes.
-                nameEntry.State = State.MODIFIED;
+                // Unpublish entry if it is currently published since it is awaiting the approval of the new changes.
+                entry.State = State.MODIFIED;
             }
 
-            return await UpdateName(nameEntry);
+            return await Update(entry);
         }
 
         /// <summary>
@@ -165,13 +165,13 @@ namespace YorubaOrganization.Application.Services
         /// <param name="originalEntry"></param>
         /// <param name="newEntry"></param>
         /// <returns></returns>
-        public virtual async Task<T?> UpdateName(T originalEntry, T newEntry)
+        public virtual async Task<T?> Update(T originalEntry, T newEntry)
         {
             originalEntry.Modified = newEntry;
-            return await UpdateNameWithUnpublish(originalEntry);
+            return await UpdateEntryWithUnpublish(originalEntry);
         }
 
-        public virtual async Task<List<T>> ListNames()
+        public virtual async Task<List<T>> ListAll()
         {
             var result = await _entryRepository.ListAll();
             return [.. result];
@@ -187,7 +187,7 @@ namespace YorubaOrganization.Application.Services
             return await _entryRepository.FindByState(state);
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllNames(State? state, string? submittedBy)
+        public virtual async Task<IEnumerable<T>> GetAllEntries(State? state, string? submittedBy)
         {
             return await _entryRepository.GetAllNames(state, submittedBy);
         }
@@ -197,20 +197,20 @@ namespace YorubaOrganization.Application.Services
             return await _entryRepository.List(pageNumber, pageSize, state, submittedBy);
         }
 
-        public virtual async Task<T?> LoadName(string name)
+        public virtual async Task<T?> LoadEntry(string title)
         {
-            return await _entryRepository.FindByName(name);
+            return await _entryRepository.FindByName(title);
         }
 
-        public virtual async Task<List<T>> LoadNames(string[] names)
+        public virtual async Task<List<T>> LoadEntries(string[] titles)
         {
-            return await _entryRepository.FindByNames(names);
+            return await _entryRepository.FindByNames(titles);
         }
 
-        public virtual async Task Delete(string name)
+        public virtual async Task Delete(string title)
         {
-            await _entryRepository.Delete(name);
-            await PublishEntryDeletedEvent(name);
+            await _entryRepository.Delete(title);
+            await PublishEntryDeletedEvent(title);
         }
 
         private async Task PublishEntryDeletedEvent(string title)
@@ -218,12 +218,12 @@ namespace YorubaOrganization.Application.Services
             await _eventPubService.PublishEvent(new EntryDeleted(title));
         }
 
-        public virtual async Task<T?> FindByNameAndState(string name, State state) =>
-            await _entryRepository.FindByNameAndState(name, state);
+        public virtual async Task<T?> FindByTitleAndState(string title, State state) =>
+            await _entryRepository.FindByNameAndState(title, state);
 
-        public virtual async Task DeleteNamesBatch(string[] names)
+        public virtual async Task DeleteEntriesBatch(string[] titles)
         {
-            await _entryRepository.DeleteMany(names);
+            await _entryRepository.DeleteMany(titles);
         }
     }
 }
