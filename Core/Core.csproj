@@ -10,6 +10,6 @@
     <None Remove="Enums\**" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\YorubaOrganization.Core\YorubaOrganization.Core.csproj" />
+    <PackageReference Include="YorubaOrganization.Core" Version="1.0.0" />
   </ItemGroup>
 </Project>
