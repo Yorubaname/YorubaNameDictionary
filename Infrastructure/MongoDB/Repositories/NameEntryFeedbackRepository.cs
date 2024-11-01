@@ -19,17 +19,18 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
 
     public async Task<List<NameFeedbackDto>> FindAllAsync()
     {
+        var feedbacksFieldName = nameof(NameEntry.Feedbacks);
         var pipeline = new BsonDocument[]
         {
-            new BsonDocument("$unwind", "$Feedbacks"),
-            new BsonDocument("$project", new BsonDocument
+            new("$unwind", $"${feedbacksFieldName}"),
+            new("$project", new BsonDocument
             {
-                { "Name", "$Name" },
-                { "Feedback", "$Feedbacks.Content" },
-                { "SubmittedAt", "$Feedbacks.CreatedAt" },
-                { "_id", "$Feedbacks._id" }
+                { "Name", $"${nameof(NameEntry.Title)}" },
+                { "Feedback", $"${feedbacksFieldName}.{nameof(Feedback.Content)}" },
+                { $"{nameof(NameFeedbackDto.SubmittedAt)}", $"${feedbacksFieldName}.{nameof(Feedback.CreatedAt)}" },
+                { "_id", $"${feedbacksFieldName}._id" }
             }),
-            new BsonDocument("$sort", new BsonDocument("SubmittedAt", -1))
+            new("$sort", new BsonDocument($"{nameof(NameFeedbackDto.SubmittedAt)}", -1))
         };
 
         var feedbacks = await _nameEntryCollection
