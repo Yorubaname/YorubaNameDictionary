@@ -1,6 +1,8 @@
-﻿namespace YorubaOrganization.Core.Events
+﻿using MediatR;
+
+namespace YorubaOrganization.Core.Events
 {
-    public record EntryTitleUpdated(string OriginalTitle, string NewTitle)
+    public record EntryTitleUpdated(string OriginalTitle, string NewTitle) : INotification
     {
     }
 }
