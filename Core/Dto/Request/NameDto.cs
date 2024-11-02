@@ -26,7 +26,7 @@ namespace Core.Dto.Request
         public List<Variant> VariantsV2 { 
             get
             {
-                return Variants == null ? [] : ((List<string>)Variants).Select(s => new Variant(s)).ToList();
+                return Variants == null ? [] : ((List<string>)Variants).Select(v => new Variant(v)).ToList();
             }
         }
 
@@ -34,7 +34,7 @@ namespace Core.Dto.Request
         {
             get
             {
-                return Media == null ? [] : ((List<string>)Media).Select(s => new MediaLink(s)).ToList();
+                return Media == null ? [] : ((List<string>)Media).Select(m => new MediaLink(m)).ToList();
             }
         }
 
