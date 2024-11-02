@@ -1,10 +1,5 @@
-﻿using Core.Entities;
-using Core.Entities.NameEntry.Collections;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using YorubaOrganization.Core.Entities;
+using YorubaOrganization.Core.Entities.Partials;
 
 namespace Application.Migrator.MigrationDTOs.cs
 {

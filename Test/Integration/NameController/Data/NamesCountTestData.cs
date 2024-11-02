@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
-using Core.Entities.NameEntry;
-using Core.Enums;
+using Core.Entities;
+using YorubaOrganization.Core.Enums;
 namespace Test.Integration.NameController.Data;
 
 public class NamesCountTestData : IEnumerable<object[]>
@@ -20,7 +20,7 @@ public class NamesCountTestData : IEnumerable<object[]>
             .With(ne => ne.State, State.PUBLISHED)
             .With(ne => ne.Modified, (NameEntry?)default)
             .With(ne => ne.Duplicates, [])
-            .Do(ne => ne.Name = GetNextName()));
+            .Do(ne => ne.Title = GetNextName()));
     }
 
     public IEnumerator<object[]> GetEnumerator()

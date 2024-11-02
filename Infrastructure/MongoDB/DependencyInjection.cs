@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Core.Repositories;
 using Infrastructure.MongoDB.Repositories;
+using YorubaOrganization.Core.Repositories;
 
 namespace Infrastructure.MongoDB
 {

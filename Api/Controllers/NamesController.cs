@@ -1,15 +1,15 @@
-﻿using Api.Model.In;
-using Api.Utilities;
-using Application.Domain;
+﻿using Api.Utilities;
 using Application.Mappers;
+using Application.Services;
 using Core.Dto.Request;
 using Core.Dto.Response;
-using Core.Entities.NameEntry;
-using Core.Enums;
+using Core.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using System.Net;
+using YorubaOrganization.Core.Enums;
 
 namespace Api.Controllers
 {
@@ -63,13 +63,18 @@ namespace Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("meta")]
-        [ProducesResponseType(typeof(NamesMetadataDto[]), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(NamesMetadataDto), (int)HttpStatusCode.OK)]
         [AllowAnonymous]
         public async Task<IActionResult> GetMetaData()
         {
             var metaData = await _nameEntryService.GetMetadata();
-
-            return Ok(metaData);
+            return Ok(new NamesMetadataDto
+            {
+                TotalNames = metaData.TotalEntries,
+                TotalPublishedNames = metaData.TotalPublishedEntries,
+                TotalModifiedNames = metaData.TotalModifiedEntries,
+                TotalNewNames = metaData.TotalNewEntries
+            });
         }
 
         /// <summary>
@@ -96,7 +101,7 @@ namespace Api.Controllers
             IEnumerable<NameEntry> names;
             if (all.HasValue && all.Value)
             {
-                names = await _nameEntryService.GetAllNames(state, submittedBy);
+                names = await _nameEntryService.GetAllEntries(state, submittedBy);
                 return Ok(names.MapToDtoCollectionMini());
             }
 
@@ -116,7 +121,7 @@ namespace Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetName([FromRoute] string name)
         {
-            var nameEntry = await _nameEntryService.LoadName(name);
+            var nameEntry = await _nameEntryService.LoadEntry(name);
 
             if (nameEntry == null)
             {
@@ -146,14 +151,14 @@ namespace Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var oldNameEntry = await _nameEntryService.LoadName(name);
+            var oldNameEntry = await _nameEntryService.LoadEntry(name);
 
             if (oldNameEntry == null)
             {
                 return NotFound($"{name} not in database");
             }
 
-            _ = await _nameEntryService.UpdateName(oldNameEntry, updated.MapToEntity());
+            _ = await _nameEntryService.Update(oldNameEntry, updated.MapToEntity());
             return Ok(new { Message = "Name successfully updated" });
         }
 
@@ -161,7 +166,7 @@ namespace Api.Controllers
         [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> DeleteName(string name)
         {
-            var nameEntry = await _nameEntryService.LoadName(name);
+            var nameEntry = await _nameEntryService.LoadEntry(name);
             if (nameEntry == null)
             {
                 return NotFound($"{name} not found in the system so cannot be deleted");
@@ -177,7 +182,7 @@ namespace Api.Controllers
         public async Task<IActionResult> DeleteNamesBatch(string[] names)
         {
 
-            var foundNames = (await _nameEntryService.LoadNames(names))?.Select(f => f.Name)?.ToArray();
+            var foundNames = (await _nameEntryService.LoadEntries(names))?.Select(f => f.Title)?.ToArray();
 
             if (foundNames is null || foundNames.Length == 0)
             {
@@ -186,7 +191,7 @@ namespace Api.Controllers
 
             var notFoundNames = names.Where(d => !foundNames.Contains(d)).ToList();
 
-            await _nameEntryService.DeleteNamesBatch(foundNames);
+            await _nameEntryService.DeleteEntriesBatch(foundNames);
 
             string responseMessage = string.Join(", ", foundNames) + " deleted";
             if (notFoundNames.Any())

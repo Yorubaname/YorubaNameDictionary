@@ -1,4 +1,4 @@
-﻿using Core.Dto;
+﻿using YorubaOrganization.Core.Dto;
 
 namespace Core.StringObjectConverters
 {

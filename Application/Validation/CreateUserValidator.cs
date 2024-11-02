@@ -1,6 +1,6 @@
-﻿using Core.Dto.Response;
-using Core.Enums;
-using FluentValidation;
+﻿using FluentValidation;
+using YorubaOrganization.Core.Dto.Request;
+using YorubaOrganization.Core.Enums;
 
 namespace Application.Validation
 {

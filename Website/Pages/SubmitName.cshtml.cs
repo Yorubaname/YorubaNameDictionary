@@ -1,10 +1,9 @@
-using Application.Services;
-using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Website.Pages.Shared;
 using Website.Resources;
 using Website.Services;
+using YorubaOrganization.Core.Dto.Response;
 
 namespace Website.Pages
 {

@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Tweetinvi.Core.Web;
 using Tweetinvi.Models;
 using Tweetinvi;
 using Newtonsoft.Json;

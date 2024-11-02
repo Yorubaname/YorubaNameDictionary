@@ -1,16 +1,10 @@
 using Api.ExceptionHandler;
-using Application.Domain;
-using Application.Events;
 using Application.Migrator;
 using Application.Services;
 using Application.Validation;
-using Core.Cache;
-using Core.Enums;
-using Core.Events;
 using Core.StringObjectConverters;
 using FluentValidation;
 using Infrastructure.Twitter;
-using Infrastructure.MongoDB;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi.Models;
 using MySqlConnector;
@@ -19,6 +13,11 @@ using Hangfire;
 using Infrastructure.Hangfire;
 using Infrastructure.Redis;
 using Ardalis.GuardClauses;
+using YorubaOrganization.Core.Enums;
+using YorubaOrganization.Core.Events;
+using YorubaOrganization.Core.Cache;
+using Application.EventHandlers;
+using Infrastructure.MongoDB;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -119,7 +118,11 @@ services.AddSingleton<IRecentSearchesCache, RedisRecentSearchesCache>();
 //Validation
 services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
 
-services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ExactNameSearchedAdapter).Assembly));
+services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(PostPublishedNameCommandHandler).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(ExactEntrySearchedEventHandler).Assembly);
+});
 
 // Twitter integration configuration
 services.AddSingleton<ITwitterService, TwitterService>();

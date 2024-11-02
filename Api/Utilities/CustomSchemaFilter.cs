@@ -1,6 +1,6 @@
-﻿using Core.Dto;
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using YorubaOrganization.Core.Dto;
 
 public class CustomSchemaFilter : ISchemaFilter
 {

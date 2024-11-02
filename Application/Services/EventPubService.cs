@@ -1,6 +1,6 @@
-﻿using Core.Events;
+﻿using Ardalis.GuardClauses;
 using MediatR;
-using System.Reflection;
+using YorubaOrganization.Core.Events;
 
 namespace Application.Services
 {
@@ -15,16 +15,8 @@ namespace Application.Services
 
         public async Task PublishEvent<T>(T theEvent)
         {
-            var adapterClassName = typeof(T).Name + "Adapter";
-            Type? adapterType = Assembly.GetExecutingAssembly().GetTypes().FirstOrDefault(t => t.Name == adapterClassName);
-
-            if (adapterType == null)
-            {
-                throw new InvalidOperationException("Adapter type not found for " + typeof(T).FullName);
-            }
-
-            var adapterEvent = Activator.CreateInstance(adapterType, theEvent)!;
-            await _mediator.Publish(adapterEvent);
+            Guard.Against.Null(theEvent, nameof(theEvent));
+            await _mediator.Publish(theEvent);
         }
     }
 }

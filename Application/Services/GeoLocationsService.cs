@@ -1,6 +1,6 @@
-﻿using Application.Exceptions;
-using Core.Entities;
-using Core.Repositories;
+﻿using YorubaOrganization.Application.Exceptions;
+using YorubaOrganization.Core.Entities;
+using YorubaOrganization.Core.Repositories;
 
 namespace Application.Services
 {

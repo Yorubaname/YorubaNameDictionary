@@ -1,8 +1,9 @@
-﻿using Core.Entities.NameEntry;
-using Core.Entities.NameEntry.Collections;
-using Core.Events;
-using Core.Repositories;
+﻿using Core.Entities;
 using MongoDB.Driver;
+using YorubaOrganization.Core.Entities.Partials;
+using YorubaOrganization.Core.Events;
+using YorubaOrganization.Core.Repositories;
+using YorubaOrganization.Infrastructure.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories;
 

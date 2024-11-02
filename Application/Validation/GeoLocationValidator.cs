@@ -1,6 +1,6 @@
-﻿using Core.Dto.Request;
-using Core.Repositories;
-using FluentValidation;
+﻿using FluentValidation;
+using YorubaOrganization.Core.Dto.Request;
+using YorubaOrganization.Core.Repositories;
 
 namespace Application.Validation
 {

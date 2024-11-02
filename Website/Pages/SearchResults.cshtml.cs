@@ -3,7 +3,6 @@ using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System.Globalization;
-using System.Text.Json;
 using Website.Pages.Shared;
 using Website.Resources;
 using Website.Services;
