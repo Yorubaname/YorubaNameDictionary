@@ -5,11 +5,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Enums\**" />
-    <EmbeddedResource Remove="Enums\**" />
-    <None Remove="Enums\**" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="YorubaOrganization.Core" Version="1.0.0" />
   </ItemGroup>
 </Project>
