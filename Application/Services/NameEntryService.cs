@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using YorubaOrganization.Application.Services;
 using YorubaOrganization.Core.Events;
 
-namespace Application.Domain
+namespace Application.Services
 {
     public class NameEntryService : DictionaryEntryService<NameEntry>
     {

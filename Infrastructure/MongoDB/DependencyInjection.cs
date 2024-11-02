@@ -4,7 +4,7 @@ using Core.Repositories;
 using Infrastructure.MongoDB.Repositories;
 using YorubaOrganization.Core.Repositories;
 
-namespace Infrastructure.Database
+namespace Infrastructure.MongoDB
 {
     public static class DependencyInjection
     {

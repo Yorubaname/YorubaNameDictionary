@@ -1,6 +1,4 @@
 using Api.ExceptionHandler;
-using Application.Domain;
-using Application.Events;
 using Application.Migrator;
 using Application.Services;
 using Application.Validation;
@@ -19,7 +17,7 @@ using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Events;
 using YorubaOrganization.Core.Cache;
 using Application.EventHandlers;
-using Infrastructure.Database;
+using Infrastructure.MongoDB;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;

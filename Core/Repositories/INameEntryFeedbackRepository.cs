@@ -1,4 +1,4 @@
-﻿using YorubaOrganization.Core.Dto.Response;
+﻿using Core.Dto.Response;
 
 namespace Core.Repositories
 {

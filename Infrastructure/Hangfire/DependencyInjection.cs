@@ -5,7 +5,6 @@ using Hangfire.Mongo.Migration.Strategies;
 using Hangfire.Mongo.Migration.Strategies.Backup;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using Api.Utilities;
 using Ardalis.GuardClauses;
 
 namespace Infrastructure.Hangfire

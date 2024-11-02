@@ -1,6 +1,5 @@
-﻿using Core.Repositories;
-using YorubaOrganization.Core.Dto.Response;
-using YorubaOrganization.Core.Repositories;
+﻿using Core.Dto.Response;
+using Core.Repositories;
 
 namespace Application.Services
 {

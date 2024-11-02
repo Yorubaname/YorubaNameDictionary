@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using FluentAssertions;
 using Core.Entities;
 using YorubaOrganization.Core.Enums;
-using YorubaOrganization.Core.Dto.Response;
 
 namespace Test.Integration.NameController
 {

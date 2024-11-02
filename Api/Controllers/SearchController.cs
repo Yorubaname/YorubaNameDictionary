@@ -1,10 +1,8 @@
 ﻿using Api.Utilities;
-using Application.Domain;
 using Application.Mappers;
 using Application.Services;
 using Core.Dto.Response;
 using Core.Entities;
-using Core.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
