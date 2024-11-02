@@ -44,7 +44,7 @@ namespace Application.Mappers
                 GeoLocation = request.GeoLocation.Select(ge => new GeoLocation(ge.Place, ge.Region)).ToList(),
                 FamousPeople = request.FamousPeople ?? new List<string>(),
                 Syllables = request.Syllables ?? new List<string>(),
-                VariantsV2 =request.VariantsV2,
+                VariantsV2 = request.VariantsV2,
                 CreatedBy = request.SubmittedBy,
                 UpdatedBy = request.SubmittedBy
             };
