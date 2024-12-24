@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using AutoFixture;
-using Core.Entities.NameEntry;
-using Core.Enums;
+using Core.Entities;
+using YorubaOrganization.Core.Enums;
 
 namespace Test.Integration.NameController.Data;
 

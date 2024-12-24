@@ -48,7 +48,7 @@ To run the Website and API locally, follow these steps:
 5. **Access the Application:**
     - Once the Docker containers are up and running, you can access the Website in your browser. The website should launch automatically as soon as all the containers are ready.
     - If the Website does not launch automatically, it will be running at `http://localhost:{port}` (the actual port will be displayed in the output window of Visual Studio: "Container Tools").
-    - The API will also be running locally and accessible via a different URL. You can see its documentation and test the endpoints at `http://localhost:51515/swagger`. 
+    - The API will also be running locally and accessible via a different URL. You can see its documentation and test the endpoints at `http://localhost:9001/swagger`. 
       - You can login to the API with any username from [the database initialization script](./mongo-init.js) and password: **Password@135**.
 
 ## Contributing

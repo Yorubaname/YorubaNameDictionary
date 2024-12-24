@@ -1,9 +1,9 @@
 ﻿using Core.Dto.Response;
-using Core.Entities.NameEntry;
-using Core.Entities.NameEntry.Collections;
+using Core.Entities;
 using Core.Repositories;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using YorubaOrganization.Core.Entities.Partials;
 
 namespace Infrastructure.MongoDB.Repositories;
 
@@ -16,44 +16,45 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
         _nameEntryCollection = database.GetCollection<NameEntry>("NameEntries");
     }
 
-    public async Task<List<FeedbackDto>> FindAllAsync()
+    public async Task<List<NameFeedbackDto>> FindAllAsync()
     {
+        var feedbacksFieldName = nameof(NameEntry.Feedbacks);
         var pipeline = new BsonDocument[]
         {
-            new BsonDocument("$unwind", "$Feedbacks"),
-            new BsonDocument("$project", new BsonDocument
+            new("$unwind", $"${feedbacksFieldName}"),
+            new("$project", new BsonDocument
             {
-                { "Name", "$Name" },
-                { "Feedback", "$Feedbacks.Content" },
-                { "SubmittedAt", "$Feedbacks.CreatedAt" },
-                { "_id", "$Feedbacks._id" }
+                { "Name", $"${nameof(NameEntry.Title)}" },
+                { "Feedback", $"${feedbacksFieldName}.{nameof(Feedback.Content)}" },
+                { $"{nameof(NameFeedbackDto.SubmittedAt)}", $"${feedbacksFieldName}.{nameof(Feedback.CreatedAt)}" },
+                { "_id", $"${feedbacksFieldName}._id" }
             }),
-            new BsonDocument("$sort", new BsonDocument("SubmittedAt", -1))
+            new("$sort", new BsonDocument($"{nameof(NameFeedbackDto.SubmittedAt)}", -1))
         };
 
         var feedbacks = await _nameEntryCollection
-            .Aggregate<FeedbackDto>(pipeline)
+            .Aggregate<NameFeedbackDto>(pipeline)
             .ToListAsync();
 
         return feedbacks;
     }
 
-    public async Task<List<FeedbackDto>> FindByNameAsync(string name)
+    public async Task<List<NameFeedbackDto>> FindByNameAsync(string name)
     {
         var theName = await _nameEntryCollection
-            .Find(entry => entry.Name.ToLower() == name.ToLower())
+            .Find(entry => entry.Title.ToLower() == name.ToLower())
             .SingleOrDefaultAsync();
 
-        var feedbacksForName = theName?.Feedbacks?.Select(f => new FeedbackDto(f.Id, theName.Name, f.Content!, f.CreatedAt))
+        var feedbacksForName = theName?.Feedbacks?.Select(f => new NameFeedbackDto(f.Id, theName.Title, f.Content!, f.CreatedAt))
             .OrderByDescending(x => x.SubmittedAt)
             .ToList();
 
-        return feedbacksForName ?? new List<FeedbackDto>();
+        return feedbacksForName ?? new List<NameFeedbackDto>();
     }
 
     public async Task AddFeedbackByNameAsync(string name, string feedbackContent)
     {
-        var filter = Builders<NameEntry>.Filter.Where(x => x.Name.ToLower() == name.ToLower());
+        var filter = Builders<NameEntry>.Filter.Where(x => x.Title.ToLower() == name.ToLower());
 
         var nameFeedback = new Feedback
         {
@@ -69,7 +70,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
 
     public async Task DeleteAllFeedbackForNameAsync(string name)
     {
-        var filter = Builders<NameEntry>.Filter.Where(x => x.Name.ToLower() == name.ToLower());
+        var filter = Builders<NameEntry>.Filter.Where(x => x.Title.ToLower() == name.ToLower());
         var update = Builders<NameEntry>.Update.Set(entry => entry.Feedbacks, new List<Feedback>());
 
         await _nameEntryCollection.UpdateOneAsync(filter, update);
@@ -77,7 +78,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
 
     public async Task<bool> DeleteFeedbackAsync(string name, string feedbackId)
     {
-        var filter = Builders<NameEntry>.Filter.Where(x => x.Name.ToLower() == name.ToLower());
+        var filter = Builders<NameEntry>.Filter.Where(x => x.Title.ToLower() == name.ToLower());
         var entry = await _nameEntryCollection.Find(filter).FirstOrDefaultAsync();
 
         if (entry != null && entry.Feedbacks.Any(feedback => feedback.Id == feedbackId))
@@ -91,12 +92,12 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
         return false;
     }
 
-    public async Task<FeedbackDto?> GetFeedbackByIdAsync(string feedbackId)
+    public async Task<NameFeedbackDto?> GetFeedbackByIdAsync(string feedbackId)
     {
         var filter = Builders<NameEntry>.Filter.ElemMatch(entry => entry.Feedbacks, feedback => feedback.Id == feedbackId);
         var projectionDefinition = Builders<NameEntry>
             .Projection
-            .Include(entry => entry.Name)
+            .Include(entry => entry.Title)
             .ElemMatch(entry => entry.Feedbacks, feedback => feedback.Id == feedbackId);
 
         var nameEntry = await _nameEntryCollection.Find(filter)
@@ -104,7 +105,7 @@ public class NameEntryFeedbackRepository : INameEntryFeedbackRepository
             .FirstOrDefaultAsync();
 
         var theMatch = nameEntry?.Feedbacks?.FirstOrDefault(feedback => feedback.Id == feedbackId);
-        return theMatch == null ? null : new FeedbackDto(theMatch.Id, nameEntry!.Name, theMatch!.Content!, theMatch.CreatedAt);
+        return theMatch == null ? null : new NameFeedbackDto(theMatch.Id, nameEntry!.Title, theMatch!.Content!, theMatch.CreatedAt);
     }
 
 }

@@ -1,14 +1,15 @@
 ﻿using Application.Migrator.MigrationDTOs.cs;
-using Core.Dto;
+using Core.Dto.Request;
 using Core.Entities;
-using Core.Entities.NameEntry;
-using Core.Entities.NameEntry.Collections;
-using Core.Enums;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MySqlConnector;
+using YorubaOrganization.Core.Dto;
+using YorubaOrganization.Core.Entities;
+using YorubaOrganization.Core.Entities.Partials;
+using YorubaOrganization.Core.Enums;
 
 namespace Application.Migrator
 {
@@ -97,26 +98,34 @@ namespace Application.Migrator
                     Select(s => new EmbeddedVideo(s.url, s.caption)).ToList();
             }
 
-            List<NameEntry> documentsToInsert = name_entry.Select(s => new NameEntry()
-            {
-                Id = ObjectId.GenerateNewId().ToString(),
-                Name = s.name,
-                ExtendedMeaning = s.extended_meaning,
-                FamousPeople = new CommaSeparatedString(s.famous_people),
-                IpaNotation = s.ipa_notation,
-                Meaning = s.meaning,
-                Media = new CommaSeparatedString(s.media),
-                Morphology = new CommaSeparatedString(s.morphology),
-                Pronunciation = s.pronunciation,
-                CreatedBy = s.submitted_by,
-                Syllables = new HyphenSeparatedString(s.syllables),
-                Variants = new CommaSeparatedString(s.variants),
-                State = GetPublishState(s.state),
-                Etymology = s.etymology,
-                GeoLocation = s.geoLocations,
-                Feedbacks = s.feedbacks,
-                Videos = s.embeddedVideo
-            }).ToList();
+            List<NameEntry> documentsToInsert = name_entry.Select(s => {
+                var updateNameDto = new UpdateNameDto
+                {
+                    Media = new CommaSeparatedString(s.media),
+                    Variants = new CommaSeparatedString(s.variants)
+                };
+
+                return new NameEntry()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Title = s.name,
+                    ExtendedMeaning = s.extended_meaning,
+                    FamousPeople = new CommaSeparatedString(s.famous_people),
+                    IpaNotation = s.ipa_notation,
+                    Meaning = s.meaning,
+                    MediaLinks = updateNameDto.MediaLinks,
+                    Morphology = new CommaSeparatedString(s.morphology),
+                    Pronunciation = s.pronunciation,
+                    CreatedBy = s.submitted_by,
+                    Syllables = new HyphenSeparatedString(s.syllables),
+                    VariantsV2 = updateNameDto.VariantsV2,
+                    State = GetPublishState(s.state),
+                    Etymology = s.etymology,
+                    GeoLocation = s.geoLocations,
+                    Feedbacks = s.feedbacks,
+                    Videos = s.embeddedVideo
+                };
+                }).ToList();
 
             _nameEntryCollection.DeleteMany(FilterDefinition<NameEntry>.Empty);
             _nameEntryCollection.InsertMany(documentsToInsert);

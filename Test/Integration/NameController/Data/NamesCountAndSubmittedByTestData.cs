@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using AutoFixture;
-using Core.Entities.NameEntry;
+using Core.Entities;
 
 namespace Test.Integration.NameController.Data
 {

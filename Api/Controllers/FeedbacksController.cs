@@ -1,8 +1,6 @@
-﻿using Api.Model.Request;
-using Application.Domain;
-using Application.Services;
+﻿using Application.Services;
+using Core.Dto.Request;
 using Core.Dto.Response;
-using Core.Entities.NameEntry.Collections;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -27,7 +25,7 @@ namespace Api.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [ProducesResponseType(typeof(FeedbackDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(NameFeedbackDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetById(string id)
         {
             var feedback = await _nameEntryFeedbackService.GetFeedbackByIdAsync(id);
@@ -46,7 +44,7 @@ namespace Api.Controllers
         /// <param name="name">Optional name parameter</param>
         /// <returns>A list of all feedback (or just feedback for a given name)</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(List<FeedbackDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<NameFeedbackDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetFeedback([FromQuery] string? name = null)
         {
             var feedbacks = string.IsNullOrWhiteSpace(name) ? await _nameEntryFeedbackService.FindAllAsync() :
@@ -64,7 +62,7 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> Create([FromBody] CreateNameFeedbackDto model)
         {
-            var nameEntry = await _nameEntryService.LoadName(model.Name);
+            var nameEntry = await _nameEntryService.LoadEntry(model.Name);
 
             if (nameEntry == null)
             {
@@ -91,7 +89,7 @@ namespace Api.Controllers
                 return BadRequest("Name parameter is required.");
             }
 
-            var nameEntry = await _nameEntryService.LoadName(name);
+            var nameEntry = await _nameEntryService.LoadEntry(name);
 
             if (nameEntry == null)
             {
@@ -122,7 +120,7 @@ namespace Api.Controllers
                 return BadRequest("Name parameter is required.");
             }
 
-            var nameEntry = await _nameEntryService.LoadName(name);
+            var nameEntry = await _nameEntryService.LoadEntry(name);
 
             if (nameEntry == null)
             {

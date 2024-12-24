@@ -1,16 +1,16 @@
 ﻿using Api.Utilities;
-using Application.Domain;
 using Application.Mappers;
 using Application.Services;
-using Core.Cache;
 using Core.Dto.Response;
-using Core.Entities.NameEntry;
-using Core.Enums;
-using Core.Events;
+using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using YorubaOrganization.Core.Cache;
+using YorubaOrganization.Core.Dto.Response;
+using YorubaOrganization.Core.Enums;
+using YorubaOrganization.Core.Events;
 
 namespace Api.Controllers
 {
@@ -55,9 +55,9 @@ namespace Api.Controllers
             var matches = await _searchService.Search(searchTerm);
 
             // TODO: Check if the comparison here removes takes diacrits into consideration
-            if (matches.Count() == 1 && matches.First().Name.Equals(searchTerm, StringComparison.CurrentCultureIgnoreCase))
+            if (matches.Count() == 1 && matches.First().Title.Equals(searchTerm, StringComparison.CurrentCultureIgnoreCase))
             {
-                await _eventPubService.PublishEvent(new ExactNameSearched(matches.First().Name));
+                await _eventPubService.PublishEvent(new ExactEntrySearched(matches.First().Title));
             }
 
             return Ok(matches.MapToDtoCollection());
@@ -92,11 +92,11 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(NameEntryDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> SearchOne(string searchTerm)
         {
-            NameEntryDto nameEntry = await _searchService.GetName(searchTerm);
+            var nameEntry = await _searchService.GetName(searchTerm);
 
             if(nameEntry != null)
             {
-                await _eventPubService.PublishEvent(new ExactNameSearched(nameEntry.Name));
+                await _eventPubService.PublishEvent(new ExactEntrySearched(nameEntry.Name));
             }
 
             return Ok(nameEntry);
@@ -158,7 +158,7 @@ namespace Api.Controllers
         [Authorize(Policy = "AdminAndProLexicographers")]
         public async Task<IActionResult> PublishName([FromRoute] string name)
         {
-            var nameEntry = await _nameEntryService.LoadName(name);
+            var nameEntry = await _nameEntryService.LoadEntry(name);
             if (nameEntry == null)
             {
                 return BadRequest(ResponseHelper.GetResponseDict($"{name} not found in the repository so not indexed"));
@@ -170,7 +170,7 @@ namespace Api.Controllers
                 return BadRequest(ResponseHelper.GetResponseDict($"{name} is already indexed"));
             }
 
-            await _nameEntryService.PublishName(nameEntry, User!.Identity!.Name!);
+            await _nameEntryService.PublishEntry(nameEntry, User!.Identity!.Name!);
             return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict($"{name} has been published"));
         }
 
@@ -189,7 +189,7 @@ namespace Api.Controllers
             // TODO Later: Optimize by fetching all names in one database call instead of one-by-one.
             foreach (var name in names)
             {
-                var entry = await _nameEntryService.LoadName(name);
+                var entry = await _nameEntryService.LoadEntry(name);
                 if (entry != null && entry.State != State.PUBLISHED)
                 {
                     entriesToIndex.Add(entry);
@@ -204,10 +204,10 @@ namespace Api.Controllers
             foreach (var nameEntry in entriesToIndex)
             {
                 // TODO Later: The names should be updated in one batch instead of one-by-one.
-                await _nameEntryService.PublishName(nameEntry, User!.Identity!.Name!);
+                await _nameEntryService.PublishEntry(nameEntry, User!.Identity!.Name!);
             }
 
-            var successMessage = $"The following names were successfully indexed: {string.Join(',', entriesToIndex.Select(x => x.Name))}";
+            var successMessage = $"The following names were successfully indexed: {string.Join(',', entriesToIndex.Select(x => x.Title))}";
             return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict(successMessage));
         }
 
@@ -220,7 +220,7 @@ namespace Api.Controllers
         [Authorize(Policy = "AdminAndProLexicographers")]
         public async Task<IActionResult> UnpublishName([FromRoute] string name)
         {
-            var entry = await _nameEntryService.FindByNameAndState(name, State.PUBLISHED);
+            var entry = await _nameEntryService.FindByTitleAndState(name, State.PUBLISHED);
 
             if (entry == null)
             {
@@ -228,7 +228,7 @@ namespace Api.Controllers
             }
 
             entry.State = State.NEW;
-            await _nameEntryService.UpdateName(entry);
+            await _nameEntryService.Update(entry);
             return Ok(ResponseHelper.GetResponseDict($"{name} removed from index."));
         }
 
@@ -245,7 +245,7 @@ namespace Api.Controllers
 
             foreach (var name in names)
             {
-                var entry = await _nameEntryService.FindByNameAndState(name, State.PUBLISHED);
+                var entry = await _nameEntryService.FindByTitleAndState(name, State.PUBLISHED);
 
                 if (entry == null)
                 {
@@ -254,8 +254,8 @@ namespace Api.Controllers
                 else
                 {
                     entry.State = State.UNPUBLISHED;
-                    await _nameEntryService.UpdateName(entry);
-                    unpublishedNames.Add(entry.Name);
+                    await _nameEntryService.Update(entry);
+                    unpublishedNames.Add(entry.Title);
                 }
             }
 

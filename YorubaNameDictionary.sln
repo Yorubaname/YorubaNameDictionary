@@ -5,8 +5,6 @@ VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{12B35F2A-85F6-45C5-B1E9-84089F529ED6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.MongoDB", "Infrastructure.MongoDB\Infrastructure.MongoDB.csproj", "{2C8E50D5-BE74-4370-B0CA-156C16D00AA4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{6FBF4BDD-D321-4B30-BA9C-70B1B0320361}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "Api\Api.csproj", "{6DF0AC0B-335E-44A3-AD11-5DC7A12602D4}"
@@ -27,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{78930A71-3759-46B3-9429-80C4D4933D12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{78930A71-3759-46B3-9429-80C4D4933D12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +37,6 @@ Global
 		{12B35F2A-85F6-45C5-B1E9-84089F529ED6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12B35F2A-85F6-45C5-B1E9-84089F529ED6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12B35F2A-85F6-45C5-B1E9-84089F529ED6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2C8E50D5-BE74-4370-B0CA-156C16D00AA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C8E50D5-BE74-4370-B0CA-156C16D00AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2C8E50D5-BE74-4370-B0CA-156C16D00AA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2C8E50D5-BE74-4370-B0CA-156C16D00AA4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6FBF4BDD-D321-4B30-BA9C-70B1B0320361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6FBF4BDD-D321-4B30-BA9C-70B1B0320361}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FBF4BDD-D321-4B30-BA9C-70B1B0320361}.Release|Any CPU.ActiveCfg = Release|Any CPU

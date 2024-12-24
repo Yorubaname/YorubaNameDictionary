@@ -1,7 +1,7 @@
-﻿using Core.Dto.Request;
-using Core.Dto.Response;
-using Core.Entities;
-using Core.Repositories;
+﻿using YorubaOrganization.Core.Dto.Request;
+using YorubaOrganization.Core.Dto.Response;
+using YorubaOrganization.Core.Entities;
+using YorubaOrganization.Core.Repositories;
 using BCrypt_ = BCrypt.Net.BCrypt;
 
 namespace Application.Services

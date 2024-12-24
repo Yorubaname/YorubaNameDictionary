@@ -1,4 +1,6 @@
-﻿namespace Core.Dto.Request;
+﻿using YorubaOrganization.Core.Dto.Request;
+
+namespace Core.Dto.Request;
 
 public record CreateSuggestedNameDto
 {  

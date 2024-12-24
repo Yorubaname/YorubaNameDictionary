@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using System.Text.Json;
-using Core.Dto;
+using YorubaOrganization.Core.Dto;
 
 namespace Core.StringObjectConverters
 {

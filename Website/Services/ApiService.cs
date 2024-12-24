@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 using Website.Config;
+using YorubaOrganization.Core.Dto.Response;
 
 namespace Website.Services
 {

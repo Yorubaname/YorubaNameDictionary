@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using Hangfire;
 using Infrastructure.Configuration;
-using Core.Cache;
+using YorubaOrganization.Core.Cache;
 
 namespace Infrastructure.Twitter
 {

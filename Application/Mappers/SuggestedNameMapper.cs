@@ -2,6 +2,8 @@
 using Core.Dto.Response;
 using Core.Entities;
 using MongoDB.Bson;
+using YorubaOrganization.Core.Dto.Response;
+using YorubaOrganization.Core.Entities;
 
 namespace Application.Mappers;
 

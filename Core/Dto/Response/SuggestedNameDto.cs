@@ -1,4 +1,6 @@
-﻿namespace Core.Dto.Response;
+﻿using YorubaOrganization.Core.Dto.Response;
+
+namespace Core.Dto.Response;
 
 public record SuggestedNameDto
 {

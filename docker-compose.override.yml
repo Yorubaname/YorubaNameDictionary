@@ -19,7 +19,7 @@ services:
       - Twitter__AccessToken=${YND_Twitter__AccessToken}
       - Twitter__AccessTokenSecret=${YND_Twitter__AccessTokenSecret}
     ports:
-      - "51515:80"
+      - "9001:80"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

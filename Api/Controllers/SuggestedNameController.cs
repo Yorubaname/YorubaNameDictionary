@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Application.Mappers;
-using Application.Validation;
 using FluentValidation;
 
 namespace Api.Controllers;
