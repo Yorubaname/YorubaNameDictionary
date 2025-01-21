@@ -213,7 +213,7 @@ db.GeoLocations.insertMany(geoLocations);
 const nameEntries = [
     {
         "_id": "669050feeb1b60417574458f",
-        "Name": "Ààrẹ",
+        "Title": "Ààrẹ",
         "Pronunciation": "",
         "IpaNotation": "",
         "Meaning": "Commander.",
@@ -221,8 +221,10 @@ const nameEntries = [
         "Morphology": [
             "ààrẹ"
         ],
-        "Media": [
-            "https://en.wikipedia.org/wiki/Bola_Are"
+        "MediaLinks": [
+            {
+                "Url": "https://en.wikipedia.org/wiki/Bola_Are"
+            }
         ],
         "State": 2,
         "Etymology": [
@@ -246,14 +248,16 @@ const nameEntries = [
             "à",
             "rẹ"
         ],
-        "Variants": [
-            "Àrẹ"
+        "VariantsV2": [
+            {
+                "Title": "Àrẹ"
+            }
         ],
         "Feedbacks": []
     },
     {
         "_id": "669050feeb1b604175744590",
-        "Name": "Àbáyọ̀mí",
+        "Title": "Àbáyọ̀mí",
         "Pronunciation": "abayomi",
         "IpaNotation": "",
         "Meaning": "I would have been mocked.",
@@ -261,9 +265,13 @@ const nameEntries = [
         "Morphology": [
             "à-bá-yọ̀-mí"
         ],
-        "Media": [
-            "https://en.wikipedia.org/wiki/Kofo_Abayomi",
-            "http://www.vanguardngr.com/2016/08/tunji-abayomi-tinubu-never-sought-support-allow-people-freely-fairly-constitute-government/"
+        "MediaLinks": [
+            {
+                "Url": "https://en.wikipedia.org/wiki/Kofo_Abayomi"
+            },
+            {
+                "Url": "http://www.vanguardngr.com/2016/08/tunji-abayomi-tinubu-never-sought-support-allow-people-freely-fairly-constitute-government/"
+            }
         ],
         "State": 2,
         "Etymology": [
@@ -300,9 +308,13 @@ const nameEntries = [
             "yọ̀",
             "mí"
         ],
-        "Variants": [
-            "Yọ̀mí",
-            "Báyọ̀"
+        "VariantsV2": [
+            {
+                "Title": "Yọ̀mí"
+            },
+            {
+                "Title": "Báyọ̀"
+            }
         ],
         "Feedbacks": [
             {
@@ -325,7 +337,7 @@ const nameEntries = [
     },
     {
         "_id": "669050feeb1b604175744591",
-        "Name": "Abégúndé",
+        "Title": "Abégúndé",
         "Pronunciation": "",
         "IpaNotation": null,
         "Meaning": "The one who came with the masquerade.",
@@ -333,9 +345,13 @@ const nameEntries = [
         "Morphology": [
             "a-bá-eégún-dé"
         ],
-        "Media": [
-            "http://www.shineyoureye.org/person/ifedayo-sunday-abegunde/",
-            "https://www2.deloitte.com/ng/en/profiles/femi-aabegunde.html"
+        "MediaLinks": [
+            {
+                "Url": "http://www.shineyoureye.org/person/ifedayo-sunday-abegunde/"
+            },
+            {
+                "Url": "https://www2.deloitte.com/ng/en/profiles/femi-aabegunde.html"
+            }
         ],
         "State": 2,
         "Etymology": [
@@ -372,12 +388,12 @@ const nameEntries = [
             "gún",
             "dé"
         ],
-        "Variants": [],
+        "VariantsV2": [],
         "Feedbacks": []
     },
     {
         "_id": "669050feeb1b604175744592",
-        "Name": "Abẹ̀rùàgbà",
+        "Title": "Abẹ̀rùàgbà",
         "Pronunciation": "",
         "IpaNotation": "",
         "Meaning": "The one who respects elders.",
@@ -385,8 +401,10 @@ const nameEntries = [
         "Morphology": [
             "a-bẹ̀rù-àgbà"
         ],
-        "Media": [
-            "https://www.facebook.com/rotimi.aberuagba"
+        "MediaLinks": [
+            {
+                "Url": "https://www.facebook.com/rotimi.aberuagba"
+            }
         ],
         "State": 2,
         "Etymology": [
@@ -419,12 +437,12 @@ const nameEntries = [
             "à",
             "gbà"
         ],
-        "Variants": [],
+        "VariantsV2": [],
         "Feedbacks": []
     },
     {
         "_id": "669050feeb1b604175744593",
-        "Name": "Abíádé",
+        "Title": "Abíádé",
         "Pronunciation": "",
         "IpaNotation": "",
         "Meaning": "One born to royalty.",
@@ -432,9 +450,13 @@ const nameEntries = [
         "Morphology": [
             "a-bí-(sí)-adé"
         ],
-        "Media": [
-            "http://independentnig.com/i-am-proud-i-walked-out-of-my-abusive-marriage-abiola-abiade/",
-            "https://mie.uic.edu/k-teacher/jeremiah-abiade-phd/"
+        "MediaLinks": [
+            {
+                "Url": "http://independentnig.com/i-am-proud-i-walked-out-of-my-abusive-marriage-abiola-abiade/"
+            },
+            {
+                "Url": "https://mie.uic.edu/k-teacher/jeremiah-abiade-phd/"
+            }
         ],
         "State": 2,
         "Etymology": [
@@ -470,16 +492,22 @@ const nameEntries = [
             "á",
             "dé"
         ],
-        "Variants": [
-            "Abísádé",
-            "Bíádé",
-            "Bisade"
+        "VariantsV2": [
+            {
+                "Title": "Abísádé"
+            },
+            {
+                "Title": "Bíádé"
+            },
+            {
+                "Title": "Bisade"
+            }
         ],
         "Feedbacks": []
     },
     {
         "_id": "669050feeb1b604175744594",
-        "Name": "Àbíbátù",
+        "Title": "Àbíbátù",
         "Pronunciation": null,
         "IpaNotation": null,
         "Meaning": "The Yorùbá version of Habeebatu, an Arabic name meaning \"love\".",
@@ -487,8 +515,10 @@ const nameEntries = [
         "Morphology": [
             "[unknown]"
         ],
-        "Media": [
-            "https://en.wikipedia.org/wiki/Abibatu_Mogaji"
+        "MediaLinks": [
+            {
+                "Url": "https://en.wikipedia.org/wiki/Abibatu_Mogaji"
+            }
         ],
         "State": 0,
         "Etymology": [
@@ -512,12 +542,12 @@ const nameEntries = [
             "bá",
             "tù"
         ],
-        "Variants": [],
+        "VariantsV2": [],
         "Feedbacks": []
     },
     {
         "_id": "669050feeb1b604175744595",
-        "Name": "Abídèmí",
+        "Title": "Abídèmí",
         "Pronunciation": "",
         "IpaNotation": "",
         "Meaning": "The child born before I returned.",
@@ -525,9 +555,13 @@ const nameEntries = [
         "Morphology": [
             "a-bí-dè-mí"
         ],
-        "Media": [
-            "https://en.wikipedia.org/wiki/Abidemi_Sanusi",
-            "https://www.linkedin.com/in/oderinlo"
+        "MediaLinks": [
+            {
+                "Url": "https://en.wikipedia.org/wiki/Abidemi_Sanusi"
+            },
+            {
+                "Url": "https://www.linkedin.com/in/oderinlo"
+            }
         ],
         "State": 2,
         "Etymology": [
@@ -564,14 +598,16 @@ const nameEntries = [
             "dè",
             "mí"
         ],
-        "Variants": [
-            "Bídèmí"
+        "VariantsV2": [
+            {
+                "Title": "Bídèmí"
+            }
         ],
         "Feedbacks": []
     },
     {
         "_id": "669050feeb1b604175744596",
-        "Name": "Abíkóyè",
+        "Title": "Abíkóyè",
         "Pronunciation": "",
         "IpaNotation": "",
         "Meaning": "Given birth to in addition to the chieftaincy.",
@@ -579,9 +615,7 @@ const nameEntries = [
         "Morphology": [
             "a-bí-kún-oyè"
         ],
-        "Media": [
-            "http://leadingedgealliance.com/index.cfm?fuseaction=dsp_firm_details&uu_firm=F41BC446-802E-E0A7-B9F3B8362D1FE53D"
-        ],
+        "MediaLinks": [],
         "State": 2,
         "Etymology": [
             {
@@ -616,7 +650,7 @@ const nameEntries = [
             "kó",
             "yè"
         ],
-        "Variants": [],
+        "VariantsV2": [],
         "Feedbacks": []
     }
 ];
