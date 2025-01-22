@@ -11,16 +11,19 @@ namespace Website.Services
         private readonly HttpClient _httpClient;
         private readonly IOptions<ApiSettings> _apiSettings;
         private readonly JsonSerializerOptions _jsonSerializerOptions;
+        private readonly ILogger<ApiService> _logger;
 
         public ApiService(
             IHttpClientFactory httpClientFactory,
             IOptions<ApiSettings> apiSettings,
-            JsonSerializerOptions jsonSerializerOptions
+            JsonSerializerOptions jsonSerializerOptions,
+            ILogger<ApiService> logger 
             )
         {
             _httpClient = httpClientFactory.CreateClient();
             _apiSettings = apiSettings;
             _jsonSerializerOptions = jsonSerializerOptions;
+            _logger = logger;
         }
 
         private async Task<T?> GetApiResponse<T>(string endpoint)
@@ -28,12 +31,13 @@ namespace Website.Services
             var url = $"{_apiSettings.Value.BaseUrl}{endpoint}";
             var response = await _httpClient.GetAsync(url);
 
+            var rawContent = await response.Content.ReadAsStringAsync();
+
             if (!response.IsSuccessStatusCode)
             {
-                // TODO: Ensure this results in a decent user experience.
-                throw new Exception("Error calling API");
+                _logger.LogError("GET '{Url}' Failed with '{Status}'; Response: '{Content}'", endpoint, response.StatusCode, rawContent);
+                throw new Exception($"Error calling API.");
             }
-            var rawContent = await response.Content.ReadAsStringAsync();
             if (string.IsNullOrEmpty(rawContent))
             {
                 return default;
