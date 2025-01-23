@@ -1,10 +1,12 @@
 using Core.StringObjectConverters;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using ProxyKit;
 using System.Globalization;
 using Website.Config;
 using Website.Middleware;
 using Website.Services;
+using Website.Services.MultiLanguage;
 
 namespace Website
 {
@@ -45,6 +47,8 @@ namespace Website
             services.AddHttpClient();
             services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
             services.AddTransient<ApiService>();
+            services.AddTransient<ILanguageService, LanguageService>();
+            services.AddHttpContextAccessor();
 
             var app = builder.Build();
 
@@ -58,12 +62,17 @@ namespace Website
                 app.UseHsts();
             }
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost
+            });
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
 
             app.MapRazorPages();
 
+            // TODO Hafiz: Consider that this might not be necessary with the proxy in NGINX.
             app.Map("/api/v1", appBuilder =>
             {
                 appBuilder.RunProxy(context =>

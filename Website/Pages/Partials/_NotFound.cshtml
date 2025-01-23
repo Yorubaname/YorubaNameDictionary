@@ -1,11 +1,13 @@
 ﻿@using Website.Resources
+@using Website.Services.MultiLanguage
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+@inject ILanguageService LanguageService
 
 <div style="text-align: center; padding: 50px;">
     <div class="emoji" style="font-size: 100px; animation: bounce 2s infinite;">🔍</div>
     <h1>@Localizer["error-page-not-found"]</h1>
     <p class="text-muted">@Localizer["error-message1"]</p>
-    <p>@Localizer["error-message2"] <a href="/" style="color:#0e5264; text-decoration:underline">@Localizer["home-page"]</a> @Localizer["error-discover-message"]</p>
+    <p>@Localizer["error-message2"] <a href="/" style="color:#0e5264; text-decoration:underline">@Localizer["home-page"]</a> @Localizer["error-discover-message", LanguageService.LanguageDisplay]</p>
 </div>
 
 

@@ -6,12 +6,14 @@ using System.Globalization;
 using Website.Pages.Shared;
 using Website.Resources;
 using Website.Services;
+using Website.Services.MultiLanguage;
 
 namespace Website.Pages
 {
     public class SearchResultsModel(
-        IStringLocalizer<Messages> localizer, 
-        ApiService apiService) : BasePageModel(localizer)
+        IStringLocalizer<Messages> localizer,
+        ILanguageService languageService,
+        ApiService apiService) : BasePageModel(localizer, languageService)
     {
         private readonly ApiService _apiService = apiService;
 

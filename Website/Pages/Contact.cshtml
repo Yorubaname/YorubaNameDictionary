@@ -5,7 +5,9 @@
 }
 
 @using Website.Resources
+@using Website.Services.MultiLanguage
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+@inject ILanguageService LanguageService
 
 @await Html.PartialAsync("Partials/_SearchForm", Model.NameCount);
 
@@ -20,7 +22,7 @@
 
             <p>@Localizer["contact-info-email-preamble"] <a href="mailto:project@yorubaname.com">project@yorubaname.com</a></p>
             <p>
-                @Localizer["contact-info-contact-preamble"]<br>
+                @Localizer["contact-info-contact-preamble", LanguageService.Website]<br>
                 2nd Floor, The Garnet Building<br>
                 Lekki - Epe Express Road, Lekki<br>
                 Lagos 101245<br>

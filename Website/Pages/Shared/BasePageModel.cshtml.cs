@@ -2,16 +2,14 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Localization;
 using Website.Resources;
+using Website.Services.MultiLanguage;
 
 namespace Website.Pages.Shared
 {
-    public class BasePageModel : PageModel
+    public class BasePageModel(IStringLocalizer<Messages> localizer, ILanguageService languageService) : PageModel
     {
-        protected readonly IStringLocalizer<Messages> _localizer;
-        public BasePageModel(IStringLocalizer<Messages> localizer)
-        {
-            _localizer = localizer;
-        }
+        protected readonly IStringLocalizer<Messages> _localizer = localizer;
+        private readonly ILanguageService _languageService = languageService;
 
         public override void OnPageHandlerExecuting(PageHandlerExecutingContext context)
         {
@@ -20,11 +18,11 @@ namespace Website.Pages.Shared
             var host = $"{Request.Scheme}://{Request.Host}";
 
             // Some of the strings below should be internationalized.
-            ViewData["Description"] = "YorubaNames";
+            ViewData["Description"] = _languageService.SocialName;
             ViewData["BaseURL"] = host;
             ViewData["SocialPath"] = string.Empty; // HomePage path
-            ViewData["SocialTitle"] = "YorubaNames";
-            ViewData["SocialDescription"] = "Over 10,000 Yoruba names and still growing...";
+            ViewData["SocialTitle"] = _languageService.SocialName;
+            ViewData["SocialDescription"] = _localizer["name-count-tagline", 10000, _languageService.LanguageDisplay];
         }
     }
 }

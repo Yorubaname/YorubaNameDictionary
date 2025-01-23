@@ -5,12 +5,14 @@ using Microsoft.Extensions.Localization;
 using Website.Pages.Shared;
 using Website.Resources;
 using Website.Services;
+using Website.Services.MultiLanguage;
 
 namespace Website.Pages
 {
     public class AlphabetModel(
         IStringLocalizer<Messages> localizer,
-        ApiService apiService) : BasePageModel(localizer)
+        ILanguageService languageService,
+        ApiService apiService) : BasePageModel(localizer, languageService)
     {
         private readonly ApiService _apiService = apiService;
         public string Letter { get; set; } = string.Empty;
@@ -29,6 +31,8 @@ namespace Website.Pages
 
             Letter = letter;
             Names = await _apiService.GetAllNamesByAlphabet(letter);
+
+            // TODO Hafiz: The letters for Igbo names will probably be different than those for Yoruba names.
             Letters = YorubaAlphabetService.YorubaAlphabet;
 
             if ("g".Equals(letter, StringComparison.OrdinalIgnoreCase))

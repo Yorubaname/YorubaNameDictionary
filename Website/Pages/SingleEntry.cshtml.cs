@@ -6,12 +6,14 @@ using System.Web;
 using Website.Pages.Shared;
 using Website.Resources;
 using Website.Services;
+using Website.Services.MultiLanguage;
 
 namespace Website.Pages
 {
     public class SingleEntryModel(
         IStringLocalizer<Messages> localizer,
-        ApiService apiService) : BasePageModel(localizer)
+        ILanguageService languageService,
+        ApiService apiService) : BasePageModel(localizer, languageService)
     {
         private readonly ApiService _apiService = apiService;
 

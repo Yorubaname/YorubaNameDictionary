@@ -3,11 +3,12 @@ using Microsoft.Extensions.Localization;
 using Website.Pages.Shared;
 using Website.Resources;
 using Website.Services;
+using Website.Services.MultiLanguage;
 using YorubaOrganization.Core.Dto.Response;
 
 namespace Website.Pages
 {
-    public class SubmitNameModel(IStringLocalizer<Messages> localizer, ApiService apiService) : BasePageModel(localizer)
+    public class SubmitNameModel(IStringLocalizer<Messages> localizer, ILanguageService languageService, ApiService apiService) : BasePageModel(localizer, languageService)
     {
         [BindProperty(SupportsGet = true)]
         [FromQuery(Name = "missing")]

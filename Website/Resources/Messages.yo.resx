@@ -145,13 +145,13 @@
     <value>Èdè</value>
   </data>
   <data name="search-plchol" xml:space="preserve">
-    <value>Tẹ Orúkọ Yorùbá tó bá wù ẹ́ síbí kí o sì tẹ “Enter”</value>
+    <value>Tẹ Orúkọ {0} tó bá wù ẹ́ síbí kí o sì tẹ “Enter”</value>
   </data>
   <data name="jumbotron1" xml:space="preserve">
     <value>Ó ju</value>
   </data>
   <data name="jumbotron2" xml:space="preserve">
-    <value>Orùkọ Yorùbá lọ tí a ní níbí</value>
+    <value>Orùkọ {0} lọ tí a ní níbí</value>
   </data>
   <data name="kybtitle" xml:space="preserve">
     <value>Tẹ ibí fún bọ́tìnì alámì</value>
@@ -291,8 +291,8 @@
   <data name="amazing-team" xml:space="preserve">
     <value>Àwọn Ọmọ Ẹgbẹ́ wa</value>
   </data>
-  <data name="what-is-yorubaname" xml:space="preserve">
-    <value>Kíni YorubaName.com</value>
+  <data name="what-is-website" xml:space="preserve">
+    <value>Kíni {0}</value>
   </data>
   <data name="how-to-use" xml:space="preserve">
     <value>Láti lo Dikṣọ́nárì Yìí</value>
@@ -328,7 +328,7 @@
     <value>Ẹ le fi ímeèlì ránṣẹ́ sí</value>
   </data>
   <data name="contact-info-contact-preamble" xml:space="preserve">
-    <value>Tàbí kàn sí ilé iṣẹ́ wa ní YorubaName.com</value>
+    <value>Tàbí kàn sí ilé iṣẹ́ wa ní {0}</value>
   </data>
   <data name="social-media" xml:space="preserve">
     <value>Ẹ tẹ̀lé wa lórí ẹ̀rọ ayélujára</value>
@@ -364,7 +364,7 @@
     <value>Àwọn orúkọ tó bẹ̀rẹ̀ pẹ̀lú</value>
   </data>
   <data name="error-discover-message" xml:space="preserve">
-    <value>láti tún ṣàbápàdé àwọn orúkọ Yorùbá mìíràn?</value>
+    <value>láti tún ṣàbápàdé àwọn orúkọ {0} mìíràn?</value>
   </data>
   <data name="home-page" xml:space="preserve">
     <value>abala ilé</value>
@@ -383,5 +383,8 @@
   </data>
   <data name="keyboard-software-cta-title" xml:space="preserve">
     <value>Ra Oun Tí a Fi Ń Tẹ Ọ̀rọ̀ Yorùba</value>
+  </data>
+  <data name="name-count-tagline" xml:space="preserve">
+    <value>Ó ju {0} Orùkọ {1} lọ tí a ní níbí</value>
   </data>
 </root>

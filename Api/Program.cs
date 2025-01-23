@@ -69,6 +69,9 @@ services.AddSwaggerGen(c =>
 
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Yoruba Names Dictionary API", Version = "v1" });
 
+    // TODO Hafiz: Implement the class required for the code below.
+    //c.DocumentFilter<HostBasedTitleDocumentFilter>();
+
     // Define the Basic Authentication scheme
     c.AddSecurityDefinition("basic", new OpenApiSecurityScheme
     {
@@ -89,7 +92,7 @@ services.AddSwaggerGen(c =>
                             Id = "basic"
                         }
                     },
-                    new string[] { }
+                    Array.Empty<string>()
                 }
             });
 });
