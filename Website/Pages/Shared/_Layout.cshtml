@@ -3,26 +3,28 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 @inject ILanguageService LanguageService
 
+@{
+    string smallLogoUrl = "";
+    string logoUrl = "";
+
+    if (LanguageService.IsYoruba)
+    {
+        smallLogoUrl = $"{ViewData["BaseURL"]}/img/yn-logo-drum-only.png";
+        logoUrl = $"{ViewData["BaseURL"]}/img/yn-logo-brown-black.png";
+    }
+    else if (LanguageService.IsIgbo)
+    {
+        smallLogoUrl = logoUrl = $"{ViewData["BaseURL"]}/img/igboname-logo.png";
+    }
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
     <meta name="description" content="@ViewData["Description"]">
 
-    @{
-        string smallLogoUrl = "";
-        string logoUrl = "";
-
-        if (LanguageService.IsYoruba)
-        {
-            smallLogoUrl = $"{ViewData["BaseURL"]}/img/yn-logo-drum-only.png";
-            logoUrl = $"{ViewData["BaseURL"]}/img/yn-logo-brown-black.png";
-        }
-        else if (LanguageService.IsIgbo)
-        {
-            smallLogoUrl = logoUrl = $"{ViewData["BaseURL"]}/img/igboname-logo.png";
-        }
-    }
+    
 
     <meta property="og:title" content="@ViewData["SocialTitle"]">
     <meta property="og:url" content="@ViewData["BaseURL"]@ViewData["SocialPath"]">

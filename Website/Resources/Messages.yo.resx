@@ -151,7 +151,7 @@
     <value>Ó ju</value>
   </data>
   <data name="jumbotron2" xml:space="preserve">
-    <value>Orùkọ {0} lọ tí a ní níbí</value>
+    <value>Orùkọ {1} {0} lọ tí a ní níbí</value>
   </data>
   <data name="kybtitle" xml:space="preserve">
     <value>Tẹ ibí fún bọ́tìnì alámì</value>
@@ -385,6 +385,6 @@
     <value>Ra Oun Tí a Fi Ń Tẹ Ọ̀rọ̀ Yorùba</value>
   </data>
   <data name="name-count-tagline" xml:space="preserve">
-    <value>Ó ju {0} Orùkọ {1} lọ tí a ní níbí</value>
+    <value>Ó ju Orùkọ {1} {0} lọ tí a ní níbí</value>
   </data>
 </root>

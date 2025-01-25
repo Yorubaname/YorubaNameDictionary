@@ -151,7 +151,7 @@
     <value>Over</value>
   </data>
   <data name="jumbotron2" xml:space="preserve">
-    <value>{0} names and growing...</value>
+    <value>{0} {1} names and growing...</value>
   </data>
   <data name="kybtitle" xml:space="preserve">
     <value>Click here for keys with accents.</value>

@@ -4,10 +4,23 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 @inject ILanguageService LanguageService
 
+@{
+    string bgImagePath = "";
+
+    if (LanguageService.IsYoruba)
+    {
+        bgImagePath = "/img/bg/yorubaname-bg.jpg";
+    }
+    else if (LanguageService.IsIgbo)
+    {
+        bgImagePath = "/img/bg/igboname-bg.jpg";
+    }
+}
+
 <section id="searchform">
-    <div class="jumbotron" id="home-banner">
+    <div class="jumbotron" id="home-banner" style="--background-image: url('@bgImagePath')">
         <div class="container">
-            <h1>@Localizer["jumbotron1"] <span>@Model</span> @Localizer["jumbotron2", LanguageService.LanguageDisplay]</h1>
+            <h1>@Localizer["jumbotron1"] @Localizer["jumbotron2", Model, LanguageService.LanguageDisplay]</h1>
             @await Html.PartialAsync("Partials/_SearchComponent")
         </div>
     </div>
