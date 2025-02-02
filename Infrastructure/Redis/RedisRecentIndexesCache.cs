@@ -15,13 +15,13 @@ namespace Infrastructure.Redis
 
         public async Task<IEnumerable<string>> Get()
         {
-            var results = await _cache.SortedSetRangeByRankAsync(Key, 0, MaxItemsToReturn - 1, Order.Descending);
+            var results = await Cache.SortedSetRangeByRankAsync(Key, 0, MaxItemsToReturn - 1, Order.Descending);
             return results.Select(r => r.ToString());
         }
 
         public async Task<bool> Remove(string item)
         {
-            var tran = _cache.CreateTransaction();
+            var tran = Cache.CreateTransaction();
             _ = tran.SortedSetRemoveAsync(Key, item);
             return await tran.ExecuteAsync();
         }
@@ -29,7 +29,7 @@ namespace Infrastructure.Redis
         public async Task Stack(string item)
         {
             // Use a Redis transaction to ensure atomicity of both operations
-            var transaction = _cache.CreateTransaction();
+            var transaction = Cache.CreateTransaction();
 
             // Add the search term to the front of the Redis list
             _ = transaction.SortedSetAddAsync(Key, item, DateTime.UtcNow.Ticks);

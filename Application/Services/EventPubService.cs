@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using MediatR;
+using YorubaOrganization.Core;
 using YorubaOrganization.Core.Events;
 
 namespace Application.Services
@@ -13,7 +14,7 @@ namespace Application.Services
             _mediator = mediator;
         }
 
-        public async Task PublishEvent<T>(T theEvent)
+        public async Task PublishEvent<T>(T theEvent) where T : IMessage
         {
             Guard.Against.Null(theEvent, nameof(theEvent));
             await _mediator.Publish(theEvent);

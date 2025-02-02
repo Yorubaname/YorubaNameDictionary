@@ -1,6 +1,7 @@
 ﻿using Api.Utilities;
 using Application.Mappers;
 using Application.Services;
+using Application.Services.MultiLanguage;
 using Core.Dto.Response;
 using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +22,8 @@ namespace Api.Controllers
         IEventPubService eventPubService,
         IRecentSearchesCache recentSearchesCache,
         IRecentIndexesCache recentIndexesCache,
-        NameEntryService nameEntryService) : ControllerBase
+        NameEntryService nameEntryService,
+        ILanguageService languageService) : ControllerBase
     {
         private const string SearchActivity = "search", IndexActivity = "index", PopularActivity = "popular";
 
@@ -42,7 +44,7 @@ namespace Api.Controllers
             // TODO: Check if the comparison here removes takes diacrits into consideration
             if (matches.Count() == 1 && matches.First().Title.Equals(searchTerm, StringComparison.CurrentCultureIgnoreCase))
             {
-                await eventPubService.PublishEvent(new ExactEntrySearched(matches.First().Title));
+                await eventPubService.PublishEvent(new ExactEntrySearched(matches.First().Title, languageService.CurrentTenant));
             }
 
             return Ok(matches.MapToDtoCollection());
@@ -81,7 +83,7 @@ namespace Api.Controllers
 
             if(nameEntry != null)
             {
-                await eventPubService.PublishEvent(new ExactEntrySearched(nameEntry.Name));
+                await eventPubService.PublishEvent(new ExactEntrySearched(nameEntry.Name, languageService.CurrentTenant));
             }
 
             return Ok(nameEntry);
