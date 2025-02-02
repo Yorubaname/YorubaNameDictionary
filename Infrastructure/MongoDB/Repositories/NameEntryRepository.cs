@@ -4,26 +4,23 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Events;
+using YorubaOrganization.Core.Tenants;
 using YorubaOrganization.Core.Utilities;
+using YorubaOrganization.Infrastructure;
 using YorubaOrganization.Infrastructure.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories;
 
-public sealed class NameEntryRepository : DictionaryEntryRepository<NameEntry>, INameEntryRepository
+public sealed class NameEntryRepository(IMongoDatabaseFactory databaseFactory, ITenantProvider tenantProvider, IEventPubService eventPubService) : DictionaryEntryRepository<NameEntry>(CollectionName, databaseFactory, tenantProvider, eventPubService), INameEntryRepository
 {
     private const string CollectionName = "NameEntries";
-    public NameEntryRepository(
-        IMongoDatabase database,
-        IEventPubService eventPubService) : base(CollectionName, database, eventPubService)
-    {
-    }
 
     public async Task<HashSet<NameEntry>> FindEntryByExtendedMeaningContainingAndState(string name, State state)
     {
         var filter = Builders<NameEntry>.Filter.Regex(ne => ne.ExtendedMeaning,
             new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i")) &
             Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
-        var result = await EntryCollection.Find(filter).ToListAsync();
+        var result = await RepoCollection.Find(filter).ToListAsync();
         return new HashSet<NameEntry>(result);
     }
 

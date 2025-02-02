@@ -17,6 +17,7 @@
     <PackageReference Include="MongoDB.Driver" Version="2.23.1" />
     <PackageReference Include="MySqlConnector" Version="2.3.7" />
     <PackageReference Include="YorubaOrganization.Application" Version="1.0.0" />
+    <PackageReference Include="YorubaOrganization.Core" Version="1.1.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />

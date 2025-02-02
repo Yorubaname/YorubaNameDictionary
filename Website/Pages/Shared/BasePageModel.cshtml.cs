@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Application.Services.MultiLanguage;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Localization;
 using Website.Resources;
-using Website.Services.MultiLanguage;
 
 namespace Website.Pages.Shared
 {

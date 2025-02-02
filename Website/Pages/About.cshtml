@@ -1,11 +1,11 @@
 ﻿@page "/about-us"
+@using Application.Services.MultiLanguage
+@using Website.Resources
 @model AboutModel
 @{
     ViewData["Title"] = "About Us";
 }
 
-@using Website.Resources
-@using Website.Services.MultiLanguage
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 @inject ILanguageService LanguageService
 

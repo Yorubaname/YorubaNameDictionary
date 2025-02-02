@@ -1,4 +1,4 @@
-﻿namespace Website.Services.MultiLanguage
+﻿namespace Application.Services.MultiLanguage
 {
     public interface ILanguageService
     {
@@ -13,5 +13,6 @@
 
         bool IsYoruba { get; }
         bool IsIgbo { get; }
+        string CurrentTenant { get; }
     }
 }

@@ -1,3 +1,4 @@
+using Application.Services.MultiLanguage;
 using Core.StringObjectConverters;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
@@ -6,7 +7,6 @@ using System.Globalization;
 using Website.Config;
 using Website.Middleware;
 using Website.Services;
-using Website.Services.MultiLanguage;
 
 namespace Website
 {
@@ -81,6 +81,7 @@ namespace Website
 
                     return context
                         .ForwardTo(externalApiBaseUrl)
+                        .AddXForwardedHeaders()
                         .Send();
                 });
             });

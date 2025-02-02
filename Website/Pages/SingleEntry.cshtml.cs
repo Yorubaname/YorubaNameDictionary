@@ -1,4 +1,5 @@
 using Application.Services;
+using Application.Services.MultiLanguage;
 using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -6,7 +7,6 @@ using System.Web;
 using Website.Pages.Shared;
 using Website.Resources;
 using Website.Services;
-using Website.Services.MultiLanguage;
 
 namespace Website.Pages
 {

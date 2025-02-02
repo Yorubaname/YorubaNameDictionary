@@ -1,11 +1,11 @@
 ﻿@page "/contact-us"
+@using Application.Services.MultiLanguage
+@using Website.Resources
 @model Website.Pages.ContactModel
 @{
     ViewData["Title"] = "Contact Us";
 }
 
-@using Website.Resources
-@using Website.Services.MultiLanguage
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 @inject ILanguageService LanguageService
 

@@ -4,20 +4,12 @@ using MediatR;
 
 namespace Application.EventHandlers
 {
-    public class PostPublishedNameCommandHandler : INotificationHandler<PostPublishedNameCommand>
+    public class PostPublishedNameCommandHandler(
+        ITwitterService twitterService) : INotificationHandler<PostPublishedNameCommand>
     {
-        private readonly ITwitterService _twitterService;
-
-        public PostPublishedNameCommandHandler(
-            ITwitterService twitterService)
-        {
-            _twitterService = twitterService;
-
-        }
-
         public async Task Handle(PostPublishedNameCommand notification, CancellationToken cancellationToken)
         {
-            await _twitterService.PostNewNameAsync(notification.Name, notification.Meaning, cancellationToken);
+            await twitterService.PostNewNameAsync(notification.Name, notification.Meaning, cancellationToken);
         }
     }
 }

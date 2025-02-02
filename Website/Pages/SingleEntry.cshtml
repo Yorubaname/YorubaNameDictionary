@@ -1,11 +1,11 @@
 ﻿@page "/entries/{nameEntry}"
+@using Application.Services.MultiLanguage
+@using Website.Resources
 @model SingleEntryModel
 @{
     ViewData["Title"] = $"{Localizer["meaningof"]} {Model.Name.Name}";
 }
 
-@using Website.Resources
-@using Website.Services.MultiLanguage
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 @inject ILanguageService LanguageService
 

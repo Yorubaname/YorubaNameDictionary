@@ -1,4 +1,4 @@
-﻿namespace Api.ExceptionHandler
+﻿namespace Api.Middleware
 {
     public class ErrorResponse
     {

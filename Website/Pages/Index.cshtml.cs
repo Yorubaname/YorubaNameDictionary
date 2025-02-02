@@ -1,9 +1,9 @@
 using Application.Services;
+using Application.Services.MultiLanguage;
 using Microsoft.Extensions.Localization;
 using Website.Pages.Shared;
 using Website.Resources;
 using Website.Services;
-using Website.Services.MultiLanguage;
 
 namespace Website.Pages
 {

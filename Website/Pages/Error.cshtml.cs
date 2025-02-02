@@ -1,9 +1,9 @@
+using Application.Services.MultiLanguage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System.Diagnostics;
 using Website.Pages.Shared;
 using Website.Resources;
-using Website.Services.MultiLanguage;
 
 namespace Website.Pages
 {

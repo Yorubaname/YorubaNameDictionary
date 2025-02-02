@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Localization;
+﻿using Application.Services.MultiLanguage;
+using Microsoft.Extensions.Localization;
 using Website.Resources;
 using Website.Services;
-using Website.Services.MultiLanguage;
 
 namespace Website.Pages.Shared
 {

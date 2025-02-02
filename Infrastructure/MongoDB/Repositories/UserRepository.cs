@@ -4,30 +4,25 @@ using YorubaOrganization.Core.Dto.Request;
 using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Entities;
 using YorubaOrganization.Core.Repositories;
+using YorubaOrganization.Core.Tenants;
+using YorubaOrganization.Infrastructure;
 using YorubaOrganization.Infrastructure.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories
 {
-    public class UserRepository : MongoDBRepository, IUserRepository
+    public class UserRepository(IMongoDatabaseFactory mongoDatabaseFactory, ITenantProvider tenantProvider) :
+        MongoDBRepository<User>(mongoDatabaseFactory, tenantProvider, "Users"), IUserRepository
     {
-        private readonly IMongoCollection<User> _userCollection;
-
-        public UserRepository(
-            IMongoDatabase database)
-        {
-            _userCollection = database.GetCollection<User>("Users");
-        }
-
         public async Task Create(User newUser)
         {
             newUser.Id = ObjectId.GenerateNewId().ToString();
-            await _userCollection.InsertOneAsync(newUser);
+            await RepoCollection.InsertOneAsync(newUser);
         }
 
         public async Task<bool> DeleteBy(string email)
         {
             var filter = Builders<User>.Filter.Eq(nameof(User.Email), email);
-            var deleteResult = await _userCollection.DeleteOneAsync(filter, SetCollationPrimary<DeleteOptions>(new DeleteOptions()));
+            var deleteResult = await RepoCollection.DeleteOneAsync(filter, SetCollationPrimary<DeleteOptions>(new DeleteOptions()));
             return deleteResult.DeletedCount > 0;
         }
 
@@ -39,7 +34,7 @@ namespace Infrastructure.MongoDB.Repositories
                 Collation = new Collation("en", strength: CollationStrength.Primary)
             };
 
-            return await _userCollection.Find(filter, options).SingleOrDefaultAsync();
+            return await RepoCollection.Find(filter, options).SingleOrDefaultAsync();
         }
 
         public async Task<bool> Update(string email, UpdateUserDto update)
@@ -47,12 +42,12 @@ namespace Infrastructure.MongoDB.Repositories
             var filter = Builders<User>.Filter.Eq(ne => ne.Email, email);
             var updateStatement = GenerateUpdateStatement(update);
 
-            var options = SetCollationPrimary<FindOneAndUpdateOptions<User>> (new FindOneAndUpdateOptions<User>
+            var options = SetCollationPrimary<FindOneAndUpdateOptions<User>>(new FindOneAndUpdateOptions<User>
             {
                 ReturnDocument = ReturnDocument.After
             });
 
-            var updated = await _userCollection.FindOneAndUpdateAsync(filter, updateStatement, options);
+            var updated = await RepoCollection.FindOneAndUpdateAsync(filter, updateStatement, options);
 
             return updated != null;
         }
@@ -74,9 +69,9 @@ namespace Infrastructure.MongoDB.Repositories
                 updates.Add(updateBuilder.Set(u => u.Password, update.Password));
             }
 
-            if (update.Roles != null && update.Roles.Any())
+            if (update.Roles != null && update.Roles.Length != 0)
             {
-                updates.Add(updateBuilder.Set(u => u.Roles, update.Roles.ToList()));
+                updates.Add(updateBuilder.Set(u => u.Roles, [.. update.Roles]));
             }
 
             if (!string.IsNullOrWhiteSpace(update.UpdatedBy))
@@ -95,19 +90,19 @@ namespace Infrastructure.MongoDB.Repositories
 
         public async Task<IEnumerable<UserDto>> List()
         {
-            var allUsers = await _userCollection.Find(_ => true).ToListAsync();
+            var allUsers = await RepoCollection.Find(_ => true).ToListAsync();
             return allUsers.Select(u => new UserDto
             {
                 Username = u.Username,
                 Email = u.Email!,
-                Roles = u.Roles.ToArray()
+                Roles = [.. u.Roles]
             });
         }
 
         public async Task<int> CountUsers()
         {
-            var count = await _userCollection.EstimatedDocumentCountAsync();
-            return (int) count;
+            var count = await RepoCollection.EstimatedDocumentCountAsync();
+            return (int)count;
         }
     }
 }

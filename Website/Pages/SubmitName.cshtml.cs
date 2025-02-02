@@ -1,9 +1,9 @@
+using Application.Services.MultiLanguage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Website.Pages.Shared;
 using Website.Resources;
 using Website.Services;
-using Website.Services.MultiLanguage;
 using YorubaOrganization.Core.Dto.Response;
 
 namespace Website.Pages

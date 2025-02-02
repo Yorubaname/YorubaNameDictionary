@@ -1,4 +1,7 @@
-﻿namespace Website.Services.MultiLanguage
+﻿using Microsoft.AspNetCore.Http;
+using YorubaOrganization.Core;
+
+namespace Application.Services.MultiLanguage
 {
     public class LanguageService : ILanguageService
     {
@@ -26,6 +29,11 @@
             { Yoruba, "YorubaNames" },
             { Igbo, "IgboNames" },
         };
+        private static readonly Dictionary<string, string> _languageToTenantMap = new()
+        {
+            { Yoruba, Languages.YorubaLanguage },
+            { Igbo, Languages.IgboLanguage },
+        };
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string _language;
@@ -35,6 +43,8 @@
         public virtual string LanguageDisplay => _languageToLanguageDisplayMap[_language];
         public bool IsYoruba => _language == Yoruba;
         public bool IsIgbo => _language == Igbo;
+
+        public string CurrentTenant => _languageToTenantMap[_language];
 
         public LanguageService(IHttpContextAccessor httpContextAccessor)
         {
@@ -50,8 +60,24 @@
                 return Yoruba;
             }
 
-            return _hostToLanguageMap.TryGetValue(WithoutSubdomain(host), out string? value) ? value : Yoruba;
+            return _hostToLanguageMap.TryGetValue(WithoutSubdomain(host), out string? value) ? value : GetLanguageFromHeader();
         }
+
+        private string GetLanguageFromHeader()
+        {
+            var currentTenant = _httpContextAccessor.HttpContext?.Items["Tenant"]?.ToString();
+
+            switch (currentTenant)
+            {
+                case Languages.IgboLanguage:
+                    return Igbo;
+                case Languages.YorubaLanguage: 
+                    return Yoruba;
+                default:
+                    return Yoruba;
+            }
+        }
+
         private static string WithoutSubdomain(string host)
         {
             if (string.IsNullOrEmpty(host))
