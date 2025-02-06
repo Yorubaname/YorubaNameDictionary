@@ -2,15 +2,17 @@
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using YorubaOrganization.Core.Cache;
+using YorubaOrganization.Core.Tenants;
 
 namespace Infrastructure.Redis
 {
     public class RedisRecentSearchesCache(
         IConnectionMultiplexer connectionMultiplexer,
-        IOptions<RedisConfig> redisConfig) : RedisCache(connectionMultiplexer, redisConfig), IRecentSearchesCache
+        IOptions<RedisConfig> redisConfig,
+        ITenantProvider tenantProvider) : RedisCache(connectionMultiplexer, redisConfig), IRecentSearchesCache
     {
-        private const string RecentSearchesKey = "recent_searches";
-        private const string PopularSearchesKey = "popular_searches";
+        private string RecentSearchesKey = $"{tenantProvider.GetCurrentTenant()}_recent_searches";
+        private string PopularSearchesKey = $"{tenantProvider.GetCurrentTenant()}_popular_searches";
         private static readonly DateTime StartDate;
         private const int MaxItemsToReturn = 5;
         private const int MaxRecentSearches = 10;

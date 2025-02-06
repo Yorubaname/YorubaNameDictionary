@@ -120,8 +120,10 @@ services.AddScoped<UserService>();
 services.AddScoped<GeoLocationValidator>();
 services.AddScoped<EmbeddedVideoValidator>();
 services.AddScoped<EtymologyValidator>();
-services.AddSingleton<IRecentIndexesCache, RedisRecentIndexesCache>();
-services.AddSingleton<IRecentSearchesCache, RedisRecentSearchesCache>();
+
+services
+    .AddScoped<IRecentIndexesCache, RedisRecentIndexesCache>()
+    .AddScoped<IRecentSearchesCache, RedisRecentSearchesCache>();
 
 //Validation
 services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();

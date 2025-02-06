@@ -1,5 +1,4 @@
-﻿using Application.Services.MultiLanguage;
-using Ardalis.GuardClauses;
+﻿using Ardalis.GuardClauses;
 using Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;

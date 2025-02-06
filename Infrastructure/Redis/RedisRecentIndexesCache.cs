@@ -2,14 +2,16 @@
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using YorubaOrganization.Core.Cache;
+using YorubaOrganization.Core.Tenants;
 
 namespace Infrastructure.Redis
 {
     public class RedisRecentIndexesCache(
         IConnectionMultiplexer connectionMultiplexer,
-        IOptions<RedisConfig> redisConfig) : RedisCache(connectionMultiplexer, redisConfig), IRecentIndexesCache
+        IOptions<RedisConfig> redisConfig,
+        ITenantProvider tenantProvider) : RedisCache(connectionMultiplexer, redisConfig), IRecentIndexesCache
     {
-        private const string Key = "recent_indexes";
+        private string Key => $"{tenantProvider.GetCurrentTenant()}_recent_indexes";
         private const int MaxItemsToReturn = 5;
         private const int MaxItemsToStore = 10;
 
