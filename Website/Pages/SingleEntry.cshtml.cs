@@ -1,4 +1,5 @@
 using Application.Services;
+using Application.Services.MultiLanguage;
 using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -11,7 +12,8 @@ namespace Website.Pages
 {
     public class SingleEntryModel(
         IStringLocalizer<Messages> localizer,
-        ApiService apiService) : BasePageModel(localizer)
+        ILanguageService languageService,
+        ApiService apiService) : BasePageModel(localizer, languageService)
     {
         private readonly ApiService _apiService = apiService;
 

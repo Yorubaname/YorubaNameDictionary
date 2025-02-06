@@ -1,7 +1,21 @@
-﻿@using Website.Resources
+﻿@using Application.Services.MultiLanguage
+
+@inject ILanguageService LanguageService
+@{
+    string bgImagePath = "";
+
+    if (LanguageService.IsYoruba)
+    {
+        bgImagePath = "/img/bg/yorubaname-bg.jpg";
+    }
+    else if (LanguageService.IsIgbo)
+    {
+        bgImagePath = "/img/bg/igboname-bg.jpg";
+    }
+}
 
 <section id="searchform">
-    <div class="jumbotron mini" id="home-banner">
+    <div class="jumbotron mini" id="home-banner" style="--background-image: url('@bgImagePath')">
         <div class="container">
             @await Html.PartialAsync("Partials/_SearchComponent")
         </div>

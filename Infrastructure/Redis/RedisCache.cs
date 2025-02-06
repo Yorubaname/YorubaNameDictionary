@@ -8,6 +8,6 @@ namespace Infrastructure.Redis
         IConnectionMultiplexer connectionMultiplexer,
         IOptions<RedisConfig> redisConfig)
     {
-        protected readonly IDatabase _cache = connectionMultiplexer.GetDatabase(redisConfig.Value.DatabaseIndex);
+        protected readonly IDatabase Cache = connectionMultiplexer.GetDatabase(redisConfig.Value.DatabaseIndex);
     }
 }

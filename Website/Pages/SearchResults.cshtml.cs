@@ -1,4 +1,5 @@
 using Application.Services;
+using Application.Services.MultiLanguage;
 using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -10,8 +11,9 @@ using Website.Services;
 namespace Website.Pages
 {
     public class SearchResultsModel(
-        IStringLocalizer<Messages> localizer, 
-        ApiService apiService) : BasePageModel(localizer)
+        IStringLocalizer<Messages> localizer,
+        ILanguageService languageService,
+        ApiService apiService) : BasePageModel(localizer, languageService)
     {
         private readonly ApiService _apiService = apiService;
 

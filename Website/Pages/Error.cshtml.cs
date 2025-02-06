@@ -1,3 +1,4 @@
+using Application.Services.MultiLanguage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System.Diagnostics;
@@ -8,7 +9,7 @@ namespace Website.Pages
 {
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     [IgnoreAntiforgeryToken]
-    public class ErrorModel(IStringLocalizer<Messages> localizer) : BasePageModel(localizer)
+    public class ErrorModel(IStringLocalizer<Messages> localizer, ILanguageService languageService) : BasePageModel(localizer, languageService)
     {
         public string? RequestId { get; set; }
 

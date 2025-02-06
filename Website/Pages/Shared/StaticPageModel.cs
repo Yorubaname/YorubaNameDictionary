@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.Localization;
+﻿using Application.Services.MultiLanguage;
+using Microsoft.Extensions.Localization;
 using Website.Resources;
 using Website.Services;
 
 namespace Website.Pages.Shared
 {
-    public abstract class StaticPageModel(IStringLocalizer<Messages> localizer, ApiService apiService) : BasePageModel(localizer)
+    public abstract class StaticPageModel(IStringLocalizer<Messages> localizer, ILanguageService languageService, ApiService apiService) :
+        BasePageModel(localizer, languageService)
     {
         protected readonly ApiService _apiService = apiService;
 

@@ -1,4 +1,5 @@
 using Application.Services;
+using Application.Services.MultiLanguage;
 using Microsoft.Extensions.Localization;
 using Website.Pages.Shared;
 using Website.Resources;
@@ -6,7 +7,7 @@ using Website.Services;
 
 namespace Website.Pages
 {
-    public class IndexModel(IStringLocalizer<Messages> localizer, ApiService apiService) : BasePageModel(localizer)
+    public class IndexModel(IStringLocalizer<Messages> localizer, ILanguageService languageService, ApiService apiService) : BasePageModel(localizer, languageService)
     {
         public int NameCount { get; private set; }
         public string[] LatestSearches { get; private set; } = [];
