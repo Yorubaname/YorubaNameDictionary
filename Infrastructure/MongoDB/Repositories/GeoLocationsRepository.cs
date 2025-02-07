@@ -10,13 +10,22 @@ namespace Infrastructure.MongoDB.Repositories
 {
     public class GeoLocationsRepository : MongoDBRepository<GeoLocation>, IGeoLocationsRepository
     {
+        // A static lock object to ensure that only one thread initializes the data.
+        private static readonly object _geoLocationInitializeLock = new object();
         public GeoLocationsRepository(IMongoDatabaseFactory mongoDatabaseFactory, ITenantProvider tenantProvider) :
             base(mongoDatabaseFactory, tenantProvider, "GeoLocations")
         {
             // Check if data exists, if not, initialize with default data
+            // First check without locking for performance.
             if (RepoCollection.CountDocuments(FilterDefinition<GeoLocation>.Empty) == 0)
             {
-                InitGeoLocation();
+                lock (_geoLocationInitializeLock)
+                {
+                    if (RepoCollection.CountDocuments(FilterDefinition<GeoLocation>.Empty) == 0)
+                    {
+                        InitGeoLocation();
+                    }
+                }
             }
         }
 
