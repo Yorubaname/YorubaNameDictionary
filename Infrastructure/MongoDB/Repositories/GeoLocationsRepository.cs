@@ -10,13 +10,19 @@ namespace Infrastructure.MongoDB.Repositories
 {
     public class GeoLocationsRepository : MongoDBRepository<GeoLocation>, IGeoLocationsRepository
     {
+        private static readonly object _geoLocationInitializeLock = new object();
         public GeoLocationsRepository(IMongoDatabaseFactory mongoDatabaseFactory, ITenantProvider tenantProvider) :
             base(mongoDatabaseFactory, tenantProvider, "GeoLocations")
         {
-            // Check if data exists, if not, initialize with default data
             if (RepoCollection.CountDocuments(FilterDefinition<GeoLocation>.Empty) == 0)
             {
-                InitGeoLocation();
+                lock (_geoLocationInitializeLock)
+                {
+                    if (RepoCollection.CountDocuments(FilterDefinition<GeoLocation>.Empty) == 0)
+                    {
+                        InitGeoLocation();
+                    }
+                }
             }
         }
 
