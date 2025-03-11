@@ -21,13 +21,15 @@
 
                 <h2 class="intonation" id="name-entry">@Model.Name.Name</h2>
 
-                <p>
-                    <strong>@Localizer["pronunciation"]</strong>
-                    <button class="btn btn-default btn-sm" id="tts-button">
-                        <i class="fa fa-volume-up" data-placement="top" title="@Localizer["play-sound"]"></i>
-                    </button>
-                    <!--<span> class="pull-right text-muted"><strong>@Localizer["submitby"]</strong> @Model.Name.SubmittedBy</span>-->
-                </p>
+                @if (LanguageService.IsYoruba)
+                {
+                    <p>
+                        <strong>@Localizer["pronunciation"]</strong>
+                        <button class="btn btn-default btn-sm" id="tts-button">
+                            <i class="fa fa-volume-up" data-placement="top" title="@Localizer["play-sound"]"></i>
+                        </button>
+                    </p>
+                }
 
                 <div class="share">
                     <a class="btn btn-sm btn-success" href="#improve-entry" data-toggle="modal" data-target="#improveEntryModal" style="margin-right:20px">
