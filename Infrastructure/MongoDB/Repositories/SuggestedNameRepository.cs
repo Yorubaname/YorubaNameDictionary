@@ -1,26 +1,23 @@
 ﻿using Core.Entities;
 using Core.Repositories;
 using MongoDB.Driver;
+using YorubaOrganization.Core.Tenants;
+using YorubaOrganization.Infrastructure;
+using YorubaOrganization.Infrastructure.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories;
 
-public class SuggestedNameRepository : ISuggestedNameRepository
+public class SuggestedNameRepository(IMongoDatabaseFactory databaseFactory, ITenantProvider tenantProvider) :
+    MongoDBRepository<SuggestedName>(databaseFactory, tenantProvider, "SuggestedNames"), ISuggestedNameRepository
 {
-    private readonly IMongoCollection<SuggestedName> _suggestedNameCollection;
-
-    public SuggestedNameRepository(IMongoDatabase database)
-    {
-        _suggestedNameCollection = database.GetCollection<SuggestedName>("SuggestedNames");
-    }
-
     public async Task<Dictionary<string, int>> CountAsync()
     {
         var metaData = new Dictionary<string, int>();
 
-        HashSet<string> uniqueNames = new();
+        HashSet<string> uniqueNames = [];
 
         // Fetch all suggested names
-        var suggestedNamesCursor = await _suggestedNameCollection
+        var suggestedNamesCursor = await RepoCollection
             .FindSync(FilterDefinition<SuggestedName>.Empty).ToListAsync();
 
         // Add unique names to HashSet
@@ -36,33 +33,33 @@ public class SuggestedNameRepository : ISuggestedNameRepository
 
     public async Task<SuggestedName> CreateAsync(SuggestedName suggestedName)
     {
-        await _suggestedNameCollection.InsertOneAsync(suggestedName);
+        await RepoCollection.InsertOneAsync(suggestedName);
         return suggestedName;
     }
 
     public async Task<SuggestedName> GetAsync(string id)
     {
         var filter = Builders<SuggestedName>.Filter.Eq("_id", id);
-        var result = await _suggestedNameCollection.Find(filter).FirstOrDefaultAsync();
+        var result = await RepoCollection.Find(filter).FirstOrDefaultAsync();
         return result;
     }
 
     public async Task<List<SuggestedName>> GetAllAsync()
     {
-        return await _suggestedNameCollection.Find(FilterDefinition<SuggestedName>.Empty)
+        return await RepoCollection.Find(FilterDefinition<SuggestedName>.Empty)
             .ToListAsync();
     }
 
     public async Task<bool> DeleteSuggestedNameAsync(string id)
     {
         var filter = Builders<SuggestedName>.Filter.Eq("_id", id);
-        var result = await _suggestedNameCollection.DeleteOneAsync(filter);
+        var result = await RepoCollection.DeleteOneAsync(filter);
         return result.DeletedCount > 0;
     }
 
     public async Task<bool> DeleteAllSuggestionsAsync()
     {
-        var result = await _suggestedNameCollection.DeleteManyAsync(_ => true);
+        var result = await RepoCollection.DeleteManyAsync(_ => true);
 
         return result.DeletedCount > 0;
     }

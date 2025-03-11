@@ -1,23 +1,19 @@
 ﻿using Application.Events;
 using Application.Services;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using YorubaOrganization.Core;
 
 namespace Application.EventHandlers
 {
-    public class PostPublishedNameCommandHandler : INotificationHandler<PostPublishedNameCommand>
+    public class PostPublishedNameCommandHandler(ITwitterService twitterService) : INotificationHandler<PostPublishedNameCommand>
     {
-        private readonly ITwitterService _twitterService;
-
-        public PostPublishedNameCommandHandler(
-            ITwitterService twitterService)
-        {
-            _twitterService = twitterService;
-
-        }
-
         public async Task Handle(PostPublishedNameCommand notification, CancellationToken cancellationToken)
         {
-            await _twitterService.PostNewNameAsync(notification.Name, notification.Meaning, cancellationToken);
+            if (notification.Tenant == Languages.YorubaLanguage)
+            {
+                await twitterService.PostNewNameAsync(notification.Name, notification.Meaning, cancellationToken);
+            }
         }
     }
 }

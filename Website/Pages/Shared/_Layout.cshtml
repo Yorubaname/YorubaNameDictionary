@@ -1,5 +1,23 @@
-﻿@using Website.Resources
+﻿@using Application.Services.MultiLanguage
+@using Website.Resources
+
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+@inject ILanguageService LanguageService
+
+@{
+    string smallLogoUrl = "";
+    string logoUrl = "";
+
+    if (LanguageService.IsYoruba)
+    {
+        smallLogoUrl = $"{ViewData["BaseURL"]}/img/yn-logo-drum-only.png";
+        logoUrl = $"{ViewData["BaseURL"]}/img/yn-logo-brown-black.png";
+    }
+    else if (LanguageService.IsIgbo)
+    {
+        smallLogoUrl = logoUrl = $"{ViewData["BaseURL"]}/img/igboname-logo.png";
+    }
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,11 +25,13 @@
     <meta charset="UTF-8" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
     <meta name="description" content="@ViewData["Description"]">
 
+    
+
     <meta property="og:title" content="@ViewData["SocialTitle"]">
     <meta property="og:url" content="@ViewData["BaseURL"]@ViewData["SocialPath"]">
     <meta property="og:description" content="@ViewData["SocialDescription"]">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="@ViewData["BaseURL"]/img/yn-logo-drum-only.png">
+    <meta property="og:image" content="@smallLogoUrl">
 
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="@ViewData["SocialTitle"]">
@@ -19,7 +39,7 @@
     <meta name="twitter:description" content="@ViewData["SocialDescription"]">
     <meta name="twitter:site" content="@@YorubaNames">
     <meta name="twitter:creator" content="@@YorubaNames">
-    <meta name="twitter:image" content="@ViewData["BaseURL"]/img/yn-logo-drum-only.png">
+    <meta name="twitter:image" content="@smallLogoUrl">
 
     <link href="~/img/favicon.png" rel="shortcut icon">
     <link href="~/css/bootstrap.min.css" rel="stylesheet">
@@ -31,7 +51,7 @@
     <link href="//fast.fonts.net/cssapi/6dc70f84-e724-4068-9f7a-797b1bf01ddb.css" rel="stylesheet">
     <link href="~/css/styles.css" rel="stylesheet">
 
-    <title>@ViewData["Title"] - YorubaNames</title>
+    <title>@ViewData["Title"] - @LanguageService.SocialName</title>
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -70,7 +90,7 @@
     <header>
         <div class="container">
             <div class="navbar-brand">
-                <a href="/"><img class="logo" src="~/img/yn-logo-brown-black.png" alt="YorubaName.com" title="YorubaName.com"></a>
+                <a href="/"><img class="logo" src="@logoUrl" alt="@LanguageService.Website" title="@LanguageService.Website"></a>
             </div>
             <div id="layout-nav" class="navbar" role="navigation">
                 <div class="navbar-header">
@@ -84,7 +104,11 @@
                 <div class="collapse navbar-collapse navbar-main-collapse">
                     <ul id="lang-group" class="lang-toggle nav nav-tabs navbar-right">
                         <li id="en"><a href="?lang=en" target="_self">EN</a></li>
-                        <li id="yo"><a asp-route-lang="yo">YOR</a></li>
+                        @if (LanguageService.IsYoruba)
+                        {
+                            <li id="yo"><a asp-route-lang="yo">YOR</a></li>
+                        }
+                        <!-- TODO Hafiz: An an IsIgbo() elseif case here once translations become available for the IGBO language.-->
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="/">@(Localizer["home"])</a></li>
@@ -105,7 +129,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-4 text-left">
-                    <p>Copyright &copy; @DateTime.Now.Year. YorubaName.com</p>
+                    <p>Copyright &copy; @DateTime.Now.Year. @LanguageService.Website</p>
                 </div>
                 <div class="col-sm-4 text-center">
                     <nav class="social-links">

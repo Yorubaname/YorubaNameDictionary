@@ -1,4 +1,3 @@
-using Api.ExceptionHandler;
 using Application.Migrator;
 using Application.Services;
 using Application.Validation;
@@ -18,6 +17,11 @@ using YorubaOrganization.Core.Events;
 using YorubaOrganization.Core.Cache;
 using Application.EventHandlers;
 using Infrastructure.MongoDB;
+using Api.Middleware;
+using YorubaOrganization.Core.Tenants;
+using Api.Tenants;
+using Microsoft.AspNetCore.HttpOverrides;
+using Application.Services.MultiLanguage;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -69,6 +73,9 @@ services.AddSwaggerGen(c =>
 
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Yoruba Names Dictionary API", Version = "v1" });
 
+    // TODO Hafiz: Implement the class required for the code below.
+    //c.DocumentFilter<HostBasedTitleDocumentFilter>();
+
     // Define the Basic Authentication scheme
     c.AddSecurityDefinition("basic", new OpenApiSecurityScheme
     {
@@ -89,31 +96,34 @@ services.AddSwaggerGen(c =>
                             Id = "basic"
                         }
                     },
-                    new string[] { }
+                    Array.Empty<string>()
                 }
             });
 });
-var mongoDbSettings = configuration.GetRequiredSection("MongoDB");
-services.InitializeDatabase(
-    Guard.Against.NullOrEmpty(mongoDbSettings.GetValue<string>("ConnectionString")),
-    Guard.Against.NullOrEmpty(mongoDbSettings.GetValue<string>("DatabaseName")));
+
+services.AddTransient<ILanguageService, LanguageService>();
+services.AddScoped<ITenantProvider, HttpTenantProvider>();
+services.AddHttpContextAccessor();
+
+services.InitializeDatabase(configuration);
 
 builder.Services.AddTransient(x =>
   new MySqlConnection(Guard.Against.NullOrEmpty(configuration.GetSection("MySQL:ConnectionString").Value)));
 
-services.AddSingleton<NameEntryService>();
-services.AddSingleton<GeoLocationsService>();
-services.AddSingleton<NameEntryFeedbackService>();
-services.AddSingleton<IEventPubService, EventPubService>();
-services.AddSingleton<SearchService>();
-services.AddSingleton<SuggestedNameService>();
-services.AddSingleton<UserService>();
+services.AddScoped<NameEntryService>();
+services.AddScoped<GeoLocationsService>();
+services.AddScoped<NameEntryFeedbackService>();
+services.AddScoped<IEventPubService, EventPubService>();
+services.AddScoped<SearchService>();
+services.AddScoped<SuggestedNameService>();
+services.AddScoped<UserService>();
 services.AddScoped<GeoLocationValidator>();
 services.AddScoped<EmbeddedVideoValidator>();
 services.AddScoped<EtymologyValidator>();
-services.AddScoped<SqlToMongoMigrator>();
-services.AddSingleton<IRecentIndexesCache, RedisRecentIndexesCache>();
-services.AddSingleton<IRecentSearchesCache, RedisRecentSearchesCache>();
+
+services
+    .AddScoped<IRecentIndexesCache, RedisRecentIndexesCache>()
+    .AddScoped<IRecentSearchesCache, RedisRecentSearchesCache>();
 
 //Validation
 services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
@@ -128,8 +138,8 @@ services.AddMediatR(cfg =>
 services.AddSingleton<ITwitterService, TwitterService>();
 services.AddTwitterClient(configuration);
 
-builder.Services.SetupHangfire(Guard.Against.NullOrEmpty(configuration.GetRequiredSection("MongoDB:ConnectionString").Value));
-builder.Services.SetupRedis(configuration);
+services.SetupHangfire(Guard.Against.NullOrEmpty(configuration.GetRequiredSection("MongoDB:Default").Value));
+services.SetupRedis(configuration);
 
 
 var app = builder.Build();
@@ -143,8 +153,13 @@ if (app.Environment.IsDevelopment())
     app.UseCors(DevCORSAllowAll);
 }
 
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost
+});
 app.UseHttpsRedirection();
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+app.UseMiddleware<TenantIdentificationMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

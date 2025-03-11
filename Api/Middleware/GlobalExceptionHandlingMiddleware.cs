@@ -1,4 +1,4 @@
-﻿namespace Api.ExceptionHandler
+﻿namespace Api.Middleware
 {
     using Api.Utilities;
     using System.Net;

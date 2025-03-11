@@ -1,3 +1,4 @@
+using Application.Services.MultiLanguage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Website.Pages.Shared;
@@ -7,7 +8,7 @@ using YorubaOrganization.Core.Dto.Response;
 
 namespace Website.Pages
 {
-    public class SubmitNameModel(IStringLocalizer<Messages> localizer, ApiService apiService) : BasePageModel(localizer)
+    public class SubmitNameModel(IStringLocalizer<Messages> localizer, ILanguageService languageService, ApiService apiService) : BasePageModel(localizer, languageService)
     {
         [BindProperty(SupportsGet = true)]
         [FromQuery(Name = "missing")]

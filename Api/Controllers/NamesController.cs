@@ -16,19 +16,11 @@ namespace Api.Controllers
     [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize(Policy = "AdminAndLexicographers")]
-    public class NamesController : ControllerBase
+    public class NamesController(NameEntryService entryService, IValidator<NameDto> createNameValidator) : ControllerBase
     {
         private const int DefaultPage = 1;
         private const int DefaultListCount = 50;
         private const int MaxListCount = 100; //TODO Later: Make configurable
-        private readonly NameEntryService _nameEntryService;
-        private readonly IValidator<NameDto> _createNameValidator;
-
-        public NamesController(NameEntryService entryService, IValidator<NameDto> createNameValidator)
-        {
-            _nameEntryService = entryService;
-            _createNameValidator = createNameValidator;
-        }
 
         /// <summary>
         /// CreateAsync a new Name entries. Updates are not possible through this endpoint.
@@ -40,7 +32,7 @@ namespace Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Post([FromBody] CreateNameDto request)
         {
-            var result = await _createNameValidator.ValidateAsync(request);
+            var result = await createNameValidator.ValidateAsync(request);
             if (!result.IsValid)
             {
                 result.AddToModelState(ModelState);
@@ -53,7 +45,7 @@ namespace Api.Controllers
                     return BadRequest("Invalid State: A new entry needs to have the NEW state");
                 }
 
-                await _nameEntryService.Create(request.MapToEntity());
+                await entryService.Create(request.MapToEntity());
                 return StatusCode((int)HttpStatusCode.Created, "Name successfully added");
             }
         }
@@ -67,7 +59,7 @@ namespace Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetMetaData()
         {
-            var metaData = await _nameEntryService.GetMetadata();
+            var metaData = await entryService.GetMetadata();
             return Ok(new NamesMetadataDto
             {
                 TotalNames = metaData.TotalEntries,
@@ -101,13 +93,13 @@ namespace Api.Controllers
             IEnumerable<NameEntry> names;
             if (all.HasValue && all.Value)
             {
-                names = await _nameEntryService.GetAllEntries(state, submittedBy);
+                names = await entryService.GetAllEntries(state, submittedBy);
                 return Ok(names.MapToDtoCollectionMini());
             }
 
             page ??= DefaultPage;
             count = Math.Min(count ?? DefaultListCount, MaxListCount);
-            names = await _nameEntryService.List(state, submittedBy, page.Value, count.Value);
+            names = await entryService.List(state, submittedBy, page.Value, count.Value);
             return Ok(names.MapToDtoCollection());
         }
 
@@ -121,7 +113,7 @@ namespace Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetName([FromRoute] string name)
         {
-            var nameEntry = await _nameEntryService.LoadEntry(name);
+            var nameEntry = await entryService.LoadEntry(name);
 
             if (nameEntry == null)
             {
@@ -151,14 +143,14 @@ namespace Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var oldNameEntry = await _nameEntryService.LoadEntry(name);
+            var oldNameEntry = await entryService.LoadEntry(name);
 
             if (oldNameEntry == null)
             {
                 return NotFound($"{name} not in database");
             }
 
-            _ = await _nameEntryService.Update(oldNameEntry, updated.MapToEntity());
+            _ = await entryService.Update(oldNameEntry, updated.MapToEntity());
             return Ok(new { Message = "Name successfully updated" });
         }
 
@@ -166,13 +158,13 @@ namespace Api.Controllers
         [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> DeleteName(string name)
         {
-            var nameEntry = await _nameEntryService.LoadEntry(name);
+            var nameEntry = await entryService.LoadEntry(name);
             if (nameEntry == null)
             {
                 return NotFound($"{name} not found in the system so cannot be deleted");
             }
 
-            await _nameEntryService.Delete(name);
+            await entryService.Delete(name);
             return Ok(new { Message = $"{name} Deleted" });
         }
 
@@ -182,7 +174,7 @@ namespace Api.Controllers
         public async Task<IActionResult> DeleteNamesBatch(string[] names)
         {
 
-            var foundNames = (await _nameEntryService.LoadEntries(names))?.Select(f => f.Title)?.ToArray();
+            var foundNames = (await entryService.LoadEntries(names))?.Select(f => f.Title)?.ToArray();
 
             if (foundNames is null || foundNames.Length == 0)
             {
@@ -191,10 +183,10 @@ namespace Api.Controllers
 
             var notFoundNames = names.Where(d => !foundNames.Contains(d)).ToList();
 
-            await _nameEntryService.DeleteEntriesBatch(foundNames);
+            await entryService.DeleteEntriesBatch(foundNames);
 
             string responseMessage = string.Join(", ", foundNames) + " deleted";
-            if (notFoundNames.Any())
+            if (notFoundNames.Count > 0)
             {
                 responseMessage += Environment.NewLine + string.Join(", ", notFoundNames) + " not deleted as they were not found in the database";
             }

@@ -2,29 +2,35 @@
 using MongoDB.Driver;
 using YorubaOrganization.Core.Entities;
 using YorubaOrganization.Core.Repositories;
+using YorubaOrganization.Core.Tenants;
+using YorubaOrganization.Infrastructure;
 using YorubaOrganization.Infrastructure.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories
 {
-    public class GeoLocationsRepository : MongoDBRepository, IGeoLocationsRepository
+    public class GeoLocationsRepository : MongoDBRepository<GeoLocation>, IGeoLocationsRepository
     {
-        private readonly IMongoCollection<GeoLocation> _geoLocationsCollection;
-
-        public GeoLocationsRepository(IMongoDatabase database)
+        private static readonly object _geoLocationInitializeLock = new object();
+        public GeoLocationsRepository(IMongoDatabaseFactory mongoDatabaseFactory, ITenantProvider tenantProvider) :
+            base(mongoDatabaseFactory, tenantProvider, "GeoLocations")
         {
-            _geoLocationsCollection = database.GetCollection<GeoLocation>("GeoLocations");
-            // Check if data exists, if not, initialize with default data
-            if (_geoLocationsCollection.CountDocuments(FilterDefinition<GeoLocation>.Empty) == 0)
+            if (RepoCollection.CountDocuments(FilterDefinition<GeoLocation>.Empty) == 0)
             {
-                InitGeoLocation();
+                lock (_geoLocationInitializeLock)
+                {
+                    if (RepoCollection.CountDocuments(FilterDefinition<GeoLocation>.Empty) == 0)
+                    {
+                        InitGeoLocation();
+                    }
+                }
             }
         }
 
         public async Task<GeoLocation> FindByPlace(string place)
         {
-            var filter = Builders<GeoLocation>.Filter.Eq( ge => ge.Place, place);
+            var filter = Builders<GeoLocation>.Filter.Eq(ge => ge.Place, place);
             var options = SetCollationPrimary<FindOptions>(new FindOptions());
-            return await _geoLocationsCollection.Find(filter, options).SingleOrDefaultAsync();
+            return await RepoCollection.Find(filter, options).SingleOrDefaultAsync();
         }
 
         public async Task<GeoLocation> FindByPlaceAndRegion(string region, string place)
@@ -34,10 +40,10 @@ namespace Infrastructure.MongoDB.Repositories
                 Builders<GeoLocation>.Filter.Eq(ge => ge.Place, place)
                 );
             var options = SetCollationPrimary<FindOptions>(new FindOptions());
-            return await _geoLocationsCollection.Find(filter, options).FirstOrDefaultAsync();
+            return await RepoCollection.Find(filter, options).FirstOrDefaultAsync();
         }
 
-        public async Task<List<GeoLocation>> GetAll() => await _geoLocationsCollection
+        public async Task<List<GeoLocation>> GetAll() => await RepoCollection
                 .Find(Builders<GeoLocation>.Filter.Empty)
                 .Sort(Builders<GeoLocation>.Sort.Ascending(g => g.Place))
                 .ToListAsync();
@@ -45,7 +51,7 @@ namespace Infrastructure.MongoDB.Repositories
         public async Task Create(GeoLocation geoLocation)
         {
             geoLocation.Id = ObjectId.GenerateNewId().ToString();
-            await _geoLocationsCollection.InsertOneAsync(geoLocation);
+            await RepoCollection.InsertOneAsync(geoLocation);
         }
 
         public async Task<int> Delete(string id, string place)
@@ -58,7 +64,7 @@ namespace Infrastructure.MongoDB.Repositories
             );
 
             var options = SetCollationPrimary<DeleteOptions>(new DeleteOptions());
-            var deleteResult = await _geoLocationsCollection.DeleteOneAsync(filter, options);
+            var deleteResult = await RepoCollection.DeleteOneAsync(filter, options);
             return (int)deleteResult.DeletedCount;
         }
 
@@ -67,8 +73,8 @@ namespace Infrastructure.MongoDB.Repositories
             // North-West Yoruba (NWY): Abẹokuta, Ibadan, Ọyọ, Ogun and Lagos (Eko) areas
             // Central Yoruba (CY): Igbomina, Yagba, Ilésà, Ifẹ, Ekiti, Akurẹ, Ẹfọn, and Ijẹbu areas.
             // South-East Yoruba (SEY): Okitipupa, Ilaje, Ondo, Ọwọ, Ikarẹ, Ṣagamu, and parts of Ijẹbu.
-            _geoLocationsCollection.InsertMany(new List<GeoLocation>
-            {
+            RepoCollection.InsertMany(
+            [
                 new()
                 {
                     Id = ObjectId.GenerateNewId().ToString(),
@@ -213,7 +219,7 @@ namespace Infrastructure.MongoDB.Repositories
                     Place = "FOREIGN: GENERAL",
                     Region = "FOREIGN_GENERAL"
                 }
-            });
+            ]);
         }
 
     }

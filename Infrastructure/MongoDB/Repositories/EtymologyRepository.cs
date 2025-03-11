@@ -3,28 +3,20 @@ using MongoDB.Driver;
 using YorubaOrganization.Core.Entities.Partials;
 using YorubaOrganization.Core.Events;
 using YorubaOrganization.Core.Repositories;
+using YorubaOrganization.Core.Tenants;
+using YorubaOrganization.Infrastructure;
 using YorubaOrganization.Infrastructure.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories;
 
-public class EtymologyRepository : MongoDBRepository, IEtymologyRepository
+public class EtymologyRepository(IMongoDatabaseFactory mongoDatabaseFactory, ITenantProvider tenantProvider) :
+    MongoDBRepository<NameEntry>(mongoDatabaseFactory, tenantProvider, "NameEntries"), IEtymologyRepository
 {
-    private readonly IMongoCollection<NameEntry> _nameEntryCollection;
-    private readonly IEventPubService _eventPubService;
-
-    public EtymologyRepository(
-        IMongoDatabase database,
-        IEventPubService eventPubService)
-    {
-        _nameEntryCollection = database.GetCollection<NameEntry>("NameEntries");
-        _eventPubService = eventPubService;
-    }
-
     public async Task<IDictionary<string, string>> GetLatestMeaningOf(IEnumerable<string> parts)
     {
         // We use secondary collation instead of primary because we want to ignore case but not diacritics.
         var options = SetCollationSecondary<AggregateOptions>(new AggregateOptions());
-        var result = await _nameEntryCollection.Aggregate(options)
+        var result = await RepoCollection.Aggregate(options)
             .Unwind<NameEntry, UnwoundNameEntry>(x => x.Etymology)
             .Match(x => parts.Contains(x.Etymology.Part))
             .SortByDescending(x => x.Etymology.CreatedAt)
@@ -34,7 +26,7 @@ public class EtymologyRepository : MongoDBRepository, IEtymologyRepository
         return result.ToDictionary(x => x.Part, x => x.Meaning);
     }
 
-    private record UnwoundNameEntry(Etymology Etymology) 
+    private record UnwoundNameEntry(Etymology Etymology)
     {
     }
 }

@@ -1,24 +1,43 @@
 ﻿@page
+@using Application.Services.MultiLanguage
+@using Website.Resources
 @model IndexModel
 @{
     ViewData["Title"] = "Home";
 }
 
-@using Website.Resources
+@{
+    string bgImagePath = "";
+
+    if (LanguageService.IsYoruba)
+    {
+        bgImagePath = "/img/bg/yorubaname-bg.jpg";
+    }
+    else if (LanguageService.IsIgbo)
+    {
+        bgImagePath = "/img/bg/igboname-bg.jpg";
+    }
+}
+
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+@inject ILanguageService LanguageService
 
 <section id="searchform">
-    <div class="jumbotron" id="home-banner">
+    <div class="jumbotron" id="home-banner" style="--background-image: url('@bgImagePath')">
         <div class="container">
-            <h1>@Localizer["jumbotron1"] <span>@Model.NameCount</span> @Localizer["jumbotron2"]</h1>
+            <h1>@Localizer["jumbotron1"] @Localizer["jumbotron2", Model.NameCount, LanguageService.LanguageDisplay]</h1>
 
             @await Html.PartialAsync("Partials/_SearchComponent")
-            <p>
-                @Localizer["oni-message"] <br> &mdash; Ọọ̀ni Adéyẹyè Ẹniìtàn Ògúnwùsì <em>
-                    (Ọ̀jájá II
-                    .Ọọ̀ni of Ifẹ̀ Kingdom)
-                </em>
-            </p>
+
+            @if (LanguageService.IsYoruba)
+            {
+                <p>
+                    @Localizer["oni-message"] <br> &mdash; Ọọ̀ni Adéyẹyè Ẹniìtàn Ògúnwùsì <em>
+                        (Ọ̀jájá II
+                        .Ọọ̀ni of Ifẹ̀ Kingdom)
+                    </em>
+                </p>
+            }
 
             <h3>@Localizer["jumboh31"]</h3>
             <a href="/submitname" class="btn btn-lg btn-link" style="margin-bottom:15px">@Localizer["jumboh32"]</a>

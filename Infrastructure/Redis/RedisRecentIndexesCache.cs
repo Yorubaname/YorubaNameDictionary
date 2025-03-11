@@ -2,26 +2,28 @@
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using YorubaOrganization.Core.Cache;
+using YorubaOrganization.Core.Tenants;
 
 namespace Infrastructure.Redis
 {
     public class RedisRecentIndexesCache(
         IConnectionMultiplexer connectionMultiplexer,
-        IOptions<RedisConfig> redisConfig) : RedisCache(connectionMultiplexer, redisConfig), IRecentIndexesCache
+        IOptions<RedisConfig> redisConfig,
+        ITenantProvider tenantProvider) : RedisCache(connectionMultiplexer, redisConfig), IRecentIndexesCache
     {
-        private const string Key = "recent_indexes";
+        private string Key => $"{tenantProvider.GetCurrentTenant()}_recent_indexes";
         private const int MaxItemsToReturn = 5;
         private const int MaxItemsToStore = 10;
 
         public async Task<IEnumerable<string>> Get()
         {
-            var results = await _cache.SortedSetRangeByRankAsync(Key, 0, MaxItemsToReturn - 1, Order.Descending);
+            var results = await Cache.SortedSetRangeByRankAsync(Key, 0, MaxItemsToReturn - 1, Order.Descending);
             return results.Select(r => r.ToString());
         }
 
         public async Task<bool> Remove(string item)
         {
-            var tran = _cache.CreateTransaction();
+            var tran = Cache.CreateTransaction();
             _ = tran.SortedSetRemoveAsync(Key, item);
             return await tran.ExecuteAsync();
         }
@@ -29,7 +31,7 @@ namespace Infrastructure.Redis
         public async Task Stack(string item)
         {
             // Use a Redis transaction to ensure atomicity of both operations
-            var transaction = _cache.CreateTransaction();
+            var transaction = Cache.CreateTransaction();
 
             // Add the search term to the front of the Redis list
             _ = transaction.SortedSetAddAsync(Key, item, DateTime.UtcNow.Ticks);

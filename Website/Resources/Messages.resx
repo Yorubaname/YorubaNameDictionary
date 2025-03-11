@@ -145,13 +145,13 @@
     <value>Language</value>
   </data>
   <data name="search-plchol" xml:space="preserve">
-    <value>Type any Yorùbá name here and press "Enter"...</value>
+    <value>Type any {0} name here and press "Enter"...</value>
   </data>
   <data name="jumbotron1" xml:space="preserve">
     <value>Over</value>
   </data>
   <data name="jumbotron2" xml:space="preserve">
-    <value>Yorùbá names and growing...</value>
+    <value>{0} {1} names and growing...</value>
   </data>
   <data name="kybtitle" xml:space="preserve">
     <value>Click here for keys with accents.</value>
@@ -291,8 +291,8 @@
   <data name="amazing-team" xml:space="preserve">
     <value>Our Amazing Team</value>
   </data>
-  <data name="what-is-yorubaname" xml:space="preserve">
-    <value>What is YorubaName.com</value>
+  <data name="what-is-website" xml:space="preserve">
+    <value>What is {0}</value>
   </data>
   <data name="how-to-use" xml:space="preserve">
     <value>How to Use the Dictionary</value>
@@ -328,7 +328,7 @@
     <value>You may send an email to</value>
   </data>
   <data name="contact-info-contact-preamble" xml:space="preserve">
-    <value>Or visit our office at YorubaName.com</value>
+    <value>Or visit our office at {0}</value>
   </data>
   <data name="social-media" xml:space="preserve">
     <value>Follow us on Social Media</value>
@@ -364,7 +364,7 @@
     <value>Names starting with</value>
   </data>
   <data name="error-discover-message" xml:space="preserve">
-    <value>to discover more Yoruba names?</value>
+    <value>to discover more {0} names?</value>
   </data>
   <data name="home-page" xml:space="preserve">
     <value>home page</value>
@@ -383,5 +383,8 @@
   </data>
   <data name="keyboard-software-cta-title" xml:space="preserve">
     <value>Buy Yorùbá Writing Software</value>
+  </data>
+  <data name="name-count-tagline" xml:space="preserve">
+    <value>Over {0} {1} names and growing...</value>
   </data>
 </root>
