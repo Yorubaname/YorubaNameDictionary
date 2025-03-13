@@ -5,5 +5,5 @@ using YorubaOrganization.Infrastructure.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories;
 
-public class NameEntryFeedbackRepository(IMongoDatabaseFactory databaseFactory, ITenantProvider tenantProvider) :
-    EntryFeedbackRepository<NameEntry>("NameEntries", databaseFactory, tenantProvider);
+public class NameEtymologyRepository(IMongoDatabaseFactory mongoDatabaseFactory, ITenantProvider tenantProvider) :
+    EtymologyRepository<NameEntry>("NameEntries", mongoDatabaseFactory, tenantProvider);
