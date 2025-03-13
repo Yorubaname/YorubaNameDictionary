@@ -18,7 +18,7 @@ namespace Api.Controllers
     [Route("api/v1/[controller]")]
     [ApiController]
     public class SearchController(
-        SearchService searchService,
+        NameSearchService searchService,
         IEventPubService eventPubService,
         IRecentSearchesCache recentSearchesCache,
         IRecentIndexesCache recentIndexesCache,
@@ -79,11 +79,11 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(NameEntryDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> SearchOne(string searchTerm)
         {
-            var nameEntry = await searchService.GetName(searchTerm);
+            var nameEntry = await searchService.GetEntry(searchTerm);
 
             if(nameEntry != null)
             {
-                await eventPubService.PublishEvent(new ExactEntrySearched(nameEntry.Name, languageService.CurrentTenant));
+                await eventPubService.PublishEvent(new ExactEntrySearched(nameEntry.Title, languageService.CurrentTenant));
             }
 
             return Ok(nameEntry);

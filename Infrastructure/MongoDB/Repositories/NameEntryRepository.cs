@@ -15,6 +15,15 @@ public sealed class NameEntryRepository(IMongoDatabaseFactory databaseFactory, I
 {
     private const string CollectionName = "NameEntries";
 
+    public async Task<HashSet<NameEntry>> FindEntryByMeaningContainingAndState(string title, State state)
+    {
+        var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Meaning,
+            new BsonRegularExpression(title.ReplaceYorubaVowelsWithPattern(), "i")) & 
+            Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
+        var result = await RepoCollection.Find(filter).ToListAsync();
+        return new HashSet<NameEntry>(result);
+    }
+
     public async Task<HashSet<NameEntry>> FindEntryByExtendedMeaningContainingAndState(string name, State state)
     {
         var filter = Builders<NameEntry>.Filter.Regex(ne => ne.ExtendedMeaning,

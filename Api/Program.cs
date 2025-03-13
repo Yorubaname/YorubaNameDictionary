@@ -1,4 +1,3 @@
-using Application.Migrator;
 using Application.Services;
 using Application.Validation;
 using Core.StringObjectConverters;
@@ -22,6 +21,8 @@ using YorubaOrganization.Core.Tenants;
 using Api.Tenants;
 using Microsoft.AspNetCore.HttpOverrides;
 using Application.Services.MultiLanguage;
+using YorubaOrganization.Application.Services;
+using Api.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -112,9 +113,10 @@ builder.Services.AddTransient(x =>
 
 services.AddScoped<NameEntryService>();
 services.AddScoped<GeoLocationsService>();
+services.AddScoped<EntryFeedbackService>();
 services.AddScoped<NameEntryFeedbackService>();
 services.AddScoped<IEventPubService, EventPubService>();
-services.AddScoped<SearchService>();
+services.AddScoped<NameSearchService>();
 services.AddScoped<SuggestedNameService>();
 services.AddScoped<UserService>();
 services.AddScoped<GeoLocationValidator>();
