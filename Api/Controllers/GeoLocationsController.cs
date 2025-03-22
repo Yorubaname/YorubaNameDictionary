@@ -1,8 +1,8 @@
 ﻿using Api.Utilities;
-using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using YorubaOrganization.Application.Services;
 using YorubaOrganization.Core.Dto.Request;
 using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Entities;

@@ -67,15 +67,12 @@ namespace Application.Services.MultiLanguage
         {
             var currentTenant = _httpContextAccessor.HttpContext?.Items["Tenant"]?.ToString();
 
-            switch (currentTenant)
+            return currentTenant switch
             {
-                case Languages.IgboLanguage:
-                    return Igbo;
-                case Languages.YorubaLanguage: 
-                    return Yoruba;
-                default:
-                    return Yoruba;
-            }
+                Languages.IgboLanguage => Igbo,
+                Languages.YorubaLanguage => Yoruba,
+                _ => Yoruba,
+            };
         }
 
         private static string WithoutSubdomain(string host)

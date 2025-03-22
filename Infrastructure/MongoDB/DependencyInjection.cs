@@ -4,6 +4,7 @@ using Infrastructure.MongoDB.Repositories;
 using YorubaOrganization.Core.Repositories;
 using YorubaOrganization.Infrastructure;
 using Microsoft.Extensions.Configuration;
+using YorubaOrganization.Infrastructure.Repositories;
 
 namespace Infrastructure.MongoDB
 {
@@ -16,10 +17,10 @@ namespace Infrastructure.MongoDB
                 .AddSingleton<IMongoDatabaseFactory, MongoDatabaseFactory>()
                 .AddScoped<INameEntryRepository, NameEntryRepository>()
                 .AddScoped<IGeoLocationsRepository, GeoLocationsRepository>()
-                .AddScoped<INameEntryFeedbackRepository, NameEntryFeedbackRepository>()
+                .AddScoped<IEntryFeedbackRepository, NameEntryFeedbackRepository>()
                 .AddScoped<ISuggestedNameRepository, SuggestedNameRepository>()
                 .AddScoped<IUserRepository, UserRepository>()
-                .AddScoped<IEtymologyRepository, EtymologyRepository>();
+                .AddScoped<IEtymologyRepository, NameEtymologyRepository>();
         }
     }
 }

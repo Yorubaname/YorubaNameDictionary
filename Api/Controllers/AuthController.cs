@@ -1,9 +1,9 @@
 ﻿using Api.Utilities;
-using Application.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using YorubaOrganization.Application.Services;
 using YorubaOrganization.Core.Dto.Request;
 using YorubaOrganization.Core.Dto.Response;
 
@@ -32,7 +32,8 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(Dictionary<string, int>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> CountUsers()
         {
-            Dictionary<string, int> result = new Dictionary<string, int> {
+            Dictionary<string, int> result = new()
+            {
                 { "totalUsers", await _userService.CountUsers() }
             };
             return Ok(result);
@@ -45,7 +46,7 @@ namespace Api.Controllers
             var theUser = await _userService.GetUserByEmail(User.Identity!.Name!);
             var userDetails = new UserDto
             {
-                Roles = theUser.Roles.ToArray(),
+                Roles = [.. theUser.Roles],
                 Username = theUser.Email,
             };
 

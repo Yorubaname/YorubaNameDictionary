@@ -2,16 +2,19 @@
 using Swashbuckle.AspNetCore.SwaggerGen;
 using YorubaOrganization.Core.Dto;
 
-public class CustomSchemaFilter : ISchemaFilter
+namespace Api.Utilities
 {
-    public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+    public class CustomSchemaFilter : ISchemaFilter
     {
-        if (context.Type.BaseType != null &&
-            context.Type.BaseType.IsGenericType &&
-            context.Type.BaseType.GetGenericTypeDefinition() == typeof(CharacterSeparatedString<>))
+        public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
-            schema.Type = "string";
-            // Additional configurations if needed
+            if (context.Type.BaseType != null &&
+                context.Type.BaseType.IsGenericType &&
+                context.Type.BaseType.GetGenericTypeDefinition() == typeof(CharacterSeparatedString<>))
+            {
+                schema.Type = "string";
+                // Additional configurations if needed
+            }
         }
     }
 }

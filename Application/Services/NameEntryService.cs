@@ -15,9 +15,7 @@ namespace Application.Services
         ILogger<NameEntryService> logger) :
         DictionaryEntryService<NameEntry>(nameEntryRepository, eventPubService, tenantProvider, logger)
     {
-        private readonly INameEntryRepository _nameEntryRepository = nameEntryRepository;
         private readonly IEventPubService _eventPubService = eventPubService;
-        private readonly ILogger<NameEntryService> _logger = logger;
         private readonly string _currentTenant = tenantProvider.GetCurrentTenant();
 
         public async Task<List<NameEntry>> BulkUpdateNames(List<NameEntry> nameEntries)
