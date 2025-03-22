@@ -83,7 +83,7 @@ $(function(){
   /* Play Audio Sound */
   $("#tts-button").on("click", function () {
     var host = $("#host").html(),
-      audio = new Audio("https://gentle-falls-68008.herokuapp.com/api/v1/names/" + $("#name-entry").html());
+        audio = new Audio("https://tts.yorubaname.com/api/v1/names/" + $("#name-entry").html());
     audio.play();
   });
 
