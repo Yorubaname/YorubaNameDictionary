@@ -79,7 +79,7 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(NameEntryDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> SearchOne(string searchTerm)
         {
-            var nameEntry = (await searchService.GetEntry(searchTerm))!.MapToDto();
+            var nameEntry = (await searchService.GetEntry(searchTerm))?.MapToDto();
 
             if(nameEntry != null)
             {
