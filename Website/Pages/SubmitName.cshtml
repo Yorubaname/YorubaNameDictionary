@@ -4,8 +4,10 @@
     ViewData["Title"] = "Submit Name";
 }
 
+@using Application.Services.MultiLanguage
 @using Website.Resources
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+@inject ILanguageService LanguageService
 
 @await Html.PartialAsync("Partials/_MiniSearchForm");
 
@@ -28,7 +30,10 @@
                     <div class="form-group">
                         <label class="required">@Localizer["submitname.entername"]</label>
                         <p class="small sec-color">
-                            @Localizer["entry-not-found.minikeyb-text"]
+                            @if (LanguageService.IsYoruba)
+                            {
+                                @Localizer["entry-not-found.minikeyb-text"]
+                            }
                             <div class="input-group">
                                 <input type="text" class="form-control" id="miniKeyboard" name="name"
                                        placeholder="@Localizer["submitname.enternameplch"]" value="@Model.MissingName" required="true">
@@ -38,7 +43,7 @@
 
                     <div class="form-group">
                         <label class="required">@Localizer["submitname.entermeaning"]:</label>
-                        <textarea required="true" name="suggestedMeaning" id="suggestedMeaning" class="form-control"
+                        <textarea required name="suggestedMeaning" id="suggestedMeaning" class="form-control"
                                   rows="3"></textarea>
                     </div><br>
 
