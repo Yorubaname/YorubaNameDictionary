@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using YorubaOrganization.Core.Repositories;
 
-namespace Api.Controllers
+namespace Api.Controllers.Names
 {
     [Route("api/v1/[controller]")]
     [ApiController]

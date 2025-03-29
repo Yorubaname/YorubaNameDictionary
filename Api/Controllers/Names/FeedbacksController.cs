@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 
-namespace Api.Controllers
+namespace Api.Controllers.Names
 {
     [Route("api/v1/[controller]")]
     [ApiController]

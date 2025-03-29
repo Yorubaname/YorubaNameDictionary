@@ -11,7 +11,7 @@ using MongoDB.Driver;
 using System.Net;
 using YorubaOrganization.Core.Enums;
 
-namespace Api.Controllers
+namespace Api.Controllers.Names
 {
     [Route("api/v1/[controller]")]
     [ApiController]

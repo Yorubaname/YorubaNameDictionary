@@ -7,7 +7,7 @@ using YorubaOrganization.Core.Dto.Request;
 using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Entities;
 
-namespace Api.Controllers
+namespace Api.Controllers.Names
 {
     [Route("api/v1/[controller]")]
     [ApiController]

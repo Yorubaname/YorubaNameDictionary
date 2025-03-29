@@ -13,7 +13,7 @@ using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Events;
 
-namespace Api.Controllers
+namespace Api.Controllers.Names
 {
     [Route("api/v1/[controller]")]
     [ApiController]

@@ -8,7 +8,7 @@ using System.Net;
 using Application.Mappers;
 using FluentValidation;
 
-namespace Api.Controllers;
+namespace Api.Controllers.Names;
 
 [Route("api/v1/suggestions")]
 [ApiController]
