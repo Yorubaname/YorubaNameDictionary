@@ -1,5 +1,5 @@
 ﻿using Core.Entities;
-using Core.Repositories;
+using Core.Repositories.Names;
 using YorubaOrganization.Application.Services;
 using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Enums;

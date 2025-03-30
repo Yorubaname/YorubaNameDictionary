@@ -1,5 +1,5 @@
 ﻿using Core.Entities;
-using Core.Repositories;
+using Core.Repositories.Names;
 
 namespace Application.Services.Names;
 

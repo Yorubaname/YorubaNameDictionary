@@ -2,7 +2,7 @@
 using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Repositories;
 
-namespace Core.Repositories
+namespace Core.Repositories.Names
 {
     public interface INameEntryRepository : IDictionaryEntryRepository<NameEntry>
     {

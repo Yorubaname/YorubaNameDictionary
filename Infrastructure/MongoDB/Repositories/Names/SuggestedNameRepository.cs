@@ -1,5 +1,5 @@
 ﻿using Core.Entities;
-using Core.Repositories;
+using Core.Repositories.Names;
 using MongoDB.Driver;
 using YorubaOrganization.Core.Tenants;
 using YorubaOrganization.Infrastructure;

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Core.Repositories;
 using YorubaOrganization.Core.Repositories;
 using YorubaOrganization.Infrastructure;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +9,7 @@ using Core.Repositories.Words;
 using Infrastructure.MongoDB.Repositories.Words;
 using Infrastructure.MongoDB.Repositories;
 using Words.Core.Entities;
+using Core.Repositories.Names;
 
 namespace Infrastructure.MongoDB
 {
@@ -32,10 +32,6 @@ namespace Infrastructure.MongoDB
                 .AddScoped<IEntryFeedbackRepository<WordEntry>, WordFeedbackRepository>();
             // I decided to use the same Users table for the Names repository and the Words repository.
             // I also decided to use the same GeoLocationsRepository
-            // I need to figure out a solution to the Etymology repository problem for the Words dictionary
-                // (The dictionary should reference definition of other words for Etymology).
-                // Or maybe it should just flag that this word is not yet in the dictionary and allow blanks?
-                // If I follow this approach, then I'll have to change the implementation of IEtymologyRepository
         }
     }
 }
