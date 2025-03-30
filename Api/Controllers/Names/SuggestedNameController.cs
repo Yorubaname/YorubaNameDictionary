@@ -3,10 +3,10 @@ using Core.Dto.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using Application.Mappers;
 using FluentValidation;
 using Application.Services.Names;
-using Core.Dto.Response.Names;
+using Core.Dto.Response;
+using Application.Mappers.Names;
 
 namespace Api.Controllers.Names;
 

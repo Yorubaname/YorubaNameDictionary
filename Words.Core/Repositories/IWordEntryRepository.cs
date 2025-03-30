@@ -2,7 +2,7 @@
 using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Repositories;
 
-namespace Core.Repositories.Words
+namespace Words.Core.Repositories
 {
     public interface IWordEntryRepository : IDictionaryEntryRepository<WordEntry>
     {

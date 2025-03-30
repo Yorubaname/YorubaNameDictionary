@@ -1,4 +1,4 @@
-﻿using Core.Dto.Response.Names;
+﻿using Core.Dto.Response;
 using Core.Entities;
 using YorubaOrganization.Application.Services;
 

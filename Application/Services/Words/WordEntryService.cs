@@ -1,7 +1,7 @@
 using Core.Events;
-using Core.Repositories.Words;
 using Microsoft.Extensions.Logging;
 using Words.Core.Entities;
+using Words.Core.Repositories;
 using YorubaOrganization.Application.Services;
 using YorubaOrganization.Core.Events;
 using YorubaOrganization.Core.Tenants;

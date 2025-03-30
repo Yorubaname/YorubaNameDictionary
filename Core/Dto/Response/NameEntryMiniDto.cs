@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Core.Dto.Response.Names
+namespace Core.Dto.Response
 {
     public class NameEntryMiniDto
     {

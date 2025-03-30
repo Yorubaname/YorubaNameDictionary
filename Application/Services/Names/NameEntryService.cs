@@ -1,6 +1,6 @@
 ﻿using Core.Entities;
 using Core.Events;
-using Core.Repositories.Names;
+using Core.Repositories;
 using Microsoft.Extensions.Logging;
 using YorubaOrganization.Application.Services;
 using YorubaOrganization.Core.Events;

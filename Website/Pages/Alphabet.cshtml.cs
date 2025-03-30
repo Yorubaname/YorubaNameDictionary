@@ -1,5 +1,5 @@
 using Application.Services.MultiLanguage;
-using Core.Dto.Response.Names;
+using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Website.Pages.Shared;

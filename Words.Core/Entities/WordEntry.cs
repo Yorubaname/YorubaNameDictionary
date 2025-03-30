@@ -10,6 +10,8 @@ namespace Words.Core.Entities
 
         public List<Definition> Definitions { get; set; }
 
+        // TODO YDict Later: Fields to re-adopt: InOtherLanguages, TonalMark, Tags
+
         protected override void InitializeLists()
         {
             base.InitializeLists();

@@ -6,11 +6,4 @@
         public string? EnglishTranslation { get; set; }
         public ExampleType Type { get; set; }
     }
-
-    public enum ExampleType
-    {
-        Proverb,
-        Song,
-        Other
-    }
 }

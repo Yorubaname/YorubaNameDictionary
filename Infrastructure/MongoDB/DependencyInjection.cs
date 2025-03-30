@@ -5,11 +5,11 @@ using Microsoft.Extensions.Configuration;
 using YorubaOrganization.Infrastructure.Repositories;
 using Core.Entities;
 using Infrastructure.MongoDB.Repositories.Names;
-using Core.Repositories.Words;
 using Infrastructure.MongoDB.Repositories.Words;
 using Infrastructure.MongoDB.Repositories;
 using Words.Core.Entities;
-using Core.Repositories.Names;
+using Words.Core.Repositories;
+using Core.Repositories;
 
 namespace Infrastructure.MongoDB
 {

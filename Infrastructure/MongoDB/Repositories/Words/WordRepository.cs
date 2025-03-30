@@ -4,10 +4,10 @@ using YorubaOrganization.Core.Tenants;
 using YorubaOrganization.Infrastructure.Repositories;
 using YorubaOrganization.Infrastructure;
 using Words.Core.Entities;
-using Core.Repositories.Words;
 using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Utilities;
 using MongoDB.Bson;
+using Words.Core.Repositories;
 
 namespace Infrastructure.MongoDB.Repositories.Words
 {

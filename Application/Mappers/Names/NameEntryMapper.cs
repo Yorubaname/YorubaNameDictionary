@@ -1,5 +1,5 @@
 ﻿using Core.Dto.Request;
-using Core.Dto.Response.Names;
+using Core.Dto.Response;
 using Core.Entities;
 using YorubaOrganization.Core.Dto;
 using YorubaOrganization.Core.Dto.Request;
@@ -8,7 +8,7 @@ using YorubaOrganization.Core.Entities;
 using YorubaOrganization.Core.Entities.Partials;
 using YorubaOrganization.Core.Enums;
 
-namespace Application.Mappers
+namespace Application.Mappers.Names
 {
     public static class NameEntryMapper
     {

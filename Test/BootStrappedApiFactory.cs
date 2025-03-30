@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Api;
-using Core.Repositories.Names;
+using Core.Repositories;
 using Core.StringObjectConverters;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;

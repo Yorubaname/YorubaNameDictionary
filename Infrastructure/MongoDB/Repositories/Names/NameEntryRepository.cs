@@ -1,5 +1,5 @@
 ﻿using Core.Entities;
-using Core.Repositories.Names;
+using Core.Repositories;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using YorubaOrganization.Core.Enums;

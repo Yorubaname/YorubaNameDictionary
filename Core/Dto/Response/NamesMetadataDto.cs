@@ -1,4 +1,4 @@
-﻿namespace Core.Dto.Response.Names
+﻿namespace Core.Dto.Response
 {
     public class NamesMetadataDto
     {

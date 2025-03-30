@@ -1,6 +1,6 @@
 ﻿using Core.Entities;
 
-namespace Core.Repositories.Names;
+namespace Core.Repositories;
 
 public interface ISuggestedNameRepository
 {

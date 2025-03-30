@@ -1,11 +1,11 @@
 ﻿using Core.Dto.Request;
-using Core.Dto.Response.Names;
+using Core.Dto.Response;
 using Core.Entities;
 using MongoDB.Bson;
 using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Entities;
 
-namespace Application.Mappers;
+namespace Application.Mappers.Names;
 
 public static class SuggestedNameMapper
 {

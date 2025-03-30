@@ -1,4 +1,4 @@
-﻿namespace Core.Dto.Response.Names
+﻿namespace Core.Dto.Response
 {
     public record NameFeedbackDto(string Id, string Name, string Feedback, DateTime SubmittedAt)
     {

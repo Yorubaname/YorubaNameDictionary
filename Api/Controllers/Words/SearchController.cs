@@ -1,10 +1,7 @@
-﻿using Api.Utilities;
-using Application.Mappers;
-using Application.Mappers.Names;
+using Api.Utilities;
 using Application.Services.MultiLanguage;
-using Application.Services.Names;
-using Core.Dto.Response;
-using Core.Entities;
+using Application.Services.Words;
+using Words.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -13,36 +10,53 @@ using YorubaOrganization.Core.Cache;
 using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Events;
+using Words.Core.Dto.Response;
+using Application.Mappers.Words;
 
-namespace Api.Controllers.Names
+namespace Api.Controllers.Words
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/dictionary/search")]
     [ApiController]
-    public class SearchController(
-        NameSearchService searchService,
-        IEventPubService eventPubService,
-        IRecentSearchesCache recentSearchesCache,
-        IRecentIndexesCache recentIndexesCache,
-        NameEntryService nameEntryService,
-        ILanguageService languageService) : ControllerBase
+    public class SearchController : ControllerBase
     {
         private const string SearchActivity = "search", IndexActivity = "index", PopularActivity = "popular";
+        private readonly WordSearchService searchService;
+        private readonly IEventPubService eventPubService;
+        private readonly IRecentSearchesCache recentSearchesCache;
+        private readonly IRecentIndexesCache recentIndexesCache;
+        private readonly WordEntryService wordEntryService;
+        private readonly ILanguageService languageService;
+        
+        public SearchController(
+            WordSearchService searchService,
+            IEventPubService eventPubService,
+            IRecentSearchesCache recentSearchesCache,
+            IRecentIndexesCache recentIndexesCache,
+            WordEntryService wordEntryService,
+            ILanguageService languageService)
+        {
+            this.searchService = searchService;
+            this.eventPubService = eventPubService;
+            this.recentSearchesCache = recentSearchesCache;
+            this.recentIndexesCache = recentIndexesCache;
+            this.wordEntryService = wordEntryService;
+            this.languageService = languageService;
+        }
 
         [HttpGet("meta")]
         [ProducesResponseType(typeof(SearchMetadataDto[]), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetMetadata()
         {
-            var metadata = await searchService.GetNamesMetadata();
+            var metadata = await searchService.GetWordsMetadata();
             return Ok(metadata);
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(NameEntryDto[]), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(WordEntryDto[]), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Search([FromQuery(Name = "q"), Required] string searchTerm)
         {
             var matches = await searchService.Search(searchTerm);
 
-            // TODO: Check if the comparison here removes takes diacrits into consideration
             if (matches.Count() == 1 && matches.First().Title.Equals(searchTerm, StringComparison.CurrentCultureIgnoreCase))
             {
                 await eventPubService.PublishEvent(new ExactEntrySearched(matches.First().Title, languageService.CurrentTenant));
@@ -64,38 +78,32 @@ namespace Api.Controllers.Names
         }
 
         [HttpGet("alphabet/{searchTerm}")]
-        [ProducesResponseType(typeof(IEnumerable<NameEntryDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<WordEntryDto>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> SearchByStartsWith(string searchTerm)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
-                return Ok(Enumerable.Empty<NameEntryDto>());
+                return Ok(Enumerable.Empty<WordEntryDto>());
             }
 
-            var nameEntry = await searchService.SearchByStartsWith(searchTerm);
-            return Ok(nameEntry.MapToDtoCollection());
+            var wordEntry = await searchService.SearchByStartsWith(searchTerm);
+            return Ok(wordEntry.MapToDtoCollection());
         }
 
         [HttpGet("{searchTerm}")]
-        [ProducesResponseType(typeof(NameEntryDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(WordEntryDto), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> SearchOne(string searchTerm)
         {
-            var nameEntry = (await searchService.GetEntry(searchTerm))?.MapToDto();
+            var wordEntry = (await searchService.GetEntry(searchTerm))?.MapToDto();
 
-            if(nameEntry != null)
+            if (wordEntry != null)
             {
-                await eventPubService.PublishEvent(new ExactEntrySearched(nameEntry.Name, languageService.CurrentTenant));
+                await eventPubService.PublishEvent(new ExactEntrySearched(wordEntry.Word, languageService.CurrentTenant));
             }
 
-            return Ok(nameEntry);
+            return Ok(wordEntry);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="activityType">Possible values: "search", "index", "popular"</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
         [HttpGet("activity")]
         [ProducesResponseType(typeof(IEnumerable<string>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -137,47 +145,38 @@ namespace Api.Controllers.Names
             return Ok(result);
         }
 
-        /// <summary>
-        /// Publish an existing name to the index.
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost("indexes/{name}")]
+        [HttpPost("indexes/{word}")]
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
         [Authorize(Policy = "AdminAndProLexicographers")]
-        public async Task<IActionResult> PublishName([FromRoute] string name)
+        public async Task<IActionResult> PublishWord([FromRoute] string word)
         {
-            var nameEntry = await nameEntryService.LoadEntry(name);
-            if (nameEntry == null)
+            var wordEntry = await wordEntryService.LoadEntry(word);
+            if (wordEntry == null)
             {
-                return BadRequest(ResponseHelper.GetResponseDict($"{name} not found in the repository so not indexed"));
+                return BadRequest(ResponseHelper.GetResponseDict($"{word} not found in the repository so not indexed"));
             }
 
-            var isNameAlreadyPublished = nameEntry.State.Equals(State.PUBLISHED);
-            if (isNameAlreadyPublished)
+            var isWordAlreadyPublished = wordEntry.State.Equals(State.PUBLISHED);
+            if (isWordAlreadyPublished)
             {
-                return BadRequest(ResponseHelper.GetResponseDict($"{name} is already indexed"));
+                return BadRequest(ResponseHelper.GetResponseDict($"{word} is already indexed"));
             }
 
-            await nameEntryService.PublishEntry(nameEntry, User!.Identity!.Name!);
-            return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict($"{name} has been published"));
+            await wordEntryService.PublishEntry(wordEntry, User!.Identity!.Name!);
+            return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict($"{word} has been published"));
         }
 
-        /// <summary>
-        /// Publish a collection of existing names to the index.
-        /// </summary>
-        /// <returns></returns>
         [HttpPost("indexes/batch")]
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
         [Authorize(Policy = "AdminAndProLexicographers")]
-        public async Task<IActionResult> PublishNames([FromBody] string[] names)
+        public async Task<IActionResult> PublishWords([FromBody] string[] words)
         {
-            var entriesToIndex = new HashSet<NameEntry>();
+            var entriesToIndex = new HashSet<WordEntry>();
 
-
-            // TODO Later: Optimize by fetching all names in one database call instead of one-by-one.
-            foreach (var name in names)
+            // TODO Later: Optimize by fetching all words in one database call instead of one-by-one.
+            foreach (var word in words)
             {
-                var entry = await nameEntryService.LoadEntry(name);
+                var entry = await wordEntryService.LoadEntry(word);
                 if (entry != null && entry.State != State.PUBLISHED)
                 {
                     entriesToIndex.Add(entry);
@@ -186,77 +185,69 @@ namespace Api.Controllers.Names
 
             if (entriesToIndex.Count == 0)
             {
-                return NotFound(ResponseHelper.GetResponseDict("All names either do not exist or have already been indexed."));
+                return NotFound(ResponseHelper.GetResponseDict("All words either do not exist or have already been indexed."));
             }
 
-            foreach (var nameEntry in entriesToIndex)
+            foreach (var wordEntry in entriesToIndex)
             {
-                // TODO Later: The names should be updated in one batch instead of one-by-one.
-                await nameEntryService.PublishEntry(nameEntry, User!.Identity!.Name!);
+                // TODO Later: The words should be updated in one batch instead of one-by-one.
+                await wordEntryService.PublishEntry(wordEntry, User!.Identity!.Name!);
             }
 
-            var successMessage = $"The following names were successfully indexed: {string.Join(',', entriesToIndex.Select(x => x.Title))}";
+            var successMessage = $"The following words were successfully indexed: {string.Join(',', entriesToIndex.Select(x => x.Title))}";
             return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict(successMessage));
         }
 
-        /// <summary>
-        /// Remove a name from the index.
-        /// </summary>
-        /// <returns></returns>
-        [HttpDelete("indexes/{name}")]
+        [HttpDelete("indexes/{word}")]
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.OK)]
         [Authorize(Policy = "AdminAndProLexicographers")]
-        public async Task<IActionResult> UnpublishName([FromRoute] string name)
+        public async Task<IActionResult> UnpublishWord([FromRoute] string word)
         {
-            var entry = await nameEntryService.FindByTitleAndState(name, State.PUBLISHED);
+            var entry = await wordEntryService.FindByTitleAndState(word, State.PUBLISHED);
 
             if (entry == null)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, ResponseHelper.GetResponseDict("Published name not found."));
+                return StatusCode((int)HttpStatusCode.BadRequest, ResponseHelper.GetResponseDict("Published word not found."));
             }
 
             entry.State = State.NEW;
-            await nameEntryService.Update(entry);
-            return Ok(ResponseHelper.GetResponseDict($"{name} removed from index."));
+            await wordEntryService.Update(entry);
+            return Ok(ResponseHelper.GetResponseDict($"{word} removed from index."));
         }
 
-        /// <summary>
-        /// Remove a name from the index.
-        /// </summary>
-        /// <returns></returns>
         [HttpDelete("indexes/batch")]
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.OK)]
         [Authorize(Policy = "AdminAndProLexicographers")]
-        public async Task<IActionResult> UnpublishNames([FromBody] string[] names)
+        public async Task<IActionResult> UnpublishWords([FromBody] string[] words)
         {
-            List<string> notFoundNames = [], unpublishedNames = [];
+            List<string> notFoundWords = new(), unpublishedWords = new();
 
-            foreach (var name in names)
+            foreach (var word in words)
             {
-                var entry = await nameEntryService.FindByTitleAndState(name, State.PUBLISHED);
+                var entry = await wordEntryService.FindByTitleAndState(word, State.PUBLISHED);
 
                 if (entry == null)
                 {
-                    notFoundNames.Add(name);
+                    notFoundWords.Add(word);
                 }
                 else
                 {
                     entry.State = State.UNPUBLISHED;
-                    await nameEntryService.Update(entry);
-                    unpublishedNames.Add(entry.Title);
+                    await wordEntryService.Update(entry);
+                    unpublishedWords.Add(entry.Title);
                 }
             }
 
-            if (!unpublishedNames.Any())
+            if (!unpublishedWords.Any())
             {
-                return NotFound(ResponseHelper.GetResponseDict("None of the names was found in the repository so not attempting to remove."));
+                return NotFound(ResponseHelper.GetResponseDict("None of the words was found in the repository so not attempting to remove."));
             }
 
-            var successMessage = $"Successfully removed the following names from search index: {string.Join(',', unpublishedNames)}.";
+            var successMessage = $"Successfully removed the following words from search index: {string.Join(',', unpublishedWords)}.";
 
-            if (notFoundNames.Any())
+            if (notFoundWords.Any())
             {
-                successMessage += $" The following names were skipped as they are not published in the database: {string.Join(',', notFoundNames)}.";
+                successMessage += $" The following words were skipped as they are not published in the database: {string.Join(',', notFoundWords)}.";
             }
 
             return Ok(ResponseHelper.GetResponseDict(successMessage));
