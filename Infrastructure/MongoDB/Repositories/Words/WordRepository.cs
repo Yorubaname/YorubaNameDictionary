@@ -1,16 +1,6 @@
-﻿using Core.Entities;
-using Core.Repositories;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using YorubaOrganization.Core.Enums;
+﻿using MongoDB.Driver;
 using YorubaOrganization.Core.Events;
 using YorubaOrganization.Core.Tenants;
-using YorubaOrganization.Core.Utilities;
 using YorubaOrganization.Infrastructure.Repositories;
 using YorubaOrganization.Infrastructure;
 using Words.Core.Entities;
