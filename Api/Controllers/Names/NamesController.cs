@@ -1,8 +1,8 @@
 ﻿using Api.Utilities;
 using Application.Mappers;
-using Application.Services;
+using Application.Services.Names;
 using Core.Dto.Request;
-using Core.Dto.Response;
+using Core.Dto.Response.Names;
 using Core.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;

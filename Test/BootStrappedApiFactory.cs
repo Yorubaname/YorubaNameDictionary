@@ -7,7 +7,7 @@ using Core.Repositories;
 using Core.StringObjectConverters;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
-using Infrastructure.MongoDB.Repositories;
+using Infrastructure.MongoDB.Repositories.Names;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;

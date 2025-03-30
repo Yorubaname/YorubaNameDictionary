@@ -1,7 +1,6 @@
 ﻿using Application.Events;
-using Application.Services;
+using Application.Services.Names;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using YorubaOrganization.Core;
 
 namespace Application.EventHandlers

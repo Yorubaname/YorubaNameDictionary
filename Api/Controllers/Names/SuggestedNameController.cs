@@ -1,12 +1,12 @@
 ﻿using Api.Utilities;
-using Application.Services;
 using Core.Dto.Request;
-using Core.Dto.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Application.Mappers;
 using FluentValidation;
+using Application.Services.Names;
+using Core.Dto.Response.Names;
 
 namespace Api.Controllers.Names;
 

@@ -6,7 +6,7 @@ using YorubaOrganization.Application.Services;
 using YorubaOrganization.Core.Events;
 using YorubaOrganization.Core.Tenants;
 
-namespace Application.Services
+namespace Application.Services.Names
 {
     public class NameEntryService(
         INameEntryRepository nameEntryRepository,

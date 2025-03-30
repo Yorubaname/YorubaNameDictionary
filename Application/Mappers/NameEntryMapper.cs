@@ -1,5 +1,5 @@
 ﻿using Core.Dto.Request;
-using Core.Dto.Response;
+using Core.Dto.Response.Names;
 using Core.Entities;
 using YorubaOrganization.Core.Dto;
 using YorubaOrganization.Core.Dto.Request;

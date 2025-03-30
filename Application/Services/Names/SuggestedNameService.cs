@@ -1,7 +1,7 @@
 ﻿using Core.Entities;
 using Core.Repositories;
 
-namespace Application.Services;
+namespace Application.Services.Names;
 
 public class SuggestedNameService
 {

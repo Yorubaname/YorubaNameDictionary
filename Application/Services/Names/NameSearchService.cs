@@ -4,7 +4,7 @@ using YorubaOrganization.Application.Services;
 using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Enums;
 
-namespace Application.Services
+namespace Application.Services.Names
 {
     public class NameSearchService(INameEntryRepository namesRepository) : SearchService<NameEntry>(namesRepository)
     {

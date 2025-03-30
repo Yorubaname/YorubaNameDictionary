@@ -1,5 +1,5 @@
 ﻿using Application.Services.MultiLanguage;
-using Core.Dto.Response;
+using Core.Dto.Response.Names;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 using Website.Config;

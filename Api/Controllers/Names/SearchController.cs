@@ -1,8 +1,8 @@
 ﻿using Api.Utilities;
 using Application.Mappers;
-using Application.Services;
 using Application.Services.MultiLanguage;
-using Core.Dto.Response;
+using Application.Services.Names;
+using Core.Dto.Response.Names;
 using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,9 +1,10 @@
-﻿using Core.Dto.Response;
+﻿using Core.Dto.Response.Names;
+using Core.Entities;
 using YorubaOrganization.Application.Services;
 
-namespace Application.Services
+namespace Application.Services.Names
 {
-    public class NameEntryFeedbackService(EntryFeedbackService entryFeedbackService)
+    public class NameEntryFeedbackService(EntryFeedbackService<NameEntry> entryFeedbackService)
     {
         public async Task<List<NameFeedbackDto>> FindAllAsync()
         {

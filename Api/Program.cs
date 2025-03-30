@@ -1,4 +1,3 @@
-using Application.Services;
 using Application.Validation;
 using Core.StringObjectConverters;
 using FluentValidation;
@@ -23,6 +22,10 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Application.Services.MultiLanguage;
 using YorubaOrganization.Application.Services;
 using Api.Utilities;
+using Application.Services.Names;
+using Application.Services.Words;
+using Core.Entities;
+using Words.Core.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -113,8 +116,10 @@ builder.Services.AddTransient(x =>
 
 services.AddScoped<NameEntryService>();
 services.AddScoped<GeoLocationsService>();
-services.AddScoped<EntryFeedbackService>();
+
+services.AddScoped<EntryFeedbackService<NameEntry>>();
 services.AddScoped<NameEntryFeedbackService>();
+
 services.AddScoped<IEventPubService, EventPubService>();
 services.AddScoped<NameSearchService>();
 services.AddScoped<SuggestedNameService>();
@@ -122,6 +127,13 @@ services.AddScoped<UserService>();
 services.AddScoped<GeoLocationValidator>();
 services.AddScoped<EmbeddedVideoValidator>();
 services.AddScoped<EtymologyValidator>();
+
+// Words
+services.AddScoped<WordFeedbackService>();
+
+services.AddScoped<EntryFeedbackService<WordEntry>>();
+services.AddScoped<WordFeedbackService>();
+
 
 services
     .AddScoped<IRecentIndexesCache, RedisRecentIndexesCache>()

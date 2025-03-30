@@ -9,7 +9,7 @@ using YorubaOrganization.Core.Utilities;
 using YorubaOrganization.Infrastructure;
 using YorubaOrganization.Infrastructure.Repositories;
 
-namespace Infrastructure.MongoDB.Repositories;
+namespace Infrastructure.MongoDB.Repositories.Names;
 
 public sealed class NameEntryRepository(IMongoDatabaseFactory databaseFactory, ITenantProvider tenantProvider, IEventPubService eventPubService) : DictionaryEntryRepository<NameEntry>(CollectionName, databaseFactory, tenantProvider, eventPubService), INameEntryRepository
 {
@@ -21,7 +21,7 @@ public sealed class NameEntryRepository(IMongoDatabaseFactory databaseFactory, I
             new BsonRegularExpression(title.ReplaceYorubaVowelsWithPattern(), "i")) & 
             Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var result = await RepoCollection.Find(filter).ToListAsync();
-        return new HashSet<NameEntry>(result);
+        return [.. result];
     }
 
     public async Task<HashSet<NameEntry>> FindEntryByExtendedMeaningContainingAndState(string name, State state)
@@ -30,7 +30,7 @@ public sealed class NameEntryRepository(IMongoDatabaseFactory databaseFactory, I
             new BsonRegularExpression(name.ReplaceYorubaVowelsWithPattern(), "i")) &
             Builders<NameEntry>.Filter.Eq(ne => ne.State, state);
         var result = await RepoCollection.Find(filter).ToListAsync();
-        return new HashSet<NameEntry>(result);
+        return [.. result];
     }
 
     protected override UpdateDefinition<NameEntry> GenerateCustomUpdateStatement(NameEntry newEntry) => Builders<NameEntry>.Update

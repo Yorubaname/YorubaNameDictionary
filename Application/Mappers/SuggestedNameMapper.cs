@@ -1,5 +1,5 @@
 ﻿using Core.Dto.Request;
-using Core.Dto.Response;
+using Core.Dto.Response.Names;
 using Core.Entities;
 using MongoDB.Bson;
 using YorubaOrganization.Core.Dto.Response;
@@ -11,7 +11,7 @@ public static class SuggestedNameMapper
 {
     public static SuggestedNameDto[] MapToDtoCollection(this IEnumerable<SuggestedName> names)
     {
-        return names.Select(nameEntry => MapToDto(nameEntry)).ToArray();
+        return [.. names.Select(MapToDto)];
     }
     public static SuggestedName MapToEntity(this CreateSuggestedNameDto request)
     {

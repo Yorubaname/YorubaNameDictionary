@@ -3,7 +3,7 @@ using YorubaOrganization.Core.Dto.Request;
 using YorubaOrganization.Core.Dto.Response;
 using YorubaOrganization.Core.Enums;
 
-namespace Core.Dto.Response
+namespace Core.Dto.Response.Names
 {
     public record NameEntryDto
     {

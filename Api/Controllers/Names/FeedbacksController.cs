@@ -1,6 +1,6 @@
-﻿using Application.Services;
+﻿using Application.Services.Names;
 using Core.Dto.Request;
-using Core.Dto.Response;
+using Core.Dto.Response.Names;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;

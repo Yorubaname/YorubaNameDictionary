@@ -1,6 +1,6 @@
 ﻿using YorubaOrganization.Core.Dto.Response;
 
-namespace Core.Dto.Response;
+namespace Core.Dto.Response.Names;
 
 public record SuggestedNameDto
 {

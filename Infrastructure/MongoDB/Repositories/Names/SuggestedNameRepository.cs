@@ -5,7 +5,7 @@ using YorubaOrganization.Core.Tenants;
 using YorubaOrganization.Infrastructure;
 using YorubaOrganization.Infrastructure.Repositories;
 
-namespace Infrastructure.MongoDB.Repositories;
+namespace Infrastructure.MongoDB.Repositories.Names;
 
 public class SuggestedNameRepository(IMongoDatabaseFactory databaseFactory, ITenantProvider tenantProvider) :
     MongoDBRepository<SuggestedName>(databaseFactory, tenantProvider, "SuggestedNames"), ISuggestedNameRepository
