@@ -1,4 +1,4 @@
-﻿using Core.Dto.Response.Words;
+﻿using Words.Core.Dto.Response;
 using Words.Core.Entities;
 using YorubaOrganization.Application.Services;
 

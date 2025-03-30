@@ -1,5 +1,5 @@
-﻿using Core.Dto.Response.Words;
-using Core.Repositories.Words;
+﻿using Core.Repositories.Words;
+using Words.Core.Dto.Response;
 using Words.Core.Entities;
 using YorubaOrganization.Application.Services;
 using YorubaOrganization.Core.Enums;

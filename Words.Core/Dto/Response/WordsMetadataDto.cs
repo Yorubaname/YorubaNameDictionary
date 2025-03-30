@@ -1,4 +1,4 @@
-﻿namespace Core.Dto.Response.Words
+﻿namespace Words.Core.Dto.Response
 {
     public record WordsMetadataDto(
         long TotalWords,
