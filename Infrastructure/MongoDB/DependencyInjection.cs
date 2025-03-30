@@ -23,7 +23,7 @@ namespace Infrastructure.MongoDB
                 .AddScoped<INameEntryRepository, NameEntryRepository>()
                 .AddScoped<IGeoLocationsRepository, GeoLocationsRepository>()
                 .AddScoped<IEntryFeedbackRepository<NameEntry>, NameEntryFeedbackRepository>()
-                .AddScoped<ISuggestedNameRepository, SuggestedNameRepository>()
+                .AddScoped<ISuggestedNameRepository, SuggestedNameRepository>() // TODO YDict Later: Implement Suggested Word repository.
                 .AddScoped<IUserRepository, UserRepository>()
                 .AddScoped<IEtymologyRepository, NameEtymologyRepository>(); // TODO YDict: Figure out how this would work for the dictionary.
 
