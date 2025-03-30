@@ -15,7 +15,7 @@
     <PackageReference Include="FluentValidation" Version="11.9.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.23.1" />
     <PackageReference Include="MySqlConnector" Version="2.3.7" />
-    <PackageReference Include="YorubaOrganization.Application" Version="4.0.0" />
+    <PackageReference Include="YorubaOrganization.Application" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />

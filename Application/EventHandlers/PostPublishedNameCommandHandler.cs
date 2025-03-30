@@ -1,7 +1,7 @@
 ﻿using Application.Events;
 using Application.Services.Names;
 using MediatR;
-using YorubaOrganization.Core;
+using YorubaOrganization.Core.Tenants;
 
 namespace Application.EventHandlers
 {
@@ -9,7 +9,7 @@ namespace Application.EventHandlers
     {
         public async Task Handle(PostPublishedNameCommand notification, CancellationToken cancellationToken)
         {
-            if (notification.Tenant == Languages.YorubaLanguage)
+            if (notification.Tenant == Tenants.YorubaNames)
             {
                 await twitterService.PostNewNameAsync(notification.Name, notification.Meaning, cancellationToken);
             }
