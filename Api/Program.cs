@@ -114,32 +114,30 @@ services.InitializeDatabase(configuration);
 builder.Services.AddTransient(x =>
   new MySqlConnection(Guard.Against.NullOrEmpty(configuration.GetSection("MySQL:ConnectionString").Value)));
 
-services.AddScoped<NameEntryService>();
 services.AddScoped<GeoLocationsService>();
-
-services.AddScoped<EntryFeedbackService<NameEntry>>();
-services.AddScoped<NameEntryFeedbackService>();
-
 services.AddScoped<IEventPubService, EventPubService>();
-services.AddScoped<NameSearchService>();
-services.AddScoped<SuggestedNameService>();
 services.AddScoped<UserService>();
-services.AddScoped<GeoLocationValidator>();
-services.AddScoped<EmbeddedVideoValidator>();
-services.AddScoped<EtymologyValidator>();
+
+services
+    .AddScoped<EntryFeedbackService<NameEntry>>()
+    .AddScoped<NameEntryFeedbackService>()
+    .AddScoped<NameEntryService>()
+    .AddScoped<NameSearchService>()
+    .AddScoped<SuggestedNameService>();
 
 // Words
-services.AddScoped<WordFeedbackService>();
-
-services.AddScoped<EntryFeedbackService<WordEntry>>();
-services.AddScoped<WordFeedbackService>();
-
+services
+    .AddScoped<EntryFeedbackService<WordEntry>>()
+    .AddScoped<WordFeedbackService>()
+    .AddScoped<WordEntryService>()
+    .AddScoped<WordSearchService>();
 
 services
     .AddScoped<IRecentIndexesCache, RedisRecentIndexesCache>()
     .AddScoped<IRecentSearchesCache, RedisRecentSearchesCache>();
 
 //Validation
+// TODO YDict: Check that the removed validator injections do not cause negative impact.
 services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
 
 services.AddMediatR(cfg =>
