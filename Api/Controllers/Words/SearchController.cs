@@ -15,7 +15,7 @@ using Application.Mappers.Words;
 
 namespace Api.Controllers.Words
 {
-    [Route("api/v1/dictionary/search")]
+    [Route("api/v1/words/[controller]")]
     [ApiController]
     public class SearchController : ControllerBase
     {

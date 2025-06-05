@@ -8,7 +8,7 @@ using Words.Core.Dto.Response;
 
 namespace Api.Controllers.Words
 {
-    [Route("api/v1/dictionary/[controller]")]
+    [Route("api/v1/words/[controller]")]
     [ApiController]
     [Authorize(Policy = "AdminAndLexicographers")]
     public class FeedbackController : ControllerBase

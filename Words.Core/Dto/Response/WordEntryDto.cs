@@ -15,11 +15,8 @@ namespace Words.Core.Dto.Response
         public string? IpaNotation { get; set; }
         public List<VariantDto> Variants { get; set; }
         public HyphenSeparatedString Syllables { get; set; }
-        public string Meaning { get; set; }
         public CommaSeparatedString Morphology { get; set; }
         public List<GeoLocationDto> GeoLocation { get; set; }
-        public CommaSeparatedString FamousPeople { get; set; }
-        public CommaSeparatedString Media { get; set; }
         public string? SubmittedBy { get; set; }
         public List<EtymologyDto> Etymology { get; set; }
         public List<MediaLinkDto> MediaLinks { get; set; }
