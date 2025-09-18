@@ -17,7 +17,7 @@ namespace Api.Controllers.Words
     [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize(Policy = "AdminAndLexicographers")]
-    public class WordsController(WordEntryService entryService, IValidator<CreateWordDto> createWordValidator) : ControllerBase
+    public class WordsController(WordEntryService entryService, IValidator<WordDto> createWordValidator) : ControllerBase
     {
         private const int DefaultPage = 1;
         private const int DefaultListCount = 50;
