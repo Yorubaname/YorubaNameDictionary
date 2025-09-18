@@ -10,15 +10,15 @@ using Application.Mappers.Names;
 
 namespace Api.Controllers.Names;
 
-[Route("api/v1/suggestions")]
+[Route("api/v1/[controller]")]
 [ApiController]
 [Authorize(Policy = "AdminAndLexicographers")]
-public class SuggestedNameController : ControllerBase
+public class SuggestionsController : ControllerBase
 {
     private readonly SuggestedNameService _suggestedNameService;
     private readonly IValidator<CreateSuggestedNameDto> _suggestedNameValidator;
 
-    public SuggestedNameController(SuggestedNameService suggestedNameService, IValidator<CreateSuggestedNameDto> suggestedNameValidator)
+    public SuggestionsController(SuggestedNameService suggestedNameService, IValidator<CreateSuggestedNameDto> suggestedNameValidator)
     {
         _suggestedNameService = suggestedNameService;
         _suggestedNameValidator = suggestedNameValidator;
