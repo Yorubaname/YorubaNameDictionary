@@ -123,7 +123,7 @@ services
     .AddScoped<NameEntryFeedbackService>()
     .AddScoped<NameEntryService>()
     .AddScoped<NameSearchService>()
-    .AddScoped<SuggestedNameService>();
+    .AddScoped<SuggestionsService>();
 
 // Words
 services

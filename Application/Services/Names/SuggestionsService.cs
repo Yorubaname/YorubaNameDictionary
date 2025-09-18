@@ -3,11 +3,11 @@ using Core.Repositories;
 
 namespace Application.Services.Names;
 
-public class SuggestedNameService
+public class SuggestionsService
 {
     private readonly ISuggestedNameRepository _suggestedNameRepository;
 
-    public SuggestedNameService(ISuggestedNameRepository suggestedNameRepository)
+    public SuggestionsService(ISuggestedNameRepository suggestedNameRepository)
     {
         _suggestedNameRepository = suggestedNameRepository;
     }

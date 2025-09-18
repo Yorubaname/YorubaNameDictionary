@@ -15,10 +15,10 @@ namespace Api.Controllers.Names;
 [Authorize(Policy = "AdminAndLexicographers")]
 public class SuggestionsController : ControllerBase
 {
-    private readonly SuggestedNameService _suggestedNameService;
+    private readonly SuggestionsService _suggestedNameService;
     private readonly IValidator<CreateSuggestedNameDto> _suggestedNameValidator;
 
-    public SuggestionsController(SuggestedNameService suggestedNameService, IValidator<CreateSuggestedNameDto> suggestedNameValidator)
+    public SuggestionsController(SuggestionsService suggestedNameService, IValidator<CreateSuggestedNameDto> suggestedNameValidator)
     {
         _suggestedNameService = suggestedNameService;
         _suggestedNameValidator = suggestedNameValidator;
