@@ -26,6 +26,8 @@ using Application.Services.Names;
 using Application.Services.Words;
 using Core.Entities;
 using Words.Core.Entities;
+using SuggestedNamesService = Application.Services.Names.SuggestionsService;
+using SuggestedWordsService = Application.Services.Words.SuggestionsService;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -123,7 +125,8 @@ services
     .AddScoped<NameEntryFeedbackService>()
     .AddScoped<NameEntryService>()
     .AddScoped<NameSearchService>()
-    .AddScoped<SuggestionsService>();
+    .AddScoped<SuggestedNamesService>()
+    .AddScoped<SuggestedWordsService>();
 
 // Words
 services

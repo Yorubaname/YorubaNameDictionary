@@ -15,6 +15,38 @@ namespace Infrastructure.MongoDB.Repositories.Words
     {
         private const string CollectionName = "Words";
 
+        public async Task<int> CountByStateAsync(State state)
+        {
+            var filter = Builders<WordEntry>.Filter.Eq(ne => ne.State, state);
+            return (int)await RepoCollection.CountDocumentsAsync(filter);
+        }
+
+        public async Task<List<WordEntry>> FindByStateAsync(State state)
+        {
+            var filter = Builders<WordEntry>.Filter.Eq(ne => ne.State, state);
+            return await RepoCollection.Find(filter).ToListAsync();
+        }
+
+        public async Task<WordEntry?> GetByIdAsync(string id)
+        {
+            var filter = Builders<WordEntry>.Filter.Eq(ne => ne.Id, id);
+            return await RepoCollection.Find(filter).FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> DeleteAsync(string id)
+        {
+            var filter = Builders<WordEntry>.Filter.Eq(ne => ne.Id, id);
+            var result = await RepoCollection.DeleteOneAsync(filter);
+            return result.DeletedCount > 0;
+        }
+
+        public async Task<int> DeleteByStateAsync(State state)
+        {
+            var filter = Builders<WordEntry>.Filter.Eq(ne => ne.State, state);
+            var result = await RepoCollection.DeleteManyAsync(filter);
+            return (int)result.DeletedCount;
+        }
+
         // TODO YDict: Test that this definition content search works as expected.
         public async Task<HashSet<WordEntry>> FindEntryByDefinitionsContentContainingAndState(string title, State state)
         {
