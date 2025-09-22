@@ -1,9 +1,9 @@
 using FluentValidation;
-using Words.Core.Entities;
+using Words.Core.Dto.Response;
 
 namespace Application.Validation
 {
-    public class DefinitionValidator : AbstractValidator<Definition>
+    public class DefinitionValidator : AbstractValidator<DefinitionDto>
     {
         public DefinitionValidator()
         {
@@ -22,7 +22,7 @@ namespace Application.Validation
         }
     }
 
-    public class DefinitionExampleValidator : AbstractValidator<DefinitionExample>
+    public class DefinitionExampleValidator : AbstractValidator<DefinitionExampleDto>
     {
         public DefinitionExampleValidator()
         {

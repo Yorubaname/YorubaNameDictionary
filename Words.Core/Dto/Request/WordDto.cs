@@ -26,7 +26,7 @@ namespace Words.Core.Dto.Request
         public PartOfSpeech PartOfSpeech { get; set; }
         public Style? Style { get; set; }
         public GrammaticalFeature? GrammaticalFeature { get; set; }
-        public List<Definition> Definitions { get; set; }
+        public List<DefinitionDto> Definitions { get; set; }
 
         // Constructors
         public WordDto(string word)

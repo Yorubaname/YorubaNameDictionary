@@ -22,7 +22,10 @@ namespace Application.Mappers.Words
                 Style = wordEntry.Style?.ToString(),
                 GrammaticalFeature = wordEntry.GrammaticalFeature?.ToString(),
                 IpaNotation = wordEntry.IpaNotation,
-                Variants = [.. wordEntry.VariantsV2.Select(v => new VariantDto(v.Title, v.GeoLocation?.Place))],
+                Variants = [.. wordEntry.VariantsV2.Select(v => new VariantDto(v.Title,
+                                v.GeoLocation == null ?
+                                null :
+                                new GeoLocationDto(v.GeoLocation.Id, v.GeoLocation.Place, v.GeoLocation.Region)))],
                 Syllables = (HyphenSeparatedString)wordEntry.Syllables,
                 Morphology = (CommaSeparatedString)wordEntry.Morphology,
 
@@ -63,7 +66,8 @@ namespace Application.Mappers.Words
                 Style = dto.Style,
                 GrammaticalFeature = dto.GrammaticalFeature,
                 IpaNotation = dto.IpaNotation,
-                VariantsV2 = dto.Variants?.Select(v => new Variant(v.Word, v.Geolocation is not null ? new GeoLocation { Place = v.Geolocation } : null)).ToList() ?? [],
+                VariantsV2 = dto.Variants?.Select(v =>
+                new Variant(v.Word, v.Geolocation is not null ? new GeoLocation { Place = v.Geolocation.Place, Region = v.Geolocation.Region } : null)).ToList() ?? [],
                 Syllables = dto.Syllables ?? new List<string>(),
                 Morphology = dto.Morphology ?? new List<string>(),
                 GeoLocation = dto.GeoLocation?.Select(g => new GeoLocation(g.Place, g.Region)).ToList() ?? [],
