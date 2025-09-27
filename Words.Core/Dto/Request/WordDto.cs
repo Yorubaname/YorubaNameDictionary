@@ -18,7 +18,7 @@ namespace Words.Core.Dto.Request
         public List<CreateGeoLocationDto> GeoLocation { get; set; }
         public HyphenSeparatedString? Syllables { get; set; }
         public CommaSeparatedString? Morphology { get; set; }
-        public MediaLinkDto[] MediaLinks;
+        public MediaLinkDto[] MediaLinks { get; set; }
         public VariantDto[] Variants { get; set; }
         public virtual string SubmittedBy { get; set; }
 
@@ -46,6 +46,8 @@ namespace Words.Core.Dto.Request
             Videos = [];
             GeoLocation = [];
             Definitions = [];
+            MediaLinks = [];
+            Variants = [];
         }
     }
 }

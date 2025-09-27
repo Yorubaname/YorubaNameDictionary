@@ -25,7 +25,7 @@ namespace Application.Mappers.Words
                 Variants = [.. wordEntry.VariantsV2.Select(v => new VariantDto(v.Title,
                                 v.GeoLocation == null ?
                                 null :
-                                new GeoLocationDto(v.GeoLocation.Id, v.GeoLocation.Place, v.GeoLocation.Region)))],
+                                new CreateGeoLocationDto(v.GeoLocation.Place, v.GeoLocation.Region)))],
                 Syllables = (HyphenSeparatedString)wordEntry.Syllables,
                 Morphology = (CommaSeparatedString)wordEntry.Morphology,
 
