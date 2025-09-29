@@ -1,6 +1,4 @@
-﻿using YorubaOrganization.Core;
-
-namespace Api.Middleware
+﻿namespace Api.Middleware
 {
     public class TenantIdentificationMiddleware
     {
@@ -17,7 +15,7 @@ namespace Api.Middleware
 
             if (string.IsNullOrWhiteSpace(tenant))
             {
-                tenant = Languages.YorubaLanguage;
+                tenant = YorubaOrganization.Core.Tenants.Tenants.YorubaNames;
             }
 
             context.Items["Tenant"] = tenant;

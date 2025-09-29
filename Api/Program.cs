@@ -1,4 +1,3 @@
-using Application.Services;
 using Application.Validation;
 using Core.StringObjectConverters;
 using FluentValidation;
@@ -23,6 +22,12 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Application.Services.MultiLanguage;
 using YorubaOrganization.Application.Services;
 using Api.Utilities;
+using Application.Services.Names;
+using Application.Services.Words;
+using Core.Entities;
+using Words.Core.Entities;
+using SuggestedNamesService = Application.Services.Names.SuggestionsService;
+using SuggestedWordsService = Application.Services.Words.SuggestionsService;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -111,23 +116,31 @@ services.InitializeDatabase(configuration);
 builder.Services.AddTransient(x =>
   new MySqlConnection(Guard.Against.NullOrEmpty(configuration.GetSection("MySQL:ConnectionString").Value)));
 
-services.AddScoped<NameEntryService>();
 services.AddScoped<GeoLocationsService>();
-services.AddScoped<EntryFeedbackService>();
-services.AddScoped<NameEntryFeedbackService>();
 services.AddScoped<IEventPubService, EventPubService>();
-services.AddScoped<NameSearchService>();
-services.AddScoped<SuggestedNameService>();
 services.AddScoped<UserService>();
-services.AddScoped<GeoLocationValidator>();
-services.AddScoped<EmbeddedVideoValidator>();
-services.AddScoped<EtymologyValidator>();
+
+services
+    .AddScoped<EntryFeedbackService<NameEntry>>()
+    .AddScoped<NameEntryFeedbackService>()
+    .AddScoped<NameEntryService>()
+    .AddScoped<NameSearchService>()
+    .AddScoped<SuggestedNamesService>()
+    .AddScoped<SuggestedWordsService>();
+
+// Words
+services
+    .AddScoped<EntryFeedbackService<WordEntry>>()
+    .AddScoped<WordFeedbackService>()
+    .AddScoped<WordEntryService>()
+    .AddScoped<WordSearchService>();
 
 services
     .AddScoped<IRecentIndexesCache, RedisRecentIndexesCache>()
     .AddScoped<IRecentSearchesCache, RedisRecentSearchesCache>();
 
 //Validation
+// TODO YDict: Check that the removed validator injections do not cause negative impact.
 services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
 
 services.AddMediatR(cfg =>

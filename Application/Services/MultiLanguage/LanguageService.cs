@@ -1,77 +1,74 @@
 ﻿using Microsoft.AspNetCore.Http;
-using YorubaOrganization.Core;
+using YorubaOrganization.Core.Tenants;
 
 namespace Application.Services.MultiLanguage
 {
     public class LanguageService : ILanguageService
     {
-        private const string Yoruba = "yoruba";
-        private const string Igbo = "igbo";
-
-        private static readonly Dictionary<string, string> _hostToLanguageMap = new(){
-            { "yorubaname.com", Yoruba },
-            { "yorubanames.com", Yoruba },
-            { "igboname.com", Igbo },
-            { "igbonames.com", Igbo },
+        private static readonly Dictionary<string, string> _hostToTenantMap = new(){
+            { "yorubaword.com", Tenants.YorubaWord },
+            { "yorubanames.com", Tenants.YorubaNames },
+            { "yorubaname.com", Tenants.YorubaNames },
+            { "igboname.com", Tenants.IgboNames },
+            { "igbonames.com", Tenants.IgboNames },
         };
-        private static readonly Dictionary<string, string> _languageToWebsiteMap = new()
+        private static readonly Dictionary<string, string> _tenantToWebsiteMap = new()
         {
-            { Yoruba, "YorubaName.com" },
-            { Igbo, "IgboName.com" },
+            { Tenants.YorubaNames, "YorubaName.com" },
+            { Tenants.YorubaWord, "YorubaWord.com" },
+            { Tenants.IgboNames, "IgboName.com" },
         };
-        private static readonly Dictionary<string, string> _languageToLanguageDisplayMap = new()
+        private static readonly Dictionary<string, string> _tenantToLanguageDisplayMap = new()
         {
-            { Yoruba, "Yorùbá" },
-            { Igbo, "Igbo" },
+            { Tenants.YorubaNames, "Yorùbá" },
+            { Tenants.YorubaWord, "Yorùbá" },
+            { Tenants.IgboNames, "Igbo" },
         };
-        private static readonly Dictionary<string, string> _languageToSocialNameMap = new()
+        private static readonly Dictionary<string, string> _tenantToSocialNameMap = new()
         {
-            { Yoruba, "YorubaNames" },
-            { Igbo, "IgboNames" },
-        };
-        private static readonly Dictionary<string, string> _languageToTenantMap = new()
-        {
-            { Yoruba, Languages.YorubaLanguage },
-            { Igbo, Languages.IgboLanguage },
+            { Tenants.YorubaNames, "YorubaNames" },
+            { Tenants.YorubaWord, "YorubaWords" },
+            { Tenants.IgboNames, "IgboNames" }
         };
 
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly string _language;
+        private readonly string _tenant;
 
-        public virtual string Website => _languageToWebsiteMap[_language];
-        public virtual string SocialName => _languageToSocialNameMap[_language];
-        public virtual string LanguageDisplay => _languageToLanguageDisplayMap[_language];
-        public bool IsYoruba => _language == Yoruba;
-        public bool IsIgbo => _language == Igbo;
+        public virtual string Website => _tenantToWebsiteMap[_tenant];
+        public virtual string SocialName => _tenantToSocialNameMap[_tenant];
+        public virtual string LanguageDisplay => _tenantToLanguageDisplayMap[_tenant];
+        public bool IsYoruba => _tenant == Tenants.YorubaNames;
+        public bool IsIgbo => _tenant == Tenants.IgboNames;
 
-        public string CurrentTenant => _languageToTenantMap[_language];
+        public string CurrentTenant => _tenant;
 
         public LanguageService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _language = GetCurrentLanguage();
+            _tenant = GetCurrentTenant();
         }
 
-        private string GetCurrentLanguage()
+        private string GetCurrentTenant()
         {
             var host = _httpContextAccessor.HttpContext?.Request.Host.Host;
             if (host == null)
             {
-                return Yoruba;
+                return Tenants.YorubaNames;
             }
 
-            return _hostToLanguageMap.TryGetValue(WithoutSubdomain(host), out string? value) ? value : GetLanguageFromHeader();
+            return _hostToTenantMap.TryGetValue(WithoutSubdomain(host), out string? value) ? value : GetTenantFromHeader();
         }
 
-        private string GetLanguageFromHeader()
+        private string GetTenantFromHeader()
         {
             var currentTenant = _httpContextAccessor.HttpContext?.Items["Tenant"]?.ToString();
 
             return currentTenant switch
             {
-                Languages.IgboLanguage => Igbo,
-                Languages.YorubaLanguage => Yoruba,
-                _ => Yoruba,
+                Tenants.IgboNames => Tenants.IgboNames,
+                Tenants.YorubaNames => Tenants.YorubaNames,
+                Tenants.YorubaWord => Tenants.YorubaWord,
+                _ => Tenants.YorubaNames
             };
         }
 
