@@ -1,10 +1,10 @@
-﻿using Application.Services;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using Hangfire;
 using Infrastructure.Configuration;
 using YorubaOrganization.Core.Cache;
+using Application.Services.Names;
 
 namespace Infrastructure.Twitter
 {

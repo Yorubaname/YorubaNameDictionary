@@ -1,9 +1,10 @@
 ﻿// Current date
 const currentDate = ISODate();
 db = db.getSiblingDB("yoruba_name_dictionary");
+yorubawordDb = db.getSiblingDB("yoruba_dictionary");
 
 // Users collection initialization
-db.Users.insertMany([
+const users = [
     {
         "_id": "669a1c2ebfcf74446326d088",
         "CreatedAt": currentDate,
@@ -59,7 +60,9 @@ db.Users.insertMany([
         "Password": "$2a$10$SnjXPE8WzS/5cg9BQdS/jO.Wc8ohiyhqy62mlG7rTEvX0jGWS3KqW",
         "Roles": ["BASIC_LEXICOGRAPHER"]
     }
-]);
+];
+db.Users.insertMany(users);
+yorubawordDb.Users.insertMany(users);
 
 // GeoLocations collection initialization
 const geoLocations = [

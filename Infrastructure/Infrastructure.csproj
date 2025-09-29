@@ -16,11 +16,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="StackExchange.Redis" Version="2.8.16" />
     <PackageReference Include="TweetinviAPI" Version="5.0.4" />
-    <PackageReference Include="YorubaOrganization.Infrastructure" Version="3.0.0" />
+    <PackageReference Include="YorubaOrganization.Infrastructure" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Words.Core\Words.Core.csproj" />
   </ItemGroup>
 
 </Project>
