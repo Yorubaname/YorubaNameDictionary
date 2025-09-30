@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="welcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
+  <data name="home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="about" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="donate" xml:space="preserve">
+    <value>Donate</value>
+  </data>
+  <data name="volunteer" xml:space="preserve">
+    <value>Volunteer</value>
+  </data>
+  <data name="logreg" xml:space="preserve">
+    <value>Login | Register</value>
+  </data>
+  <data name="contact" xml:space="preserve">
+    <value>Contact Us</value>
+  </data>
+  <data name="blog" xml:space="preserve">
+    <value>Blog</value>
+  </data>
+  <data name="language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="search-plchol" xml:space="preserve">
+    <value>Type any Yorùbá word here and press "Enter"...</value>
+  </data>
+  <data name="jumbotron1" xml:space="preserve">
+    <value>Over</value>
+  </data>
+  <data name="jumbotron2" xml:space="preserve">
+    <value>Yorùbá names and growing...</value>
+  </data>
+  <data name="kybtitle" xml:space="preserve">
+    <value>Click here for keys with accents.</value>
+  </data>
+  <data name="adv-search" xml:space="preserve">
+    <value>Advanced Search</value>
+  </data>
+  <data name="jumboh31" xml:space="preserve">
+    <value>Join other users and add a new word.</value>
+  </data>
+  <data name="jumboh32" xml:space="preserve">
+    <value>Submit a word »</value>
+  </data>
+  <data name="latest-search" xml:space="preserve">
+    <value>Latest Searches</value>
+  </data>
+  <data name="latest-add" xml:space="preserve">
+    <value>Latest Addition</value>
+  </data>
+  <data name="most-popular" xml:space="preserve">
+    <value>Most Popular</value>
+  </data>
+  <data name="most-popular-names" xml:space="preserve">
+    <value>Most Popular Names</value>
+  </data>
+  <data name="word-of-day" xml:space="preserve">
+    <value>Name of the day</value>
+  </data>
+  <data name="play-sound" xml:space="preserve">
+    <value>Click to hear pronunciation</value>
+  </data>
+  <data name="submitby" xml:space="preserve">
+    <value>Submitted by</value>
+  </data>
+  <data name="pronunciation" xml:space="preserve">
+    <value>Pronunciation</value>
+  </data>
+  <data name="share" xml:space="preserve">
+    <value>Share</value>
+  </data>
+  <data name="improve-entry" xml:space="preserve">
+    <value>Improve this entry</value>
+  </data>
+  <data name="meaningof" xml:space="preserve">
+    <value>Meaning of</value>
+  </data>
+  <data name="extendedmeaningof" xml:space="preserve">
+    <value>Extended Meaning</value>
+  </data>
+  <data name="topDefinition" xml:space="preserve">
+    <value>Top Definition</value>
+  </data>
+  <data name="storyof" xml:space="preserve">
+    <value>Little story about this word</value>
+  </data>
+  <data name="morphology" xml:space="preserve">
+    <value>Morphology</value>
+  </data>
+  <data name="etymology" xml:space="preserve">
+    <value>Gloss</value>
+  </data>
+  <data name="geolocation" xml:space="preserve">
+    <value>Geolocation</value>
+  </data>
+  <data name="variants" xml:space="preserve">
+    <value>Variants</value>
+  </data>
+  <data name="see-also" xml:space="preserve">
+    <value>See also</value>
+  </data>
+  <data name="entryfoundfor" xml:space="preserve">
+    <value>Entries found for -</value>
+  </data>
+  <data name="commonin" xml:space="preserve">
+    <value>Common in</value>
+  </data>
+  <data name="number-of-names" xml:space="preserve">
+    <value>Number of names</value>
+  </data>
+  <data name="word-listed-by-alphabets" xml:space="preserve">
+    <value>Names listed alphabetically</value>
+  </data>
+  <data name="famous-persons" xml:space="preserve">
+    <value>Famous Persons</value>
+  </data>
+  <data name="media-links" xml:space="preserve">
+    <value>Media Links</value>
+  </data>
+  <data name="submitname-heading" xml:space="preserve">
+    <value>Submit a new word</value>
+  </data>
+  <data name="submitname-entername" xml:space="preserve">
+    <value>Enter new word here</value>
+  </data>
+  <data name="submitname-enternameplch" xml:space="preserve">
+    <value>Enter suggested word here...</value>
+  </data>
+  <data name="submitname-entermeaning" xml:space="preserve">
+    <value>If you know, please tell us the meaning and/or history of the word</value>
+  </data>
+  <data name="submitname-enterlocation" xml:space="preserve">
+    <value>Where did you hear or were given the word</value>
+  </data>
+  <data name="submitname-enteremail" xml:space="preserve">
+    <value>Email address to send confirmation of new word submission</value>
+  </data>
+  <data name="submitname-nameexists" xml:space="preserve">
+    <value>The word already exist in the system</value>
+  </data>
+  <data name="submitname-viewentry" xml:space="preserve">
+    <value>View Entry</value>
+  </data>
+  <data name="improve-entry-help-us" xml:space="preserve">
+    <value>Help us improve</value>
+  </data>
+  <data name="improve-entry-sub-text" xml:space="preserve">
+    <value>Perhaps you might have a story to share about this word, simply add something we missed, or expand a definition.</value>
+  </data>
+  <data name="entry-not-found-no-match" xml:space="preserve">
+    <value>Oops! No match found for</value>
+  </data>
+  <data name="entry-not-found-suggest-text" xml:space="preserve">
+    <value>Would you like to submit the word to our database? Kindly fill in the details below.</value>
+  </data>
+  <data name="entry-not-found-suggest-pretext" xml:space="preserve">
+    <value>Would you like to submit the word to our database?</value>
+  </data>
+  <data name="entry-not-found-similar-names" xml:space="preserve">
+    <value>Find below names that could be similar</value>
+  </data>
+  <data name="go-to-suggest-linktext" xml:space="preserve">
+    <value>Kindly go to the word submission page.</value>
+  </data>
+  <data name="entry-not-found-minikeyb-text" xml:space="preserve">
+    <value>Please use the Yorùbá mini keyboard for characters with tonal marks.</value>
+  </data>
+  <data name="join-the-team" xml:space="preserve">
+    <value>Join the team</value>
+  </data>
+  <data name="amazing-team" xml:space="preserve">
+    <value>Our Amazing Team</value>
+  </data>
+  <data name="what-is-yorubaname" xml:space="preserve">
+    <value>What is YorubaName.com</value>
+  </data>
+  <data name="how-to-use" xml:space="preserve">
+    <value>How to Use the Dictionary</value>
+  </data>
+  <data name="work-in-progress" xml:space="preserve">
+    <value>Entries are a Work-in-Progress</value>
+  </data>
+  <data name="about-tone-mark" xml:space="preserve">
+    <value>To Tone-Mark or Not to Tone-Mark</value>
+  </data>
+  <data name="how-names-collected" xml:space="preserve">
+    <value>How did we go about collecting names</value>
+  </data>
+  <data name="about-tts" xml:space="preserve">
+    <value>Audio Prompts: Hearing the Names</value>
+  </data>
+  <data name="join-us-lex" xml:space="preserve">
+    <value>Join us as a Lexicographer!</value>
+  </data>
+  <data name="lets-build-together" xml:space="preserve">
+    <value>Let's build up this database together</value>
+  </data>
+  <data name="how-to-support" xml:space="preserve">
+    <value>I would like to support you in some way… but how?</value>
+  </data>
+  <data name="contact-info" xml:space="preserve">
+    <value>Contact Information</value>
+  </data>
+  <data name="contact-info-preamble" xml:space="preserve">
+    <value>We're easy to get through to, whether in person or by mail.</value>
+  </data>
+  <data name="contact-info-email-preamble" xml:space="preserve">
+    <value>You may send an email to</value>
+  </data>
+  <data name="contact-info-contact-preamble" xml:space="preserve">
+    <value>Or visit our office at YorubaName.com</value>
+  </data>
+  <data name="social-media" xml:space="preserve">
+    <value>Follow us on Social Media</value>
+  </data>
+  <data name="error-page-not-found" xml:space="preserve">
+    <value>Oops. Sure you got the right link?</value>
+  </data>
+  <data name="error-message1" xml:space="preserve">
+    <value>It seems like we can't find the resource you're looking for, or it's been moved.</value>
+  </data>
+  <data name="error-message2" xml:space="preserve">
+    <value>Why not click here to go back to the &lt;a href="/" style="color:#0e5264; text-decoration:underline"&gt;home page&lt;/a&gt; to discover more Yoruba names?</value>
+  </data>
+  <data name="oni-message" xml:space="preserve">
+    <value>A phenomenal concept that will keep the Yorùbá culture alive. I strongly support the endeavor.</value>
+  </data>
+  <data name="key-supporters" xml:space="preserve">
+    <value>Our key supporters</value>
+  </data>
+  <data name="yoruba-word-dictionary" xml:space="preserve">
+    <value>Yoruba Names Dictionary</value>
+  </data>
+  <data name="yoruba-word-newsletter" xml:space="preserve">
+    <value>YorubaName Newsletter</value>
+  </data>
+  <data name="follow-update" xml:space="preserve">
+    <value>Follow us behind the scenes for exclusive news, freebies, links, lexicographer tools, and other important updates about this dictionary.</value>
+  </data>
+  <data name="enter-your-email" xml:space="preserve">
+    <value>Enter your email here</value>
+  </data>
+  <data name="english-translation" xml:space="preserve">
+    <value>English Translation</value>
+  </data>
+  <data name="other-definitions" xml:space="preserve">
+    <value>Other Definitions</value>
+  </data>
+  <data name="example" xml:space="preserve">
+    <value>Example</value>
+  </data>
+  <data name="would-you-like-to-add" xml:space="preserve">
+    <value>Would You Like To Add To The Dictionary?</value>
+  </data>
+  <data name="appreciate-input" xml:space="preserve">
+    <value>We will appreciate your input as we try to make this dictionary more comprehensive</value>
+  </data>
+  <data name="add-to-dictionary" xml:space="preserve">
+    <value>Add To Dictionary</value>
+  </data>
+  <data name="frequently-asked-questions" xml:space="preserve">
+    <value>Frequently Asked Questions</value>
+  </data>
+  <data name="how-do-you-get-words" xml:space="preserve">
+    <value>a. How do you get words?</value>
+  </data>
+  <data name="how-do-you-verify" xml:space="preserve">
+    <value>b. How do you verify words?</value>
+  </data>
+  <data name="faq-answer-1" xml:space="preserve">
+    <value>Lorem ipsum lorem ipsum lorem ipsum lore edr erwt aer arew are a. Lorem ipsum lorem ipsum lorem ipsum lore edr erwt aer arew are a. Lorem ipsum lorem ipsum lorem ipsum lore edr erwt aer arew are a</value>
+  </data>
+  <data name="faq-answer-2" xml:space="preserve">
+    <value>Lorem ipsum lorem ipsum lorem ipsum lore edr erwt aer arew are a. Lorem ipsum lorem ipsum lorem ipsum lore edr erwt aer arew are a. Lorem ipsum lorem ipsum lorem ipsum lore edr erwt aer arew are a</value>
+  </data>
+  <data name="read-more" xml:space="preserve">
+    <value>Read More</value>
+  </data>
+</root>

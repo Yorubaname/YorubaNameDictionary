@@ -37,12 +37,12 @@ namespace Words.Website.Services
                     _logger.LogError("GET '{Url}' Failed with '{Status}'; Response: '{Content}'", endpoint, response.StatusCode, rawContent);
                     throw new Exception($"Error calling API.");
                 }
-                
+
                 if (string.IsNullOrEmpty(rawContent))
                 {
                     return default;
                 }
-                
+
                 return JsonSerializer.Deserialize<T>(rawContent, _jsonSerializerOptions);
             }
             catch (Exception ex)

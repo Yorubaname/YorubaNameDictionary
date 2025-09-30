@@ -1,6 +1,7 @@
 @page
 @using Application.Services.MultiLanguage
 @using Words.Website.Resources
+@using Words.Website.Pages.Shared.Partials
 @model IndexModel
 @{
     ViewData["Title"] = "Home";
@@ -9,7 +10,11 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 @inject ILanguageService LanguageService
 
-@await Html.PartialAsync("Partials/_SearchFormWithAlphabet", new { showAlphabet = true, showTagline = true })
+@await Html.PartialAsync("Partials/_SearchFormWithAlphabet", new SearchFormWithAlphabetModel {
+ShowAlphabet = true,
+ShowTagline = true,
+Letters = Model.Letters // Make sure IndexModel exposes Letters
+})
 
 @await Html.PartialAsync("Partials/_Blogs")
 
@@ -27,7 +32,7 @@
                 </ul>
             </div>
 
-            <div class="col-md-4 popo-bg">
+            <div class="col-md-4 col-lg-4 popo-bg">
                 <p class="popotext">@Localizer["latest-add"]</p>
                 <ul class="popo-wd">
                     @foreach (var addition in Model.LatestAdditions)
@@ -37,7 +42,7 @@
                 </ul>
             </div>
 
-            <div class="col-md-4 popo-bg">
+            <div class="col-md-4 col-lg-4 popo-bg">
                 <p class="popotext">@Localizer["most-popular"]</p>
                 <ul class="popo-wd">
                     @foreach (var popular in Model.MostPopular)
@@ -58,7 +63,8 @@
             <div class="col-md-12">
                 <h2>@Localizer["would-you-like-to-add"]</h2>
                 <p>@Localizer["appreciate-input"]</p>
-                <a href="/submit-word" class="btn btn-lg btn-link" style="margin-bottom:15px">@Localizer["add-to-dictionary"]</a>
+                <a href="/submit-word" class="btn btn-lg btn-link"
+                    style="margin-bottom:15px">@Localizer["add-to-dictionary"]</a>
             </div>
         </div>
     </div>

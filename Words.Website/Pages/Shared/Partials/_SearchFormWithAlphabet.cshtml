@@ -1,20 +1,29 @@
-@model dynamic
+@model Words.Website.Pages.Shared.Partials.SearchFormWithAlphabetModel
 
 <section id="searchform">
     <div class="jumbotron" id="home-banner">
         <div class="container">
-            <h1>Discover the meaning of Yoruba words</h1>
-            @await Html.PartialAsync("Partials/_SearchComponent")
-            
-            @if (Model?.showTagline == true)
-            {
-                <p class="lead">Over 10,000 Yoruba words and still growing...</p>
-            }
-            
-            @if (Model?.showAlphabet == true)
-            {
-                @await Html.PartialAsync("Partials/_Alphabets")
-            }
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    @if (Model.ShowTagline)
+                    {
+                        <h1>The Only Multimedia Yorùbá Dictionary Online</h1>
+                    }
+
+                    <div class="search-background">
+                        <h4>Names listed alphabetically:</h4>
+
+                        @if (Model.ShowAlphabet)
+                        {
+                            @await Html.PartialAsync("Partials/_Alphabets", Model.Letters)
+                        }
+
+                        @await Html.PartialAsync("Partials/_SearchComponent")
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
         </div>
     </div>
 </section>
