@@ -1,0 +1,19 @@
+@model IEnumerable<string>?
+
+<ul class="alphabets">
+    @if (Model != null)
+    {
+        foreach (var letter in Model)
+        {
+            <a href="/alphabet/@letter"><li>@letter</li></a>
+        }
+    }
+    else
+    {
+        @* Default Yoruba alphabet *@
+        @foreach (var letter in new[] { "A", "B", "D", "E", "Ẹ", "F", "G", "Gb", "H", "I", "J", "K", "L", "M", "N", "O", "Ọ", "P", "R", "S", "Ṣ", "T", "U", "W", "Y" })
+        {
+            <a href="/alphabet/@letter"><li>@letter</li></a>
+        }
+    }
+</ul>
