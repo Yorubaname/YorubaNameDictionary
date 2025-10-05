@@ -29,6 +29,8 @@ services:
     container_name: ynd-mongodb
     ports:
       - "27020:27017"
+    volumes:
+      - mongodb-data:/data/db
   redis:
     image: redis:latest
     container_name: redis
@@ -39,4 +41,5 @@ services:
 
 volumes:
   redis-data:
+  mongodb-data:
 
