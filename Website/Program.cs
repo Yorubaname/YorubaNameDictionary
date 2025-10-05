@@ -78,7 +78,8 @@ namespace Website
                 appBuilder.RunProxy(context =>
                 {
                     var externalApiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"];
-
+                    var languageService = context.RequestServices.GetRequiredService<ILanguageService>();
+                    context.Request.Headers["X-Tenant"] = context.Request.Headers["X-Tenant"].FirstOrDefault() ?? languageService.CurrentTenant;
                     return context
                         .ForwardTo(externalApiBaseUrl)
                         .AddXForwardedHeaders()
