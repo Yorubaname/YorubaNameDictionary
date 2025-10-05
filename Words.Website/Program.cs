@@ -2,12 +2,10 @@ using Application.Services.MultiLanguage;
 using Core.StringObjectConverters;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Localization;
 using ProxyKit;
 using System.Globalization;
 using Words.Website.Config;
 using Words.Website.Middleware;
-using Words.Website.Resources;
 using Words.Website.Services;
 
 namespace Words.Website
