@@ -3,6 +3,7 @@ using System.Text.Json;
 using Application.Services.MultiLanguage;
 using Words.Core.Dto.Response;
 using Words.Website.Config;
+using YorubaOrganization.Core.Dto.Response;
 
 namespace Words.Website.Services
 {
@@ -72,22 +73,9 @@ namespace Words.Website.Services
             return GetApiResponse<WordsMetadataDto>("/words/meta");
         }
 
-        public Task<RecentStatsDto?> GetRecentStats()
+        public Task<RecentStats?> GetRecentStats()
         {
-            return GetApiResponse<RecentStatsDto>("/words/search/activity");
+            return GetApiResponse<RecentStats>("/words/search/activity");
         }
-    }
-
-    public class RecentStatsDto
-    {
-        public string[] LatestSearches { get; set; } = [];
-        public string[] LatestAdditions { get; set; } = [];
-        public string[] MostPopular { get; set; } = [];
-    }
-
-    public static class YorubaAlphabetService
-    {
-        public static List<string> YorubaAlphabet =>
-            ["A", "B", "D", "E", "Ẹ", "F", "G", "Gb", "H", "I", "J", "K", "L", "M", "N", "O", "Ọ", "P", "R", "S", "Ṣ", "T", "U", "W", "Y"];
     }
 }
