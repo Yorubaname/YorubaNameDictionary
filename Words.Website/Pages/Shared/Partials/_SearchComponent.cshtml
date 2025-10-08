@@ -1,7 +1,7 @@
 @using Words.Website.Resources
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 
-<form action="/entries" method="get" class="form-horizontal" role="form">
+<form class="form-horizontal" role="form">
     <div class="search-input" id="search-tph">
         <input type="text" name="q" class="form-control th this-query" id="keyboard"
             placeholder="@Localizer["search-plchol"]" required autocomplete="off" spellcheck="false">
