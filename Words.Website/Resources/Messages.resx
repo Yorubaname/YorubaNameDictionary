@@ -59,10 +59,7 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root"
-    xmlns=""
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -101,10 +98,7 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -404,5 +398,26 @@
   </data>
   <data name="read-more" xml:space="preserve">
     <value>Read More</value>
+  </data>
+  <data name="faqs" xml:space="preserve">
+    <value>FAQs</value>
+  </data>
+  <data name="stay-updated" xml:space="preserve">
+    <value>Stay updated with our latest</value>
+  </data>
+  <data name="enter-email" xml:space="preserve">
+    <value>Enter Email</value>
+  </data>
+  <data name="follow-us" xml:space="preserve">
+    <value>Follow Us</value>
+  </data>
+  <data name="we-are-social" xml:space="preserve">
+    <value>We are social</value>
+  </data>
+  <data name="newsletter" xml:space="preserve">
+    <value>Newsletter</value>
+  </data>
+  <data name="about-us" xml:space="preserve">
+    <value>About Us</value>
   </data>
 </root>
