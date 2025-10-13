@@ -370,9 +370,13 @@
 
                     <p class="ety-sl" data-entry-id="1">How could we have illustrated it better?</p>
 
-                    <form name="word_feedback" action="/v1/feedbacks" method="post">
+                    <form name="word_feedback" action="/api/v1/words/feedback" method="post">
                         <input id="wordToFeedback" type="hidden" value="@Model.Word.Word" />
-                        <textarea name="feedback" id="improveEntry" required="true" cols="40" rows="5"></textarea>
+                        <textarea name="feedback"
+                                  id="improveEntry"
+                                  required
+                                  cols="40"
+                                  rows="5"></textarea>
                         <br>
                         <button type="submit" id="submitEntry" class="btnz">Submit Message</button>
                     </form>
