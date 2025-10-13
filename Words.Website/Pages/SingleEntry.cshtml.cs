@@ -6,6 +6,7 @@ using Words.Core.Dto.Response;
 using Words.Website.Pages.Shared;
 using Words.Website.Resources;
 using Words.Website.Services;
+using YorubaOrganization.Application.Services;
 
 namespace Words.Website.Pages
 {
@@ -27,7 +28,7 @@ namespace Words.Website.Pages
 
             if (word == null)
             {
-                return Redirect($"/search?q={HttpUtility.UrlEncode(wordEntry)}");
+                return Redirect($"/entries?q={HttpUtility.UrlEncode(wordEntry)}");
             }
 
             ViewData["SocialTitle"] = word.Word;
@@ -35,23 +36,12 @@ namespace Words.Website.Pages
             ViewData["SocialDescription"] = word.Definitions?.FirstOrDefault()?.Content ?? "";
 
             Word = word;
-
-            // Initialize alphabet letters (simplified version)
-            Letters = GetYorubaAlphabet();
+            Letters = YorubaAlphabetService.YorubaAlphabet;
 
             var searchActivity = await _apiService.GetRecentStats();
             MostPopular = searchActivity?.MostPopular ?? [];
 
             return Page();
-        }
-
-        private static List<string> GetYorubaAlphabet()
-        {
-            return new List<string>
-            {
-                "A", "B", "D", "E", "Ẹ", "F", "G", "GB", "H", "I", "J", "K", "KP", "L", "M",
-                "N", "O", "Ọ", "P", "R", "S", "Ṣ", "T", "U", "W", "Y"
-            };
         }
     }
 }

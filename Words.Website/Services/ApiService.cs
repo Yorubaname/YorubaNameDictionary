@@ -55,7 +55,7 @@ namespace Words.Website.Services
 
         public Task<WordEntryDto?> GetWord(string wordEntry)
         {
-            return GetApiResponse<WordEntryDto?>($"/words/{wordEntry}");
+            return GetApiResponse<WordEntryDto?>($"/words/search/{wordEntry}");
         }
 
         public Task<WordEntryDto[]?> GetAllWordsByAlphabet(string letter)
@@ -70,12 +70,12 @@ namespace Words.Website.Services
 
         public Task<WordsMetadataDto?> GetIndexedWordCount()
         {
-            return GetApiResponse<WordsMetadataDto>("/words/meta");
+            return GetApiResponse<WordsMetadataDto>("/words/search/meta");
         }
 
         public Task<RecentStats?> GetRecentStats()
         {
-            return GetApiResponse<RecentStats>("/words/search/activity");
+            return GetApiResponse<RecentStats>("/words/search/activity/all");
         }
     }
 }
