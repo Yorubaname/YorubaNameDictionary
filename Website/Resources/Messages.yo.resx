@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="welcome" xml:space="preserve">
-    <value>Ẹ káàbọ̀</value>
+  <data name="about" xml:space="preserve">
+    <value>Nípa Wa</value>
   </data>
   <data name="home" xml:space="preserve">
     <value>Ilé</value>
   </data>
-  <data name="about" xml:space="preserve">
-    <value>Nípa Wa</value>
+  <data name="welcome" xml:space="preserve">
+    <value>Ẹ káàbọ̀</value>
   </data>
   <data name="donate" xml:space="preserve">
     <value>Rànwálọ́wọ́</value>
@@ -386,5 +386,11 @@
   </data>
   <data name="name-count-tagline" xml:space="preserve">
     <value>Ó ju Orùkọ {1} {0} lọ tí a ní níbí</value>
+  </data>
+  <data name="terms-of-use" xml:space="preserve">
+    <value>Terms of Use</value>
+  </data>
+  <data name="terms" xml:space="preserve">
+    <value>Terms</value>
   </data>
 </root>
