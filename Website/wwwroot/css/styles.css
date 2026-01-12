@@ -448,6 +448,30 @@ ul.alphabets li:hover {
 	color: #555;
 }
 
+/* Terms page styles */
+.terms-content {
+	background: #ffffff;
+	padding: 22px 26px;
+	border-radius: 4px;
+	color: #333333;
+	line-height: 1.7;
+	-webkit-box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+	-moz-box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+	box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.terms-content h1,
+.terms-content h3 {
+	color: #075265;
+}
+.terms-content p small { color: #777; }
+
+.terms-sep {
+	border: 0;
+	height: 1px;
+	margin: 20px 0;
+	background: linear-gradient(to right, transparent, #cda463 40%, #cda463 60%, transparent);
+}
+
 /* ----- Media queries ----- */
 
 @media (max-width: 1200px) {

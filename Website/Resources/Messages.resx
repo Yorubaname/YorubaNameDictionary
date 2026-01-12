@@ -387,4 +387,10 @@
   <data name="name-count-tagline" xml:space="preserve">
     <value>Over {0} {1} names and growing...</value>
   </data>
+  <data name="terms-of-use" xml:space="preserve">
+    <value>Terms of Use</value>
+  </data>
+  <data name="terms" xml:space="preserve">
+    <value>Terms</value>
+  </data>
 </root>
