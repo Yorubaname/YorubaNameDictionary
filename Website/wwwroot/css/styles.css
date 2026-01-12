@@ -388,6 +388,39 @@ footer a + a {
 	margin-left: 10px;
 }
 
+/* Make footer links visually distinct from surrounding text - stronger specificity */
+
+/* Footer links: inherit site color and show underline; blue on hover */
+footer p a,
+footer .col-sm-4.text-right a,
+footer a.terms-link {
+	color: inherit !important;
+	text-decoration: underline !important;
+	font-weight: 400 !important;
+}
+
+footer p a:hover,
+footer .col-sm-4.text-right a:hover,
+footer a.terms-link:hover {
+	color: #04363b !important;
+	text-decoration: underline !important;
+}
+
+/* Also ensure visited links use the same color */
+footer a:visited {
+	color: inherit !important;
+}
+
+/* Footer social icons: inherit color, smooth transition, turn blue on hover */
+footer .social-links a {
+	color: inherit !important;
+	transition: color 150ms ease-in-out;
+}
+
+footer .social-links a:hover {
+	color: #075265 !important;
+}
+
 ul.alphabets {
 	list-style: none;
 	text-align: center;
