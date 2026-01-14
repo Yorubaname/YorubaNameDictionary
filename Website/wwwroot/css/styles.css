@@ -111,6 +111,11 @@ header {
 	padding-bottom: 25px;
 }
 
+/* ensure header content can layer above other elements on small screens */
+header {
+  position: relative;
+}
+
 .navbar {
 	border-radius: 0;
     margin-bottom: 0px;
@@ -118,6 +123,14 @@ header {
 
 .navbar-brand {
 	padding:0;
+}
+
+/* make logo link sit above collapsible/navbar elements so it's clickable on mobile */
+.navbar-brand a,
+.navbar-brand img.logo {
+	position: relative;
+	z-index: 2000;
+	display: inline-block;
 }
 
 header .container img.logo {
@@ -297,6 +310,14 @@ header .container img.logo {
 .social-links {
   font-size: 20px;
   display: inline-block;
+}
+
+/* Separator between content and footer */
+.footer-sep {
+	border: 0;
+	height: 1px;
+	margin: 30px 0 20px;
+	background: linear-gradient(to right, transparent, #cda463 40%, #cda463 60%, transparent);
 }
 
 .social-links a {
