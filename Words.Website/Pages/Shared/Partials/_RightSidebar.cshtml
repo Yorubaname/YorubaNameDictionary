@@ -1,0 +1,16 @@
+@using Words.Website.Resources
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+
+<div class="col-lg-4 col-xl-3 popo-bg-p">
+    @if (Model != null)
+    {
+        <p class="popotext-p">@Localizer["most-popular"]</p>
+        <ul class="popo-wd-p" id="side_popular">
+            @foreach (var popularWord in Model)
+            {
+                <li><a href="/entries/@popularWord">@popularWord</a></li>
+            }
+        </ul>
+    }
+</div>

@@ -1,0 +1,88 @@
+@page
+@using Application.Services.MultiLanguage
+@using Words.Website.Resources
+@using Words.Website.Pages.Shared.Partials
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+@inject ILanguageService LanguageService
+
+@await Html.PartialAsync("Partials/_SearchFormWithAlphabet", new SearchFormWithAlphabetModel {
+ShowAlphabet = true,
+ShowTagline = true,
+Letters = Model.Letters // Make sure IndexModel exposes Letters
+})
+
+@await Html.PartialAsync("Partials/_Blogs")
+
+<!-- middle section -->
+<section>
+    <div class="container">
+        <div class="row midbar">
+            <div class="col-md-4 col-lg-4 popo-bg">
+                <p class="popotext">@Localizer["latest-search"]</p>
+                <ul class="popo-wd">
+                    @foreach (var search in Model.LatestSearches)
+                    {
+                        <li><a href="/entries/@search">@search</a></li>
+                    }
+                </ul>
+            </div>
+
+            <div class="col-md-4 col-lg-4 popo-bg">
+                <p class="popotext">@Localizer["latest-add"]</p>
+                <ul class="popo-wd">
+                    @foreach (var addition in Model.LatestAdditions)
+                    {
+                        <li><a href="/entries/@addition">@addition</a></li>
+                    }
+                </ul>
+            </div>
+
+            <div class="col-md-4 col-lg-4 popo-bg">
+                <p class="popotext">@Localizer["most-popular"]</p>
+                <ul class="popo-wd">
+                    @foreach (var popular in Model.MostPopular)
+                    {
+                        <li><a href="/entries/@popular">@popular</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- end middle section -->
+
+<!-- CTA section -->
+<section class="ctab">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>@Localizer["would-you-like-to-add"]</h2>
+                <p>@Localizer["appreciate-input"]</p>
+                <a href="/submit-word" class="btn btn-lg btn-link"
+                    style="margin-bottom:15px">@Localizer["add-to-dictionary"]</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="faqq hidden">
+    <div class="container">
+        <div class="row">
+            <h2 class="faqq-header">@Localizer["frequently-asked-questions"]</h2>
+            <div class="col-md-6" style="padding-bottom: 30px;">
+                <h4>@Localizer["how-do-you-get-words"]</h4><br>
+                <p>@Localizer["faq-answer-1"]</p>
+            </div>
+            <div class="col-md-6" style="padding-bottom: 30px;">
+                <h4>@Localizer["how-do-you-verify"]</h4><br>
+                <p>@Localizer["faq-answer-2"]</p>
+            </div>
+            <a href="/faqs" class="btn btn-lg btn-link" style="margin-bottom:15px;">@Localizer["read-more"]</a>
+        </div>
+    </div>
+</section>

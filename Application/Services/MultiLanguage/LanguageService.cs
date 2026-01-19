@@ -61,7 +61,8 @@ namespace Application.Services.MultiLanguage
 
         private string GetTenantFromHeader()
         {
-            var currentTenant = _httpContextAccessor.HttpContext?.Items["Tenant"]?.ToString();
+            var httpContext = _httpContextAccessor.HttpContext;
+            var currentTenant = httpContext?.Request.Headers["X-Tenant"].FirstOrDefault();
 
             return currentTenant switch
             {

@@ -23,7 +23,7 @@ namespace Website.Services
 
             // Create the request message
             var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Add("X-Language", languageService.CurrentTenant);
+            request.Headers.Add("X-Tenant", languageService.CurrentTenant);
             var response = await _httpClient.SendAsync(request);
 
             var rawContent = await response.Content.ReadAsStringAsync();

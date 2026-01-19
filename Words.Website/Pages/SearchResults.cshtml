@@ -1,0 +1,45 @@
+@page "/entries"
+@using Application.Services.MultiLanguage
+@using Words.Website.Resources
+@using Words.Core.Dto.Response
+@model Words.Website.Pages.SearchResultsModel
+@{
+    ViewData["Title"] = "Search Results";
+}
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+@inject ILanguageService LanguageService
+
+@await Html.PartialAsync("Partials/_MiniSearchForm")
+
+<!-- main-content -->
+<section id="content">
+    <div class="container">
+        <div class="row">
+            
+            <div class="col-sm-7 search-results">
+                <h4>@Localizer["lang.entry-not-found.no-match"] <strong class="intonation"><i>@Model.Query</i></strong><br/>
+                    @Localizer["lang.entry-not-found.suggest-pretext"]
+                    <a href="/submit-word?missing=@Model.Query">@Localizer["lang.go-to-suggest-linktext"]</a>
+                </h4>
+
+                @if (Model.Words != null && Model.Words.Length > 0)
+                {
+                    <p>@Localizer["lang.entry-not-found.similar-names"]</p>
+                    @foreach (var word in Model.Words)
+                    {
+                        <hr>
+                        <h4 class="strong-text intonation"><a href="/entries/@word.Word">@word.Word</a></h4>
+
+                        <p><strong>Brief Meaning: </strong> @(word.Definitions?.FirstOrDefault()?.Content ?? "") </p>
+
+                        <!--<p class="small text-muted"><strong>@Localizer["lang.submitby"]</strong> @word.SubmittedBy</p>-->
+                    }
+                }
+            </div>
+            @await Html.PartialAsync("Partials/_Alphabets", Model.Letters)
+        </div>
+    </div>
+</section>
+
+<!-- /main-content -->

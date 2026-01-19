@@ -1,0 +1,32 @@
+@model Words.Website.Pages.Shared.Partials.SearchFormWithAlphabetModel
+
+<section id="searchform">
+    <div class="jumbotron" id="home-banner">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    @if (Model.ShowTagline)
+                    {
+                        <h1>The Only Multimedia Yorùbá Dictionary Online</h1>
+                    }
+
+                    <div class="search-background">
+                        <h4>Names listed alphabetically:</h4>
+
+                        @if (Model.ShowAlphabet)
+                        {
+                            @await Html.PartialAsync("Partials/_Alphabets", Model.Letters)
+                        }
+
+                        @await Html.PartialAsync("Partials/_SearchComponent")
+                    </div>
+
+                    @await Html.PartialAsync("Partials/_Donate")
+
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+    </div>
+</section>
