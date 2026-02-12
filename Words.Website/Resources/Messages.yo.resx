@@ -231,6 +231,12 @@
   <data name="number-of-names" xml:space="preserve">
     <value>Iye àwọn orúkọ</value>
   </data>
+  <data name="number-of-words" xml:space="preserve">
+    <value>Iye àwọn ọ̀rọ̀</value>
+  </data>
+  <data name="words-starting-with" xml:space="preserve">
+    <value>Àwọn ọ̀rọ̀ tí ó bẹ̀rẹ̀ pẹ̀lú</value>
+  </data>
   <data name="word-listed-by-alphabets" xml:space="preserve">
     <value>Awọn orúkọ tí a kọ ní A-B-D</value>
   </data>

@@ -142,4 +142,10 @@
   <data name="about-us" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="number-of-words" xml:space="preserve">
+    <value>Number of words</value>
+  </data>
+  <data name="words-starting-with" xml:space="preserve">
+    <value>Words starting with</value>
+  </data>
 </root>

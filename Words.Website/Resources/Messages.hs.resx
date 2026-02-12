@@ -126,4 +126,10 @@
   <data name="welcome" xml:space="preserve">
     <value>Maraba</value>
   </data>
+  <data name="number-of-words" xml:space="preserve">
+    <value>Number of words</value>
+  </data>
+  <data name="words-starting-with" xml:space="preserve">
+    <value>Words starting with</value>
+  </data>
 </root>

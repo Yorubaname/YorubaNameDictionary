@@ -231,6 +231,12 @@
   <data name="number-of-names" xml:space="preserve">
     <value>Number of names</value>
   </data>
+  <data name="number-of-words" xml:space="preserve">
+    <value>Number of words</value>
+  </data>
+  <data name="words-starting-with" xml:space="preserve">
+    <value>Words starting with</value>
+  </data>
   <data name="word-listed-by-alphabets" xml:space="preserve">
     <value>Names listed alphabetically</value>
   </data>
