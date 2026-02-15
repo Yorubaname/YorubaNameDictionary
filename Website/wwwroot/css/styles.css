@@ -1,5 +1,4 @@
 /* SECTION 0: Keyboard UI Override */
-
 .ui-keyboard {
 	background-color: rgba(205, 164, 99, 0.8);
 	border-bottom-right-radius: 4px;
@@ -9,8 +8,6 @@
 }
 
 /* SECTION 1: Bootstrap Override */
-
-
 .form-control, .btn, input, textarea { border-radius:0; }
 
 .btn-link:hover {
@@ -410,8 +407,6 @@ footer a + a {
 }
 
 /* Make footer links visually distinct from surrounding text - stronger specificity */
-
-/* Footer links: inherit site color and show underline; blue on hover */
 footer p a,
 footer .col-sm-4.text-right a,
 footer a.terms-link {
@@ -527,9 +522,7 @@ ul.alphabets li:hover {
 }
 
 /* ----- Media queries ----- */
-
 @media (max-width: 1200px) {
-
 }
 
 @media (max-width: 767px) {
