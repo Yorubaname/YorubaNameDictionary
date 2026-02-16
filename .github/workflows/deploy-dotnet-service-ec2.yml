@@ -50,9 +50,9 @@ jobs:
         echo "$SSH_PRIVATE_KEY" > private_key
         chmod 600 private_key
         rsync -avz --exclude 'appsettings.json' -e "ssh -i private_key -o StrictHostKeyChecking=no" out/ ec2-user@$EC2_INSTANCE_IP:$SERVICE_PATH
-      if [ -n "$SERVICE_FILE" ]; then
-        scp -i private_key -o StrictHostKeyChecking=no "$SERVICE_FILE" ec2-user@$EC2_INSTANCE_IP:/tmp/
-      fi
+        if [ -n "$SERVICE_FILE" ]; then
+          scp -i private_key -o StrictHostKeyChecking=no "$SERVICE_FILE" ec2-user@$EC2_INSTANCE_IP:/tmp/
+        fi
         ssh -i private_key -o StrictHostKeyChecking=no ec2-user@$EC2_INSTANCE_IP "
         SERVICE_UNIT=\"$SERVICE_NAME\"
         if [[ \"$SERVICE_UNIT\" != *.service ]]; then
