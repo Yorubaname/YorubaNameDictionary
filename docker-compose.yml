@@ -7,6 +7,14 @@ services:
     depends_on:
       - api
 
+  words-website:
+    image: ${DOCKER_REGISTRY-}words-website
+    build:
+      context: .
+      dockerfile: Words.Website/Dockerfile
+    depends_on:
+      - api
+
   api:
     image: ${DOCKER_REGISTRY-}api
     build:
@@ -21,6 +29,8 @@ services:
     container_name: ynd-mongodb
     ports:
       - "27020:27017"
+    volumes:
+      - mongodb-data:/data/db
   redis:
     image: redis:latest
     container_name: redis
@@ -31,4 +41,5 @@ services:
 
 volumes:
   redis-data:
+  mongodb-data:
 

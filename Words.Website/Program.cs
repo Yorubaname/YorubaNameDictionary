@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using ProxyKit;
 using System.Globalization;
-using Website.Config;
-using Website.Middleware;
-using Website.Services;
+using Words.Website.Config;
+using Words.Website.Middleware;
+using Words.Website.Services;
 
-namespace Website
+namespace Words.Website
 {
     public class Program
     {
@@ -45,6 +45,7 @@ namespace Website
             services.AddRazorPages().AddViewLocalization();
 
             services.AddHttpClient();
+
             services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
             services.AddTransient<ApiService>();
             services.AddTransient<ILanguageService, LanguageService>();
@@ -58,7 +59,6 @@ namespace Website
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Error/500");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -69,10 +69,9 @@ namespace Website
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-
             app.MapRazorPages();
 
-            // TODO Hafiz: Consider that this might not be necessary with the proxy in NGINX.
+            // Proxy API requests
             app.Map("/api/v1", appBuilder =>
             {
                 appBuilder.RunProxy(context =>
