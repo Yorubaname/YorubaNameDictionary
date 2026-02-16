@@ -1,18 +1,18 @@
-name: Deploy Website to EC2 PROD
+name: Deploy Dictionary to EC2 staging
 
 on:
   push:
     branches:
-      - PROD
+      - main
 
 jobs:
   fetch-vars:
     if: github.repository_owner == 'Yorubaname'
     runs-on: ubuntu-latest
-    environment: PROD
+    environment: staging
     outputs:
-      service_name: ${{ vars.WEBSITE_SERVICE_NAME }}
-      service_path: ${{ vars.WEBSITE_SERVICE_PATH }}
+      service_name: ${{ vars.DICTIONARY_SERVICE_NAME }}
+      service_path: ${{ vars.DICTIONARY_SERVICE_PATH }}
     steps:
       - run: echo "Exposing vars to reusable workflow."
 
@@ -22,8 +22,8 @@ jobs:
     uses: ./.github/workflows/deploy-dotnet-service-ec2.yml
     secrets: inherit
     with:
-      project-name: Website
+      project-name: Words.Website
       dotnet-version: '8.0.x'
       service-name: ${{ needs.fetch-vars.outputs.service_name }}
       service-path: ${{ needs.fetch-vars.outputs.service_path }}
-      environment: PROD
+      environment: staging
