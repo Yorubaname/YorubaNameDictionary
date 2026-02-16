@@ -1,0 +1,102 @@
+@page "/contact-us"
+@using Application.Services.MultiLanguage
+@using Words.Website.Resources
+@model Words.Website.Pages.ContactModel
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+@inject ILanguageService LanguageService
+
+@await Html.PartialAsync("Partials/_SearchForm")
+
+<!-- main-content -->
+
+<section class="contact text-center">
+
+    <div class="section-padding">
+
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-sm-4">
+
+                    <div class="item">
+
+                        <div class="item-icon">
+
+                            <i class="icon icon-call-out"></i>
+
+                        </div>
+
+                        <h3 class="item-title">Phone</h3>
+
+                        <span>+234-803-YorubaName</span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-4">
+
+                    <div class="item">
+
+                        <div class="item-icon">
+
+                            <i class="icon icon-location-pin"></i>
+
+                        </div>
+
+                        <h3 class="item-title">Address</h3>
+
+                        <span>2nd Floor, The Garnet Building, Lekki-Epe Express Road, Lekki, Lagos 101245,
+                            Nigeria</span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-4">
+
+                    <div class="item">
+
+                        <div class="item-icon">
+
+                            <i class="icon icon-envelope-open"></i>
+
+                        </div>
+
+                        <h3 class="item-title">Email</h3>
+
+                        <span><a href="#">contact_us@yorubaword.com</a></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <form action="" class="wpcf7-form" method="post">
+
+                <input type="text" class="form-control" name="name" placeholder="Your Name" required="">
+
+                <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
+
+                <textarea name="message" class="form-control" cols="30" rows="5" placeholder="Your Message"></textarea>
+
+                <input type="submit" class="btnz" value="Submit Message">
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- /main-content -->
