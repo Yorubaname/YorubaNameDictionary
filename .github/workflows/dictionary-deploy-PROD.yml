@@ -26,4 +26,5 @@ jobs:
       dotnet-version: '8.0.x'
       service-name: ${{ needs.fetch-vars.outputs.service_name }}
       service-path: ${{ needs.fetch-vars.outputs.service_path }}
+      service-file: Server/yorubadictionary.web.service
       environment: PROD
