@@ -1,0 +1,19 @@
+[Unit]
+Description=Staging - Yoruba Dictionary Website
+After=network.target
+
+[Service]
+WorkingDirectory=/home/ec2-user/app/staging/yorubadictionary.web
+ExecStart=/usr/bin/dotnet /home/ec2-user/app/staging/yorubadictionary.web/Words.Website.dll
+Restart=always
+# Restart service after 30 seconds if the dotnet service crashes:
+RestartSec=30
+KillSignal=SIGINT
+SyslogIdentifier=staging-yorubadictionary-website
+User=ec2-user
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://localhost:5002
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+[Install]
+WantedBy=multi-user.target

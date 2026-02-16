@@ -1,0 +1,15 @@
+[Unit]
+Description=Yoruba TTS Synthesizer
+After=network.target
+
+[Service]
+User=ec2-user
+WorkingDirectory=/home/ec2-user/app/YorubaTTS
+Environment="PATH=/home/ec2-user/app/YorubaTTS/venv/bin:/usr/bin"
+ExecStart=/home/ec2-user/app/YorubaTTS/venv/bin/gunicorn --workers 3 --log-file=- app:app
+RestartSec=30
+KillSignal=SIGINT
+SyslogIdentifier=yoruba-tts-synthesizer
+
+[Install]
+WantedBy=multi-user.target
