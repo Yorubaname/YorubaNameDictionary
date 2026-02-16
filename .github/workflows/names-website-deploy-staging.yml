@@ -1,0 +1,29 @@
+name: Deploy Names Website to EC2 staging
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  fetch-vars:
+    if: github.repository_owner == 'Yorubaname'
+    runs-on: ubuntu-latest
+    environment: staging
+    outputs:
+      service_name: ${{ vars.NAMES_WEBSITE_SERVICE_NAME }}
+      service_path: ${{ vars.NAMES_WEBSITE_SERVICE_PATH }}
+    steps:
+      - run: echo "Exposing vars to reusable workflow."
+
+  deploy:
+    if: github.repository_owner == 'Yorubaname'
+    needs: fetch-vars
+    uses: ./.github/workflows/deploy-dotnet-service-ec2.yml
+    secrets: inherit
+    with:
+      project-name: Website
+      dotnet-version: '8.0.x'
+      service-name: ${{ needs.fetch-vars.outputs.service_name }}
+      service-path: ${{ needs.fetch-vars.outputs.service_path }}
+      environment: staging

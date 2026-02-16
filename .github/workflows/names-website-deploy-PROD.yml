@@ -1,18 +1,18 @@
-name: Deploy Website to EC2 staging
+name: Deploy Names Website to EC2 PROD
 
 on:
   push:
     branches:
-      - main
+      - PROD
 
 jobs:
   fetch-vars:
     if: github.repository_owner == 'Yorubaname'
     runs-on: ubuntu-latest
-    environment: staging
+    environment: PROD
     outputs:
-      service_name: ${{ vars.WEBSITE_SERVICE_NAME }}
-      service_path: ${{ vars.WEBSITE_SERVICE_PATH }}
+      service_name: ${{ vars.NAMES_WEBSITE_SERVICE_NAME }}
+      service_path: ${{ vars.NAMES_WEBSITE_SERVICE_PATH }}
     steps:
       - run: echo "Exposing vars to reusable workflow."
 
@@ -26,4 +26,4 @@ jobs:
       dotnet-version: '8.0.x'
       service-name: ${{ needs.fetch-vars.outputs.service_name }}
       service-path: ${{ needs.fetch-vars.outputs.service_path }}
-      environment: staging
+      environment: PROD
