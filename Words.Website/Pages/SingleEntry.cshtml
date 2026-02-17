@@ -1,0 +1,411 @@
+@page "/entries/{wordEntry}"
+@using Application.Services.MultiLanguage
+@using Words.Website.Resources
+@model SingleEntryModel
+@{
+    ViewData["Title"] = $"Definition of {Model.Word.Word}";
+}
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+@inject ILanguageService LanguageService
+
+@await Html.PartialAsync("Partials/_SearchForm")
+
+<!-- /main-content -->
+
+<section class="ryt">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class=" col-lg-8 col-xl-9">
+
+                <div class="row entry-header">
+
+                    <div class="col-lg-12">
+
+                        <h1 class="hword" id="word-entry">@Model.Word.Word</h1>
+
+                        <span class="fl"><a class="important-blue-link" href="#">@Model.Word.PartOfSpeech</a></span>
+
+                    </div>
+
+                </div>
+
+                <div class="row entry-attr">
+
+                    <div class="col">
+
+                        @if (!string.IsNullOrEmpty(Model.Word.Syllables?.ToString()))
+                        {
+                            <span class="word-syllables">@Model.Word.Syllables</span>
+                            <span class="syl-break"> |</span>
+                        }
+
+                        <span class="prs">
+
+                            <span class="first-slash">\</span>
+
+                            @if (!string.IsNullOrEmpty(Model.Word.IpaNotation))
+                            {
+                                <span class="pr">@Model.Word.IpaNotation</span>
+                            }
+
+                            <a class="play-pron hw-play-pron hoverable converted pointer" id="tts-button">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    width="22px" height="22px" viewBox="0 0 26 26" version="1.1"
+                                    class="svg replaced-svg">
+
+                                    <defs>
+
+                                        <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
+
+                                            <stop offset="0%" style="stop-color:rgb(38,86,103);stop-opacity:1"></stop>
+
+                                            <stop offset="100%" style="stop-color:rgb(15,56,80);stop-opacity:1"></stop>
+
+                                        </linearGradient>
+
+                                    </defs>
+
+                                    <g id="Audio" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+
+                                        <g id="Icon/AudioPron">
+
+                                            <g id="Audio">
+
+                                                <circle id="Oval" class="outline" fill="url(#grad2) #265667" cx="13"
+                                                    cy="13" r="13"></circle>
+
+                                                <polygon class="logo" id="Path-2" stroke="#FFFFFF" fill="#FFFFFF"
+                                                    points="6 10.5031797 6 15.4563465 9.37102011 15.4563465 13 18 13 8.02789307 9.5 10.5031797">
+                                                </polygon>
+
+                                                <path class="logo2"
+                                                    d="M16,8.5 C17.4887382,10.0718463 18.2331073,11.569707 18.2331073,12.993582 C18.2331073,15.1293945 17.1165537,16.4498291 16,17.5894775"
+                                                    id="Path-3" stroke="#FFFFFF"></path>
+
+                                                <path class="logo2"
+                                                    d="M18.0189209,6.5 C20.0989176,8.3652264 21.138916,10.5318931 21.138916,13 C21.138916,15.4681069 20.0723674,17.6756672 17.93927,19.6226807"
+                                                    id="Path-4" stroke="#FFFFFF"></path>
+
+                                            </g>
+
+                                        </g>
+
+                                    </g>
+
+                                </svg>
+                            </a>
+
+                            <span class="last-slash">\</span><span class="syl-break"> |</span>
+
+                            @if (Model.Word.GeoLocation?.Any() == true)
+                            {
+                                <span class="word-syllables"><a href="#"
+                                        style="text-decoration: underline;">@Model.Word.GeoLocation.First().Place</a></span>
+                                <span class="syl-break"> |</span>
+                            }
+
+                            <span class="smd">
+
+                                <a href="http://www.facebook.com/sharer.php?u=@ViewData["BaseURL"]/entries/@Model.Word.Word"
+                                    title="Share to Facebook" target="_blank"><i class="fa fa-facebook"></i></a>
+
+                                <a href="https://twitter.com/intent/tweet?url=@ViewData["BaseURL"]/entries/@Model.Word.Word&amp;text=Did you know @Model.Word.Word means '@(Model.Word.Definitions?.FirstOrDefault()?.Content ?? "")'?&amp;hashtags=YorubaWords&amp;via=YorubaWords"
+                                    title="Share to Twitter" target="_blank">
+                                    <i class="fa fa-twitter"></i>
+                                </a>
+
+                            </span>
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="row vg-header" style="padding-top: 20px; padding-bottom: 20px;">
+
+                    <div class="col">
+
+                        <h5 class="ptw">
+                            <em>
+
+                                @if (!string.IsNullOrEmpty(Model.Word.GrammaticalFeature))
+                                {
+                                    <span class="ety-sl" data-entry-id="1"> <a href="#"
+                                            style="text-decoration: underline;">@Model.Word.GrammaticalFeature</a></span>
+                                    @if (!string.IsNullOrEmpty(Model.Word.Style))
+                                    {
+                                        <text> | </text>
+                                    }
+                                }
+
+                                @if (!string.IsNullOrEmpty(Model.Word.Style))
+                                {
+                                    <span class="ety-sl" data-entry-id="1"><a href="#"
+                                            style="text-decoration: underline;">@Model.Word.Style</a></span>
+                                }
+                            </em>
+
+                        </h5>
+                    </div>
+
+                </div>
+
+                <div id="dictionary-entry-1">
+
+                    <div class="row vg-header">
+
+                        <div class="col">
+
+                            <h2 class="ptm">Definition of <em>@Model.Word.Word&nbsp;</em></h2>
+                            <p class="entryNumbers"></p>
+                        </div>
+
+                    </div>
+
+                    <div class="vg">
+
+                        @if (Model.Word.Definitions?.Any() == true)
+                        {
+                            @for (int i = 0; i < Model.Word.Definitions.Count; i++)
+                            {
+                                var definition = Model.Word.Definitions[i];
+
+                                <div class="sb has-num has-let">
+
+                                    <div class="sb-0">
+
+                                        <p class="sense has-num-only">
+
+                                            <span class="sn sense-1"><span class="num">@(i + 1)</span></span>
+
+                                            <span class="dt ">
+
+                                                <span class="dtText">
+                                                    <strong class="mw_t_bc">: </strong>@definition.Content<strong
+                                                        class="mw_t_bc">:</strong>
+
+                                                    @if (definition.Examples?.Any() == true)
+                                                    {
+
+                                                        <span class="ex-sent t no-aq sents">
+                                                            @definition.Examples.First().Content
+                                                        </span>
+
+                                                    }
+
+                                                </span>
+
+                                            </span>
+                                        </p>
+
+                                    </div>
+
+                                </div>
+                            }
+                        }
+
+                    </div>
+
+                    <div id="first-known-anchor" class="row widget">
+
+                        <h2 class="ptm">English Translation</h2>
+
+                        <p class="ety-sl">
+                            @if (Model.Word.Definitions?.Any() == true)
+                            {
+                                @for (int i = 0; i < Model.Word.Definitions.Count; i++)
+                                {
+                                    var definition = Model.Word.Definitions[i];
+                                    @definition.EnglishTranslation
+                                    @if (i < Model.Word.Definitions.Count - 1)
+                                    {
+                                        <span>,&nbsp;</span>
+                                    }
+                                }
+                            }
+                        </p>
+
+                    </div>
+
+                    @* History section commented out until History property is added to WordEntryDto model
+                    @if (!string.IsNullOrEmpty(Model.Word.History))
+                    {
+                        <div id="first-known-anchor" class="row widget">
+
+                            <h2 class="ptm">Extra Information About This <em>word&nbsp;</em></h2>
+                            <p class="entryNumbers"></p> <br>
+
+                            <strong>History</strong>
+
+                            <br>
+
+                            <p>
+                                @Model.Word.History
+                            </p>
+
+                        </div>
+                    }
+                    *@
+
+                </div>
+
+                @{
+                    // Check if there are any examples in the word definitions (similar to Handlebars {{#if word.examples}})
+                    var hasExamples = Model.Word.Definitions?.Any(d => d.Examples?.Any() == true) == true;
+                }
+                @if (hasExamples)
+                {
+                    <div id="dictionary-entry-1">
+
+                        <div class="row vg-header">
+
+                            <div class="col">
+
+                                <h2 class="ptm">Example of <em>@Model.Word.Word&nbsp;</em></h2>
+                                <p class="entryNumbers"></p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="vg">
+
+                            <div class="sb has-num">
+
+                                <div class="sb-0">
+
+                                    <p class="sense has-num-only">
+
+                                        <span class="sn sense-1"><span class="num">a.</span></span>
+
+                                        <span class="dt ">
+
+                                            <span class="dtText">
+                                                <strong class="mw_t_bc"> </strong>
+                                                @{
+                                                    var firstExampleDefinition = Model.Word.Definitions?.FirstOrDefault(d => d.Examples?.Any() == true);
+                                                    var firstExample = firstExampleDefinition?.Examples?.FirstOrDefault();
+                                                }
+                                                @if (firstExample != null)
+                                                {
+                                                    @firstExample.Content
+                                                }
+                                                else
+                                                {
+                                                    <text>hard to do, make, or carry out</text>
+                                                }
+
+                                            </span>
+
+                                        </span>
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Word.Morphology?.ToString()))
+                {
+
+                    <div id="first-known-anchor" class="row widget">
+
+                        <h2 class="ptm">Morphology</h2>
+
+                        <p class="ety-sl">
+                            <span>@Model.Word.Morphology</span>
+                        </p>
+
+                    </div>
+
+                    <div id="first-known-anchor" class="row widget">
+
+                        <h2 class="ptm">Gloss</h2>
+
+                        @if (Model.Word.Etymology?.Any() == true)
+                        {
+                            @foreach (var etymologyItem in Model.Word.Etymology)
+                            {
+
+                                <p class="ety-sl" data-entry-id="1"><strong>@etymologyItem.Part</strong> - @etymologyItem.Meaning</p>
+
+                            }
+                        }
+
+                    </div>
+
+                }
+
+                @if (Model.Word.Variants?.Any() == true)
+                {
+
+                    <div id="first-known-anchor" class="row widget">
+
+                        <h2 class="ptm">Variants</h2>
+
+                        <ul>
+                            @foreach (var variant in Model.Word.Variants)
+                            {
+                                <li>@variant.Word</li>
+                            }
+                        </ul>
+
+                    </div>
+
+                }
+
+                <div class="row widget">
+
+                    <h2 class="ptm">What Do You Think About This Word?</h2>
+
+                    <p class="ety-sl" data-entry-id="1">How could we have illustrated it better?</p>
+
+                    <form name="word_feedback" action="/api/v1/words/feedback" method="post">
+                        <input id="wordToFeedback" type="hidden" value="@Model.Word.Word" />
+                        <textarea name="feedback"
+                                  id="improveEntry"
+                                  required
+                                  cols="40"
+                                  rows="5"></textarea>
+                        <br>
+                        <button type="submit" id="submitEntry" class="btnz">Submit Message</button>
+                    </form>
+
+                </div>
+
+                <div class="row widget">
+
+                    <i class="fa fa-edit"></i>
+
+                    @if (Model.Word.UpdatedAt != DateTime.MinValue && Model.Word.UpdatedAt != Model.Word.CreatedAt)
+                    {
+                        <span class="ety-sl" data-entry-id="1">Updated on <strong>@Model.Word.UpdatedAt.ToString("MMMM dd, yyyy")</strong></span>
+
+                        <text> and </text>
+                    }
+
+                    <span class="ety-sl" data-entry-id="1">Submitted on <strong>@Model.Word.CreatedAt.ToString("MMMM dd, yyyy")</strong></span>
+
+                </div>
+
+            </div>
+
+            @await Html.PartialAsync("Partials/_RightSidebar", Model.MostPopular)
+
+        </div>
+    </div>
+</section>
+
+<br>
+
+<!-- /main-content -->

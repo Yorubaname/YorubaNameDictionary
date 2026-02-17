@@ -1,0 +1,15 @@
+[Unit]
+Description=Yoruba Name Dictionary
+After=network.target
+
+[Service]
+User=ec2-user
+Group=ec2-user
+ExecStart=/home/ec2-user/app/website/start-app.sh
+SuccessExitStatus=143
+WorkingDirectory=/home/ec2-user/app/website
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

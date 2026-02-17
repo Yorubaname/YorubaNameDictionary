@@ -174,7 +174,6 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 });
 app.UseHttpsRedirection();
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
-app.UseMiddleware<TenantIdentificationMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

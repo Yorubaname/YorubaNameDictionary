@@ -1,0 +1,14 @@
+@model IEnumerable<string>?
+@using Words.Website.Utilities
+
+<ul class="alphasearch">
+    @if (Model != null)
+    {
+        foreach (var letter in Model)
+        {
+            <a href="/alphabet/@letter.NormalizeLetter()">
+                <li>@letter.NormalizeLetter()</li>
+            </a>
+        }
+    }
+</ul>
