@@ -12,25 +12,20 @@
     <section class="hero-section">
         <div class="container">
             <h1 class="display-4 fw-bold mb-4">@Localizer["jumbotron1"] @Localizer["jumbotron2", Model.NameCount, LanguageService.LanguageDisplay]</h1>
-
-            <form class="search-input-group" role="search" action="/entries" method="GET">
-                <input type="text" class="form-control" id="keyboard" name="q" placeholder="@Localizer["search-plchol", LanguageService.LanguageDisplay]" autocomplete="off">
-                <button class="btn btn-search" type="submit"><i class="bi bi-search"></i></button>
-            </form>
-
+            @await Html.PartialAsync("Partials/_SearchComponent")
             <div class="mb-5">
+                <h5>@Localizer["jumboh31"]</h5>
                 <a href="/submitname" class="btn-submit-hero">
-                    <i class="bi bi-plus-circle-fill"></i> @Localizer["submit-name"]
+                     <i class="bi bi-plus-circle-fill"></i> @Localizer["jumboh32"]
                 </a>
             </div>
-
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     @if (LanguageService.IsYoruba)
                     {
                         <div class="text-white-50 fst-italic">
                             @Localizer["oni-message"] <br>
-                            <span class="text-white fw-bold mt-2 d-inline-block">— Ọọ̀ni Adéyẹyè Ẹniìtàn Ògúnwùsì</span> <small>(Ọ̀jájá II, Ọọ̀ni of Ifẹ̀ Kingdom)</small>
+                            <span class="text-white fw-bold mt-2 d-inline-block">&mdash; Ọọ̀ni Adéyẹyè Ẹniìtàn Ògúnwùsì</span> <small>(Ọ̀jájá II, Ọọ̀ni of Ifẹ̀ Kingdom)</small>
                         </div>
                     }
                 </div>
@@ -78,14 +73,22 @@
         </div>
     </div>
 
-    <div class="container mb-5">
+    <div class="container mb-5 py-5">
         <div class="text-center">
-            <h6 class="text-uppercase fw-bold text-muted mb-3 tracking-wide">@Localizer["name-listed-by-alphabets"]</h6>
-            <div class="alpha-grid">
-                 @foreach (var letter in Model.Letters)
-                {
-                    <a href="/alphabet/@letter.ToLower()" class="alpha-item">@letter</a>
-                }
+            <h6 class="text-uppercase fw-bold text-muted tracking-wide">@Localizer["name-listed-by-alphabets"]</h6>
+            <div class="mb-5 pt-2">
+                @await Html.PartialAsync("Partials/_Alphabets", Model.Letters)
+            </div>
+            <div class="ad-container my-5 mx-auto" style="max-width: 900px; min-height: 100px; background: #f8f9fa;">
+                <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-9086385957783523"
+                    data-ad-slot="2857515438"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
             </div>
         </div>
     </div>
