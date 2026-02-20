@@ -9,93 +9,67 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 @inject ILanguageService LanguageService
 
-@await Html.PartialAsync("Partials/_MiniSearchForm")
+@await Html.PartialAsync("Partials/_MiniSearchForm");
 
-<section class="py-5 bg-light">
+<!-- main-content -->
+<section>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-xl-7">
-                
-                <div class="text-center mb-5">
-                    <h2 class="fw-bold">@Localizer["submitname.heading"]</h2>
-                    <p class="text-muted">Contribute to the largest dictionary of Yorùbá names.</p>
-                </div>
+        <div class="row">
+            <div class="col-sm-7">
+                <h3>@Localizer["submitname.heading"]</h3>
+                <hr />
 
-                <div id="error-msg" class="alert alert-danger d-none shadow-sm border-0" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <div style="display: none" id="error-msg" class="alert alert-danger" role="alert">
                     @Localizer["submitname.nameexists"].
-                    <a id="view-entry" class="alert-link fw-bold text-decoration-underline" style="cursor: pointer;">
-                        @Localizer["submitname.viewentry"]
-                    </a>
+                    <a id="view-entry">@Localizer["submitname.viewentry"]</a>
                 </div>
+                <form id="suggest-form">
 
-                <div class="card border-0 shadow-sm rounded-4">
-                    <div class="card-body p-4 p-md-5">
-                        
-                        <form id="suggest-form">
-                            <div class="response"></div>
+                    <div class="response"></div>
 
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">
-                                    @Localizer["submitname.entername"] <span class="text-danger">*</span>
-                                </label>
-                                
-                                <div class="input-group input-group-lg">
-                                    <input type="text" class="form-control" id="miniKeyboard" name="name"
-                                           placeholder="@Localizer["submitname.enternameplch"]" 
-                                           value="@Model.MissingName" required>
-                                </div>
-                                
-                                @if (LanguageService.IsYoruba)
-                                {
-                                    <div class="form-text text-muted mt-2">
-                                        <i class="bi bi-keyboard"></i> @Localizer["entry-not-found.minikeyb-text"]
-                                    </div>
-                                }
+                    <div class="form-group">
+                        <label class="required">@Localizer["submitname.entername"]</label>
+                        <p class="small sec-color">
+                            @if (LanguageService.IsYoruba)
+                            {
+                                @Localizer["entry-not-found.minikeyb-text"]
+                            }
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="miniKeyboard" name="name"
+                                       placeholder="@Localizer["submitname.enternameplch"]" value="@Model.MissingName" required="true">
                             </div>
+                        </p>
+                    </div><br>
 
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">
-                                    @Localizer["submitname.entermeaning"]: <span class="text-danger">*</span>
-                                </label>
-                                <textarea name="suggestedMeaning" id="suggestedMeaning" class="form-control" 
-                                          rows="4" required></textarea>
-                            </div>
+                    <div class="form-group">
+                        <label class="required">@Localizer["submitname.entermeaning"]:</label>
+                        <textarea required name="suggestedMeaning" id="suggestedMeaning" class="form-control"
+                                  rows="3"></textarea>
+                    </div><br>
 
-                            <div class="mb-4">
-                                <label class="form-label fw-bold">
-                                    @Localizer["submitname.enterlocation"]:
-                                </label>
-                                
-                                <div class="legacy-select-container">
-                                    <select name="suggestedGeoLocation" id="suggestedGeoLocation" multiple="multiple" style="width: 100%;">
-                                        @foreach (var geoLocation in Model.GeoLocations)
-                                        {
-                                            <option value="@geoLocation.Region.@geoLocation.Place">@geoLocation.Place</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="form-text text-muted">Select all regions that apply.</div>
-                            </div>
-                            
-                            <div class="mb-5">
-                                <label class="form-label fw-bold">
-                                    @Localizer["submitname.enteremail"]: <span class="text-danger">*</span>
-                                </label>
-                                <input type="email" name="suggestedEmail" class="form-control form-control-lg" 
-                                       id="suggestedEmail" placeholder="name@example.com" required>
-                            </div>
+                    <div class="form-group">
+                        <label class="optional">@Localizer["submitname.enterlocation"]:</label>
+                        <select name="suggestedGeoLocation" id="suggestedGeoLocation" multiple="multiple">
+                            @foreach (var geoLocation in Model.GeoLocations)
+                            {
+                                <option value="@geoLocation.Region.@geoLocation.Place">@geoLocation.Place</option>
+                            }
+                        </select>
+                    </div><br>
 
-                            <div class="d-grid">
-                                <button type="submit" id="submit-name" class="btn btn-cta-gold btn-lg py-3 fw-bold">
-                                    SUBMIT NEW NAME
-                                </button>
-                            </div>
+                    <!--Uncomment when TTS is implemented<div class="form-group">-->
+                    <!--<label class="optonal">Please help us pronounce the new name:</label>-->
+                    <!--<input type="file" id="pronunciation">-->
+                    <!--</div>-->
 
-                        </form>
+                    <div class="form-group">
+                        <label class="required">@Localizer["submitname.enteremail"]:</label>
+                        <input type="email" name="suggestedEmail" class="form-control" id="suggestedEmail"
+                               placeholder="Your email" required="true">
                     </div>
-                </div>
 
+                    <button type="submit" id="submit-name" class="btn btn-success">Submit New Name</button>
+                </form>
             </div>
         </div>
     </div>

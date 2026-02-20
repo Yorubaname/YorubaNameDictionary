@@ -1,4 +1,4 @@
-@page
+﻿@page
 @using Application.Services.MultiLanguage
 @using Website.Resources
 @model IndexModel
@@ -6,89 +6,143 @@
     ViewData["Title"] = "Home";
 }
 
+@{
+    string bgImagePath = "";
+
+    if (LanguageService.IsYoruba)
+    {
+        bgImagePath = "/img/bg/yorubaname-bg.jpg";
+    }
+    else if (LanguageService.IsIgbo)
+    {
+        bgImagePath = "/img/bg/igboname-bg.jpg";
+    }
+}
+
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 @inject ILanguageService LanguageService
 
-    <section class="hero-section">
+<section id="searchform">
+    <div class="jumbotron" id="home-banner" style="--background-image: url('@bgImagePath')">
         <div class="container">
-            <h1 class="display-4 fw-bold mb-4">@Localizer["jumbotron1"] @Localizer["jumbotron2", Model.NameCount, LanguageService.LanguageDisplay]</h1>
+            <h1>@Localizer["jumbotron1"] @Localizer["jumbotron2", Model.NameCount, LanguageService.LanguageDisplay]</h1>
+
             @await Html.PartialAsync("Partials/_SearchComponent")
-            <div class="mb-5">
-                <h5>@Localizer["jumboh31"]</h5>
-                <a href="/submitname" class="btn-submit-hero">
-                     <i class="bi bi-plus-circle-fill"></i> @Localizer["jumboh32"]
-                </a>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    @if (LanguageService.IsYoruba)
+
+            @if (LanguageService.IsYoruba)
+            {
+                <p>
+                    @Localizer["oni-message"] <br> &mdash; Ọọ̀ni Adéyẹyè Ẹniìtàn Ògúnwùsì <em>
+                        (Ọ̀jájá II
+                        .Ọọ̀ni of Ifẹ̀ Kingdom)
+                    </em>
+                </p>
+            }
+
+            <h3>@Localizer["jumboh31"]</h3>
+            <a href="/submitname" class="btn btn-lg btn-link" style="margin-bottom:15px">@Localizer["jumboh32"]</a>
+        </div>
+    </div>
+</section>
+<!-- /search -->
+
+<section>
+    <div class="container">
+        <div class="llm row">
+            <div class="col-sm-4" id="recent_searches">
+                <ul>
+                    <li><h5>@Localizer["latest-search"]</h5></li>
+                    <hr />
+                    @foreach (var search in Model.LatestSearches)
                     {
-                        <div class="text-white-50 fst-italic">
-                            @Localizer["oni-message"] <br>
-                            <span class="text-white fw-bold mt-2 d-inline-block">&mdash; Ọọ̀ni Adéyẹyè Ẹniìtàn Ògúnwùsì</span> <small>(Ọ̀jájá II, Ọọ̀ni of Ifẹ̀ Kingdom)</small>
-                        </div>
+                        <li class="recent_entry"><a class="name" href="/entries/@search">@search</a></li>
                     }
-                </div>
+                </ul>
+            </div>
+            <div class="col-sm-4" id="recent_additions">
+                <ul>
+                    <li><h5>@Localizer["latest-add"]</h5></li>
+                    <hr />
+                    @foreach (var addition in Model.LatestAdditions)
+                    {
+                        <li class="recent_entry"><a class="name" href="/entries/@addition">@addition</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="col-sm-4" id="recent_popular">
+                <ul>
+                    <li><h5>@Localizer["most-popular"]</h5></li>
+                    <hr />
+                    @foreach (var popular in Model.MostPopular)
+                    {
+                        <li class="recent_entry"><a class="name" href="/entries/@popular">@popular</a></li>
+                    }
+                </ul>
             </div>
         </div>
-    </section>
 
-    <div class="container my-5" style="margin-top: -50px; position: relative; z-index: 10;">
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <div class="custom-card">
-                    <div class="list-title"><i class="bi bi-clock me-2"></i> @Localizer["latest-search"]</div>
-                    <ul class="recent-list">
-                        @foreach (var search in Model.LatestSearches)
-                        {
-                            <li><a href="/entries/@search">@search</a></li>
-                        }
-                    </ul>
-                </div>
-            </div>
-
-            <div class="col-lg-4">
-                <div class="custom-card">
-                    <div class="list-title"><i class="bi bi-plus-square me-2"></i> @Localizer["latest-add"]</div>
-                    <ul class="recent-list">
-                         @foreach (var addition in Model.LatestAdditions)
-                        {
-                            <li><a href="/entries/@addition">@addition</a></li>
-                        }
-                    </ul>
-                </div>
-            </div>
-
-            <div class="col-lg-4">
-                <div class="custom-card">
-                    <div class="list-title"><i class="bi bi-fire me-2"></i> @Localizer["most-popular"]</div>
-                    <ul class="recent-list">
-                        @foreach (var popular in Model.MostPopular)
-                        {
-                            <li><a href="/entries/@popular">@popular</a></li>
-                        }
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container mb-5 py-5">
         <div class="text-center">
-            <h6 class="text-uppercase fw-bold text-muted tracking-wide">@Localizer["name-listed-by-alphabets"]</h6>
-            <div class="mb-5 pt-2">
-                @await Html.PartialAsync("Partials/_Alphabets", Model.Letters)
+            <h4>@Localizer["name-listed-by-alphabets"]:</h4>
+            @await Html.PartialAsync("Partials/_Alphabets", Model.Letters)
+            <!-- Horizontal -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-9086385957783523"
+                 data-ad-slot="2857515438"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </div>
+    <!-- /llm -->
+
+    <div class="container">
+        <div class="row" style="margin-top: 40px;">
+            <div class="col-lg-12 col-lg-offset-0">
+                <div class="text-center">
+                    <div class="panel-footer">
+                        <h3>@Localizer["keyboard-software-cta-title"]</h3>
+                        <p>@Localizer["keyboard-software-cta-text"]}</p>
+                        <div class="text-center">
+                            <a class="btn btn-success ms-2" href="https://writeyoruba.com/m-checkout" style="margin-top:10px">
+                                <i class="fa fa-apple"></i>
+                                @Localizer["keyboard-software-cta-button-mac"]
+                            </a>
+                            <a class="btn btn-success ms-2" href="https://writeyoruba.com/w-checkout" style="margin-top:10px">
+                                <i class="fa fa-windows"></i>
+                                @Localizer["keyboard-software-cta-button-windows"]
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="ad-container my-5 mx-auto" style="max-width: 900px; min-height: 100px; background: #f8f9fa;">
-                <ins class="adsbygoogle"
-                    style="display:block"
-                    data-ad-client="ca-pub-9086385957783523"
-                    data-ad-slot="2857515438"
-                    data-ad-format="auto"
-                    data-full-width-responsive="true"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
+        </div>
+
+        <div class="row" style="margin-top:40px">
+            <div class="col-sm-4 col-sm-offset-2">
+                <div class="fb-page" data-href="https://www.facebook.com/YorubaNames" data-small-header="false"
+                     data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false"
+                     data-show-posts="false">
+                    <div class="fb-xfbml-parse-ignore">
+                        <blockquote cite="https://www.facebook.com/YorubaNames"><a href="https://www.facebook.com/YorubaNames">@Localizer["yoruba-name-dictionary"]</a></blockquote>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <form method="post" class="subscribe"
+                      action="//YorubaName.us10.list-manage.com/subscribe/post?u=447ae670439b332a80e50107c&amp;id=0cfdd9d988"
+                      target="_blank">
+                    <h4>@Localizer["yoruba-name-newsletter"]</h4>
+                    <p>@Localizer["follow-update"]</p>
+                    <input type="hidden" name="b_447ae670439b332a80e50107c_0cfdd9d988" tabindex="-1" value="">
+                    <div class="form-group">
+                        <input type="email" name="EMAIL" placeholder="@Localizer["enter-your-email"]" class="form-control" required="required">
+                        <button class="btn btn-success"><i class="fa fa-send"></i></button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</section>

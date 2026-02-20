@@ -18,26 +18,11 @@
     }
 }
 
-<section class="hero-section d-flex align-items-center" 
-         style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), url('@bgImagePath'); background-size: cover; background-position: center; min-height: 60vh;">
-    
-    <div class="container text-center text-white">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-8">
-                
-                <h1 class="display-4 fw-bold mb-3">
-                    @Localizer["jumbotron1"]
-                </h1>
-                
-                <p class="lead mb-5 fs-4" style="font-weight: 300; opacity: 0.9;">
-                    @Localizer["jumbotron2", Model, LanguageService.LanguageDisplay]
-                </p>
-
-                <div class="mx-auto" style="max-width: 700px;">
-                    @await Html.PartialAsync("Partials/_SearchComponent")
-                </div>
-
-            </div>
+<section id="searchform">
+    <div class="jumbotron" id="home-banner" style="--background-image: url('@bgImagePath')">
+        <div class="container">
+            <h1>@Localizer["jumbotron1"] @Localizer["jumbotron2", Model, LanguageService.LanguageDisplay]</h1>
+            @await Html.PartialAsync("Partials/_SearchComponent")
         </div>
     </div>
 </section>
