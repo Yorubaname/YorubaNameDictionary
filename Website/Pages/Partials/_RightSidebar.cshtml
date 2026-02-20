@@ -2,22 +2,16 @@
 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 
-<div class="custom-card mb-4">
+<div class="side-bar">
+
     @if (Model != null)
     {
-        <h5 class="list-title">
-            @Localizer["most-popular-names"]
-        </h5>
-
-        <ul class="recent-list">
+        <h4>@Localizer["most-popular-names"]</h4>
+        <hr />
+        <ul id="side_popular">
             @foreach (var popularName in Model)
             {
-                <li>
-                    <a href="/entries/@popularName">
-                        <i class="bi bi-star-fill text-warning me-2" style="font-size: 0.7em;"></i>
-                        @popularName
-                    </a>
-                </li>
+                <li><a href="/entries/@popularName">@popularName</a></li>
             }
         </ul>
     }

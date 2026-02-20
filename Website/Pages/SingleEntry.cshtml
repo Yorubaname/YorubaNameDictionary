@@ -14,231 +14,183 @@
 
 <!-- main-content -->
 
-<section id="content" class="py-5 bg-white">
+<section id="content">
     <div class="container">
-        <div class="row g-5">
-            
-            <div class="col-lg-8">
-                
-                <div class="d-flex align-items-center flex-wrap gap-3 mb-3">
-                    <h1 class="display-4 fw-bold text-dark mb-0 intonation" id="name-entry">@Model.Name.Name</h1>
-                    
-                    @if (LanguageService.IsYoruba)
-                    {
-                        <button class="btn btn-outline-dark rounded-circle d-flex align-items-center justify-content-center shadow-sm" 
-                                id="tts-button" 
-                                style="width: 45px; height: 45px;" 
-                                title="@Localizer["play-sound"]">
-                            <i class="bi bi-volume-up-fill fs-4"></i>
+        <div class="row search-result">
+            <div class="col-sm-7 entry">
+
+                <h2 class="intonation" id="name-entry">@Model.Name.Name</h2>
+
+                @if (LanguageService.IsYoruba)
+                {
+                    <p>
+                        <strong>@Localizer["pronunciation"]</strong>
+                        <button class="btn btn-default btn-sm" id="tts-button">
+                            <i class="fa fa-volume-up" data-placement="top" title="@Localizer["play-sound"]"></i>
                         </button>
-                    }
+                    </p>
+                }
+
+                <div class="share">
+                    <a class="btn btn-sm btn-success" href="#improve-entry" data-toggle="modal" data-target="#improveEntryModal" style="margin-right:20px">
+                        @Localizer["improve-entry"]  <i class="fa fa-pencil"></i>
+                    </a>
+                    <span class="text-muted">@Localizer["share"] <i class="fa fa-share-alt"></i></span>
+                    <a target="_blank" class="btn btn-social btn-sm btn-fb btn-primary" href="http://www.facebook.com/sharer.php?u=@ViewData["BaseURL"]/entries/@Model.Name.Name"><i class="fa fa-facebook"></i> </a>
+                    <a target="_blank" class="btn btn-social btn-sm btn-tw btn-info" href="https://twitter.com/intent/tweet?url=@ViewData["BaseURL"]/entries/@Model.Name.Name&amp;text=Did you know @Model.Name.Name means @Model.Name.Meaning?&amp;hashtags=@LanguageService.SocialName&amp;via=YorubaNames"><i class="fa fa-twitter"></i> </a>
                 </div>
 
-                <div class="d-flex flex-wrap gap-2 mb-5">
-                    <button type="button" class="btn btn-sm btn-outline-success fw-bold" 
-                            data-bs-toggle="modal" data-bs-target="#improveEntryModal">
-                        <i class="bi bi-pencil-square me-1"></i> @Localizer["improve-entry"]
-                    </button>
-
-                    <div class="d-flex align-items-center gap-2 ms-auto">
-                        <span class="text-muted small fw-bold text-uppercase">@Localizer["share"]:</span>
-                        <a target="_blank" class="btn btn-sm btn-primary border-0" style="background-color: #3b5998;"
-                           href="http://www.facebook.com/sharer.php?u=@ViewData["BaseURL"]/entries/@Model.Name.Name">
-                            <i class="bi bi-facebook"></i>
-                        </a>
-                        <a target="_blank" class="btn btn-sm btn-info text-white border-0" style="background-color: #1DA1F2;"
-                           href="https://twitter.com/intent/tweet?url=@ViewData["BaseURL"]/entries/@Model.Name.Name&amp;text=Did you know @Model.Name.Name means @Model.Name.Meaning?&amp;hashtags=@LanguageService.SocialName&amp;via=YorubaNames">
-                            <i class="bi bi-twitter"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="card bg-light border-0 p-4 mb-4 shadow-sm">
-                    <h4 class="text-secondary text-uppercase fs-6 fw-bold mb-2">@Localizer["meaningof"] @Model.Name.Name</h4>
-                    <p class="lead text-dark mb-0 fw-normal intonation">@Model.Name.Meaning</p>
-                </div>
+                <br><br>
+                <h4>@Localizer["meaningof"] @Model.Name.Name</h4>
+                <p class="intonation">@Model.Name.Meaning</p>
 
                 @if (!string.IsNullOrEmpty(Model.Name.ExtendedMeaning))
                 {
-                    <div class="mb-5">
-                        <h5 class="fw-bold text-warning border-bottom border-warning pb-2 mb-3">@Localizer["extendedmeaningof"]</h5>
-                        <p class="text-muted lh-lg">@Model.Name.ExtendedMeaning</p>
-                    </div>
-                }
-
-                @if (!string.IsNullOrEmpty(Model.Name.Morphology?.ToString()))
-                {
-                    <div class="mb-5">
-                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">@Localizer["morphology"]</h5>
-                        <p class="fs-5 badge bg-secondary text-white fw-normal intonation">@Model.Name.Morphology</p>
-                    </div>
-                }
-
-                @if (Model.Name.Etymology?.Count > 0)
-                {
-                    <div class="mb-5">
-                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">@Localizer["etymology"]</h5>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-sm w-auto">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Part</th>
-                                        <th>Meaning</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var etym in Model.Name.Etymology)
-                                    {
-                                        <tr>
-                                            <td class="fw-bold">@etym.Part</td>
-                                            <td>@etym.Meaning</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <br>                    <br>
+                    <h4>@Localizer["extendedmeaningof"]</h4>
+                    <p>@Model.Name.ExtendedMeaning</p>
                 }
 
                 @if (Model.Name.Videos.Any())
                 {
-                    <div class="mb-5">
-                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">@Localizer["videos"]</h5>
-                        <div class="row g-4">
-                            @for (var index = 0; index < Model.Name.Videos.Count; index++)
-                            {
-                                var video = Model.Name.Videos[index];
-                                <div class="col-md-12">
-                                    <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm mb-2">
-                                        <iframe src="https://www.youtube.com/embed/@video.VideoId"
-                                                title="@video.Caption"
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                                allowfullscreen></iframe>
-                                    </div>
-                                    <small class="text-muted fst-italic">@video.Caption</small>
-                                </div>
-                            }
+                    <br>
+                    <br>
+                    <h4>@Localizer["videos"]</h4>
+                    for (var index = 0; index < Model.Name.Videos.Count; index++)
+                    {
+                        var video = Model.Name.Videos[index];
+                        <div class="video-container">
+                            <div class="iframe-container" id="video@@@index">
+                                <iframe src="https://www.youtube.com/embed/@video.VideoId"
+                                        title="@video.Caption" frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        referrerpolicy="strict-origin-when-cross-origin"
+                                        allowfullscreen></iframe>
+                            </div>
+                            <div class="video-caption">@video.Caption</div>
                         </div>
-                    </div>
+                    }
                 }
+
+                @if (!string.IsNullOrEmpty(Model.Name.Morphology?.ToString()))
+                {
+                    <br>                    <br>
+                    <h4 class="intonation">@Localizer["morphology"]</h4>
+                    <p>@Model.Name.Morphology</p>
+                }
+
+
+                @if (Model.Name.Etymology?.Count > 0)
+                {
+                    <br>
+
+                    <br>
+                    <h4>@Localizer["etymology"]</h4>
+                    @foreach (var etym in Model.Name.Etymology)
+                    {
+                        <strong>@etym.Part</strong>                        <span> - @etym.Meaning</span>
+                        <br>
+                    }
+                }
+
 
                 @if (Model.Name.GeoLocation?.Count > 0)
                 {
-                    <div class="mb-5">
-                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">@Localizer["geolocation"]</h5>
-                        <p class="mb-2">@Localizer["commonin"]:</p>
-                        <div class="d-flex flex-wrap gap-2">
-                            @foreach (var place in Model.Name.GeoLocation)
-                            {
-                                <span class="badge bg-warning text-dark">@place</span>
-                            }
-                        </div>
-                    </div>
+                    <br>                    <br>
+                    <h4>@Localizer["geolocation"]</h4>
+                    <p>
+                        @Localizer["commonin"]:
+                        @foreach (var place in Model.Name.GeoLocation)
+                        {
+                            <br />
+                            @place
+                        }
+                    </p>
                 }
 
                 @if (!string.IsNullOrEmpty(Model.Name.FamousPeople?.ToString()))
                 {
-                    <div class="mb-5">
-                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">@Localizer["famous-persons"]</h5>
-                        <ul class="list-group list-group-flush">
-                            @foreach (var person in (List<string>)Model.Name.FamousPeople)
-                            {
-                                <li class="list-group-item px-0"><i class="bi bi-person-check me-2 text-warning"></i> @person</li>
-                            }
-                        </ul>
-                    </div>
+                    <br>                    <br>
+                    <h4>@Localizer["famous-persons"]</h4>
+                    <ul>
+                        @foreach (var person in (List<string>)Model.Name.FamousPeople)
+                        {
+                            <li><p>@person</p></li>
+                        }
+                    </ul>
                 }
 
                 @if (!string.IsNullOrEmpty(Model.Name.Media?.ToString()))
                 {
-                    <div class="mb-5">
-                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">@Localizer["media-links"]</h5>
-                        <ul class="list-unstyled">
-                            @foreach (var link in (List<string>)Model.Name.Media)
-                            {
-                                <li class="mb-2 text-truncate">
-                                    <i class="bi bi-link-45deg me-2"></i>
-                                    <a href="@link" target="_blank" class="text-decoration-underline text-dark">@link</a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
+                    <br>
+                    <br>
+                    <h4>@Localizer["media-links"]</h4>
+                    <ul>
+                        @foreach (var link in (List<string>)Model.Name.Media)
+                        {
+                            <li><a href="@link" target="_blank">@link</a></li>
+                        }
+                    </ul>
                 }
 
                 @if (!string.IsNullOrEmpty(Model.Name.Variants?.ToString()))
                 {
-                    <div class="mb-5">
-                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">@Localizer["variants"]</h5>
-                        <div class="d-flex flex-wrap gap-2">
-                            @foreach (var variant in (List<string>)Model.Name.Variants)
-                            {
-                                <a href="/entries/@variant" class="btn btn-outline-secondary btn-sm">@variant</a>
-                            }
-                        </div>
-                    </div>
-                }
+                    <br>
 
+                    <br>
+                    <h4>@Localizer["variants"]</h4>
+
+                    foreach (var variant in (List<string>)Model.Name.Variants)
+                    {
+                        <p class="name"><a href="/entries/@variant" target="_self">@variant</a></p>
+                    }
+                }
             </div>
 
-            <div class="col-lg-4">
-                <div class="sticky-top" style="top: 100px;">
-                    
+            <!-- sidebar -->
+            <aside>
+                <div class="col-sm-5 col-md-4">
                     @await Html.PartialAsync("Partials/_RightSidebar", Model.MostPopularNames)
 
-                    <div class="card border-0 shadow-sm p-3 mt-4 text-center bg-light">
-                        <span class="text-muted small d-block mb-2 text-uppercase">Advertisement</span>
-                        <div style="overflow: hidden;">
-                            <ins class="adsbygoogle"
-                                 style="display:block"
-                                 data-ad-client="ca-pub-9086385957783523"
-                                 data-ad-slot="3392476710"
-                                 data-ad-format="auto"
-                                 data-full-width-responsive="true"></ins>
-                            <script>
-                                (adsbygoogle = window.adsbygoogle || []).push({});
-                            </script>
-                        </div>
+                    <div class="side-bar">
+                        <!-- Square -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-9086385957783523"
+                             data-ad-slot="3392476710"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
                     </div>
-
                 </div>
-            </div>
-
-        </div>
-
-        <div class="mt-5 border-top pt-5">
+            </aside>
+            <!-- /sidebar -->
             @await Html.PartialAsync("Partials/_Alphabets", Model.Letters)
         </div>
 
     </div>
 </section>
-
-<div class="modal fade" id="improveEntryModal" tabindex="-1" aria-labelledby="improveEntryModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+<!-- /main-content -->
+<!--Improve Entry Modal -->
+<div class="modal fade" id="improveEntryModal" role="dialog">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="improveEntryModalLabel">
-                    <i class="bi bi-pencil-square me-2"></i> @Localizer["improve-entry.help-us"] "@Model.Name.Name"
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header">
+                <h3>@Localizer["improve-entry.help-us"] "@Model.Name.Name"</h3>
             </div>
-            
-            <form name="name_feedback" action="/api/v1/feedbacks" method="post" id="feedbackForm">
-                <div class="modal-body p-4">
-                    <div class="response"></div>
+            <form name="name_feedback" class="modal-body" action="/api/v1/feedbacks" method="post">
+                <div class="response"></div>
+                <div class="form-group">
                     <input id="nameToFeedback" type="hidden" value="@Model.Name.Name" />
-                    
-                    <div class="mb-3">
-                        <p class="lead text-muted fs-6">@Localizer["improve-entry.sub-text"]</p>
-                        <label for="improveEntry" class="form-label fw-bold">Your Suggestion</label>
-                        <textarea name="feedback" id="improveEntry" class="form-control" rows="6" required placeholder="Type your corrections or additions here..."></textarea>
-                    </div>
+                    <p class="lead">@Localizer["improve-entry.sub-text"]</p>
+                    <textarea name="feedback" id="improveEntry" class="form-control" rows="5" required="true"></textarea>
                 </div>
-                
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="close_feedback_modal">Cancel</button>
-                    <button type="submit" id="submitEntry" class="btn btn-cta-gold fw-bold">Submit Feedback</button>
-                </div>
+                <button type="submit" id="submitEntry" class="btn btn-success btn-lg">Submit Feedback</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" data-dismiss="modal" id="close_feedback_modal">Cancel</a>
             </form>
         </div>
     </div>
 </div>
+<!--/Improve Entry Modal -->

@@ -1,4 +1,4 @@
-@using Application.Services.MultiLanguage
+﻿@using Application.Services.MultiLanguage
 
 @inject ILanguageService LanguageService
 @{
@@ -14,10 +14,10 @@
     }
 }
 
-@using Application.Services.MultiLanguage
-
-<section class="hero-section py-5" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), url('@bgImagePath'); min-height: auto; padding-top: 3rem; padding-bottom: 3rem;">
-    <div class="container">
-        @await Html.PartialAsync("Partials/_SearchComponent")
+<section id="searchform">
+    <div class="jumbotron mini" id="home-banner" style="--background-image: url('@bgImagePath')">
+        <div class="container">
+            @await Html.PartialAsync("Partials/_SearchComponent")
+        </div>
     </div>
 </section>
