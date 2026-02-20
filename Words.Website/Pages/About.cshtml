@@ -1,0 +1,58 @@
+@page "/about-us"
+@using Application.Services.MultiLanguage
+@using Words.Website.Resources
+@model AboutModel
+@{
+    ViewData["Title"] = "About Us";
+}
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+@inject ILanguageService LanguageService
+
+@await Html.PartialAsync("Partials/_SearchForm")
+
+<!-- main-content -->
+
+<div class="about content-area-7">
+
+    <div class="container">
+
+        <div class="main-title">
+            <h1>About Us</h1>
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-8 offset-lg-2">
+
+                <p class="trd">
+
+                    YorubaWord.com is a multimedia dictionary project of the Yoruba Names Project.
+                    It will be the first free, open, crowdsourced, multimedia, and monolingual lexical
+                    dictionary of Yorùbá language on the internet, aimed at helping to better document
+                    the language for the use of learners, students, and native speakers across the world,
+                    but also to improve the presence of Yorùbá on the internet generally as a way to help
+                    it survive into the next century.
+                    <br><br>
+                    That this dictionary is monolingual means that it is
+                    not a translation dictionary with only direct equivalents in English.
+                    <br><br>
+                    Our aim for creating it is to create a place to better understand the meaning,
+                    examples, sounds, context, and geolocation of all words used in the Yorùbá language.
+
+                    <br><br>
+
+                    Read more about the Yorùbá Names Project <a href="https://en.wikipedia.org/wiki/The_YorubaName_Project" target="_blank" style="text-decoration: underline;">here</a>
+                    and check out our earlier project at <a href="http://www.yorubaname.com/" target="_blank" style="text-decoration: underline;">YorubaName.com</a>.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- /main-content -->

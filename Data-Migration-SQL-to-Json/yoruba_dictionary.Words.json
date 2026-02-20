@@ -1,0 +1,112 @@
+[
+  {
+  "_id": "68e250896c3b7b63c1bfe8ff",
+  "CreatedAt": {
+    "$date": "2025-10-05T11:03:37.732Z"
+  },
+  "CreatedBy": "admin@yorubaname.com",
+  "UpdatedAt": {
+    "$date": "2026-01-20T04:44:14.354Z"
+  },
+  "UpdatedBy": "admin@yorubaname.com",
+  "Title": "ounje",
+  "Pronunciation": "a bee a dey",
+  "Syllables": [
+    "a",
+    "bí",
+    "á",
+    "dé"
+  ],
+  "IpaNotation": "bbbb",
+  "Morphology": [
+    "àtúndá-olú-de"
+  ],
+  "Etymology": [
+    {
+      "_id": null,
+      "CreatedAt": {
+        "$date": "2026-01-20T04:44:13.975Z"
+      },
+      "CreatedBy": null,
+      "UpdatedAt": {
+        "$date": "2026-01-20T04:44:13.975Z"
+      },
+      "UpdatedBy": null,
+      "Part": "àtúndá",
+      "Meaning": "God"
+    },
+    {
+      "_id": null,
+      "CreatedAt": {
+        "$date": "2026-01-20T04:44:13.975Z"
+      },
+      "CreatedBy": null,
+      "UpdatedAt": {
+        "$date": "2026-01-20T04:44:13.975Z"
+      },
+      "UpdatedBy": null,
+      "Part": "olú",
+      "Meaning": "Olorisha"
+    },
+    {
+      "_id": null,
+      "CreatedAt": {
+        "$date": "2026-01-20T04:44:13.975Z"
+      },
+      "CreatedBy": null,
+      "UpdatedAt": {
+        "$date": "2026-01-20T04:44:13.975Z"
+      },
+      "UpdatedBy": null,
+      "Part": "de",
+      "Meaning": "come here"
+    }
+  ],
+  "MediaLinks": [],
+  "State": 2,
+  "Videos": [],
+  "GeoLocation": [
+    {
+      "_id": null,
+      "CreatedAt": {
+        "$date": "2026-01-20T04:44:13.975Z"
+      },
+      "CreatedBy": null,
+      "UpdatedAt": {
+        "$date": "2026-01-20T04:44:13.975Z"
+      },
+      "UpdatedBy": null,
+      "Place": "OSUN",
+      "Region": "OYO"
+    }
+  ],
+  "VariantsV2": [],
+  "Modified": null,
+  "Duplicates": [],
+  "Feedbacks": [],
+  "PartOfSpeech": 1,
+  "Style": 1,
+  "GrammaticalFeature": 1,
+  "Definitions": [
+    {
+      "_id": null,
+      "CreatedAt": {
+        "$date": "2026-01-20T04:44:13.975Z"
+      },
+      "CreatedBy": null,
+      "UpdatedAt": {
+        "$date": "2026-01-20T04:44:13.975Z"
+      },
+      "UpdatedBy": null,
+      "Content": "Food",
+      "EnglishTranslation": "Food",
+      "Examples": [
+        {
+          "Content": "Mo n je ounje",
+          "EnglishTranslation": "I am eating food",
+          "Type": 0
+        }
+      ]
+    }
+  ]
+}]
