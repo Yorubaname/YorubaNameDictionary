@@ -13,7 +13,7 @@
         <div class="container">
             <h1 class="display-4 fw-bold mb-4">@Localizer["jumbotron1"] @Localizer["jumbotron2", Model.NameCount, LanguageService.LanguageDisplay]</h1>
             @await Html.PartialAsync("Partials/_SearchComponent")
-            <div class="mb-5">
+            <div class="mb-5 pt-2">
                 <h5>@Localizer["jumboh31"]</h5>
                 <a href="/submitname" class="btn-submit-hero">
                      <i class="bi bi-plus-circle-fill"></i> @Localizer["jumboh32"]
@@ -23,7 +23,7 @@
                 <div class="col-lg-8">
                     @if (LanguageService.IsYoruba)
                     {
-                        <div class="text-white-50 fst-italic">
+                        <div class="text-white fst-italic">
                             @Localizer["oni-message"] <br>
                             <span class="text-white fw-bold mt-2 d-inline-block">&mdash; Ọọ̀ni Adéyẹyè Ẹniìtàn Ògúnwùsì</span> <small>(Ọ̀jájá II, Ọọ̀ni of Ifẹ̀ Kingdom)</small>
                         </div>
