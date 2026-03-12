@@ -11,67 +11,87 @@
 
 @await Html.PartialAsync("Partials/_SearchForm", Model.NameCount)
 
-<section>
+<section class="py-5 bg-light">
     <div class="container">
-        <div class="row">
-            <div class="col-sm-6 col-sm-offset-2">
-                <h3>@Localizer["terms-of-use"]</h2>
-                <!-- Terms of Use content imported from Terms of Use_Yorubaname.docx -->
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
 
-                <div class="terms-content">
-                    <p>&nbsp;</p>
-                    <hr class="terms-sep" />
-                    <p><small>Last Updated: January 4, 2025</small></p>
+                <div class="text-center mb-5">
+                    <h2 class="display-6 fw-bold">@Localizer["terms-of-use"]</h2>
+                    <p class="text-muted small">Last Updated: January 4, 2025</p>
+                </div>
 
-                    <h1>Welcome</h1>
-                    <p>Welcome to YorubaName.com. Please read these Terms of Use ("Terms") carefully before using our website.</p>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4 p-md-5">
 
-                    <hr class="terms-sep" />
-                    <h3>1. Acceptance of Terms</h3>
-                    <p>By accessing or using YorubaName.com (the "Site"), you agree to be bound by these Terms and all applicable laws and regulations. If you do not agree with any of these Terms, you are prohibited from using or accessing this Site.</p>
-                    <p>The Site is a collaborative project managed and operated by the Yorùbá Names Lexicography Initiative (a registered non-profit in Nigeria) and Oratures LLC (a Limited Liability Company based in Minnesota, USA) (collectively, "We," "Us," or "Our").</p>
+                        <h3 class="h4 fw-bold mb-3">Welcome</h3>
+                        <p class="text-muted">Welcome to YorubaName.com. Please read these Terms of Use ("Terms") carefully before using our website.</p>
 
-                    <hr class="terms-sep" />
-                    <h3>2. Intellectual Property Rights</h3>
-                    <p>All content on this Site is protected by international copyright, trademark, and intellectual property laws.</p>
-                    <p><strong>Exclusive Property:</strong> All text, data, images, audio, and other content on this website are the exclusive property of the Yorùbá Names Lexicography Initiative and Oratures LLC. No part of the Site may be copied, reproduced, distributed, or incorporated into any AI system, machine‑learning dataset, commercial product, book, article, or research without the Initiative’s explicit written permission and proper accreditation. Any use that generates profit or commercial advantage is strictly prohibited unless a license has been granted.</p>
-                    <p><strong>Attribution Requirements:</strong> When written permission is granted, you must provide clear attribution to the Yorùbá Names Lexicography Initiative (or YorubaName.com) and include a link to the original source. Unauthorized use will result in immediate removal of the material and may lead to legal action under applicable Nigerian and U.S. copyright laws.</p>
+                        <hr class="my-5 border-warning opacity-50" style="border-width: 2px;">
 
-                    <hr class="terms-sep" />
-                    <h3>3. Prohibited Uses (AI &amp; Scraping)</h3>
-                    <p>To protect our cultural data and intellectual property, specific automated behaviors are strictly prohibited. You agree that you will not:</p>
-                    <ul>
-                        <li><strong>Data Mining &amp; Scraping:</strong> Use any robot, spider, scraper, deep-link, or other automated data gathering or extraction tools, programs, algorithms, or methodology to access, acquire, copy, or monitor the Site or any portion of the Content without our express written consent.</li>
-                        <li><strong>AI Training:</strong> Use any Content from the Site, including but not limited to dictionary entries, audio pronunciations, definitions, or etymologies, for the purpose of training, fine-tuning, or grounding Artificial Intelligence (AI) systems, Large Language Models (LLMs), or Machine Learning algorithms.</li>
-                        <li><strong>Bypassing Security:</strong> Attempt to bypass or circumvent any measures we may use to prevent or restrict access to the Site, including but not limited to robots.txt protocols, IP blocking, or CAPTCHA barriers.</li>
-                    </ul>
-                    <p>We reserve the right to block any IP address or user found violating these provisions and to pursue legal remedies for damages caused by unauthorized data extraction.</p>
+                        <h3 class="h4 fw-bold mb-3">1. Acceptance of Terms</h3>
+                        <p class="text-muted">By accessing or using YorubaName.com (the "Site"), you agree to be bound by these Terms and all applicable laws and regulations. If you do not agree with any of these Terms, you are prohibited from using or accessing this Site.</p>
+                        <p class="text-muted">The Site is a collaborative project managed and operated by the Yorùbá Names Lexicography Initiative (a registered non-profit in Nigeria) and Oratures LLC (a Limited Liability Company based in Minnesota, USA) (collectively, "We," "Us," or "Our").</p>
 
-                    <hr class="terms-sep" />
-                    <h3>4. User Submissions &amp; Licensing</h3>
-                    <p>YorubaName.com relies on community contributions to document history. When you submit, upload, or post content to the Site (including names, definitions, histories, or audio recordings) ("User Content"), you agree to the following:</p>
-                    <p><strong>Grant of License:</strong> You retain your ownership rights in your original submission. However, by submitting User Content, you grant the Yorùbá Names Lexicography Initiative and Oratures LLC a perpetual, irrevocable, worldwide, non-exclusive, royalty-free, fully paid-up, transferable, and sublicensable license to host, use, copy, reproduce, process, adapt, modify, publish, transmit, display, and distribute such User Content.</p>
-                    <p><strong>Commercialization:</strong> You explicitly grant us the right to sublicense your User Content to third parties—including educational institutions, technology companies, and AI research labs—for use in commercial products, databases, linguistic research, and applications.</p>
-                    <p><strong>Right to Edit:</strong> You acknowledge that we may modify your submission for accuracy, tone-marking, formatting, or clarity before or after publication.</p>
-                    <p><strong>No Compensation:</strong> You acknowledge and agree that your submission of User Content is voluntary and made without expectation of compensation. You waive any right to royalties, fees, or other payments in connection with the use, licensing, or commercialization of the User Content by Us or our partners.</p>
+                        <hr class="my-5 border-warning opacity-50" style="border-width: 2px;">
 
-                    <hr class="terms-sep" />
-                    <h3>5. Disclaimer of Warranties</h3>
-                    <p>The materials on YorubaName.com are provided "as is." While we strive for linguistic and historical accuracy, language is fluid and subject to dialectal variation. We make no warranties, expressed or implied, regarding the accuracy, likely results, or reliability of the use of the materials on the Site. The Site is for educational and informational purposes only.</p>
+                        <h3 class="h4 fw-bold mb-3">2. Intellectual Property Rights</h3>
+                        <p class="text-muted">All content on this Site is protected by international copyright, trademark, and intellectual property laws.</p>
+                        
+                        <div class="alert alert-light border">
+                            <p class="mb-3"><strong>Exclusive Property:</strong> All text, data, images, audio, and other content on this website are the exclusive property of the Yorùbá Names Lexicography Initiative and Oratures LLC. No part of the Site may be copied, reproduced, distributed, or incorporated into any AI system, machine‑learning dataset, commercial product, book, article, or research without the Initiative’s explicit written permission and proper accreditation. Any use that generates profit or commercial advantage is strictly prohibited unless a license has been granted.</p>
+                            <p class="mb-0"><strong>Attribution Requirements:</strong> When written permission is granted, you must provide clear attribution to the Yorùbá Names Lexicography Initiative (or YorubaName.com) and include a link to the original source. Unauthorized use will result in immediate removal of the material and may lead to legal action under applicable Nigerian and U.S. copyright laws.</p>
+                        </div>
 
-                    <hr class="terms-sep" />
-                    <h3>6. Governing Law</h3>
-                    <p>These Terms are governed by and construed in accordance with the laws of:</p>
-                    <ul>
-                        <li>The State of Minnesota, USA, for matters related to Oratures LLC.</li>
-                        <li>The Federal Republic of Nigeria, for matters related to the Yorùbá Names Lexicography Initiative.</li>
-                    </ul>
-                    <p>You irrevocably submit to the exclusive jurisdiction of the courts in these locations for any disputes arising out of your use of the Site.</p>
+                        <hr class="my-5 border-warning opacity-50" style="border-width: 2px;">
 
-                    <hr class="terms-sep" />
-                    <h3>7. Contact Us</h3>
-                    <p>If you have questions about these Terms, or if you wish to request a license for commercial or research use of our data, please contact us at:</p>
-                    <p>Email: <a href="mailto:project@yorubaname.com">project@yorubaname.com</a> <em>Subject:</em> Licensing / Terms of Use Inquiry</p>
+                        <h3 class="h4 fw-bold mb-3">3. Prohibited Uses (AI &amp; Scraping)</h3>
+                        <p class="text-muted">To protect our cultural data and intellectual property, specific automated behaviors are strictly prohibited. You agree that you will not:</p>
+                        <ul class="list-group list-group-flush mb-4 text-muted">
+                            <li class="list-group-item bg-transparent px-0"><i class="bi bi-x-circle text-danger me-2"></i><strong>Data Mining &amp; Scraping:</strong> Use any robot, spider, scraper, deep-link, or other automated data gathering or extraction tools, programs, algorithms, or methodology to access, acquire, copy, or monitor the Site or any portion of the Content without our express written consent.</li>
+                            <li class="list-group-item bg-transparent px-0"><i class="bi bi-x-circle text-danger me-2"></i><strong>AI Training:</strong> Use any Content from the Site, including but not limited to dictionary entries, audio pronunciations, definitions, or etymologies, for the purpose of training, fine-tuning, or grounding Artificial Intelligence (AI) systems, Large Language Models (LLMs), or Machine Learning algorithms.</li>
+                            <li class="list-group-item bg-transparent px-0"><i class="bi bi-x-circle text-danger me-2"></i><strong>Bypassing Security:</strong> Attempt to bypass or circumvent any measures we may use to prevent or restrict access to the Site, including but not limited to robots.txt protocols, IP blocking, or CAPTCHA barriers.</li>
+                        </ul>
+                        <p class="text-muted small">We reserve the right to block any IP address or user found violating these provisions and to pursue legal remedies for damages caused by unauthorized data extraction.</p>
+
+                        <hr class="my-5 border-warning opacity-50" style="border-width: 2px;">
+
+                        <h3 class="h4 fw-bold mb-3">4. User Submissions &amp; Licensing</h3>
+                        <p class="text-muted">YorubaName.com relies on community contributions to document history. When you submit, upload, or post content to the Site (including names, definitions, histories, or audio recordings) ("User Content"), you agree to the following:</p>
+                        <ul class="list-unstyled text-muted">
+                            <li class="mb-3"><strong>Grant of License:</strong> You retain your ownership rights in your original submission. However, by submitting User Content, you grant the Yorùbá Names Lexicography Initiative and Oratures LLC a perpetual, irrevocable, worldwide, non-exclusive, royalty-free, fully paid-up, transferable, and sublicensable license to host, use, copy, reproduce, process, adapt, modify, publish, transmit, display, and distribute such User Content.</li>
+                            <li class="mb-3"><strong>Commercialization:</strong> You explicitly grant us the right to sublicense your User Content to third parties—including educational institutions, technology companies, and AI research labs—for use in commercial products, databases, linguistic research, and applications.</li>
+                            <li class="mb-3"><strong>Right to Edit:</strong> You acknowledge that we may modify your submission for accuracy, tone-marking, formatting, or clarity before or after publication.</li>
+                            <li class="mb-3"><strong>No Compensation:</strong> You acknowledge and agree that your submission of User Content is voluntary and made without expectation of compensation. You waive any right to royalties, fees, or other payments in connection with the use, licensing, or commercialization of the User Content by Us or our partners.</li>
+                        </ul>
+
+                        <hr class="my-5 border-warning opacity-50" style="border-width: 2px;">
+
+                        <h3 class="h4 fw-bold mb-3">5. Disclaimer of Warranties</h3>
+                        <div class="alert alert-warning border-0">
+                            <p class="mb-0 small">The materials on YorubaName.com are provided "as is." While we strive for linguistic and historical accuracy, language is fluid and subject to dialectal variation. We make no warranties, expressed or implied, regarding the accuracy, likely results, or reliability of the use of the materials on the Site. The Site is for educational and informational purposes only.</p>
+                        </div>
+
+                        <hr class="my-5 border-warning opacity-50" style="border-width: 2px;">
+
+                        <h3 class="h4 fw-bold mb-3">6. Governing Law</h3>
+                        <p class="text-muted">These Terms are governed by and construed in accordance with the laws of:</p>
+                        <ul class="text-muted">
+                            <li>The State of Minnesota, USA, for matters related to Oratures LLC.</li>
+                            <li>The Federal Republic of Nigeria, for matters related to the Yorùbá Names Lexicography Initiative.</li>
+                        </ul>
+                        <p class="text-muted">You irrevocably submit to the exclusive jurisdiction of the courts in these locations for any disputes arising out of your use of the Site.</p>
+
+                        <hr class="my-5 border-warning opacity-50" style="border-width: 2px;">
+
+                        <h3 class="h4 fw-bold mb-3">7. Contact Us</h3>
+                        <p class="text-muted">If you have questions about these Terms, or if you wish to request a license for commercial or research use of our data, please contact us at:</p>
+                        <div class="bg-light p-3 rounded">
+                            <p class="mb-0"><strong>Email:</strong> <a href="mailto:project@yorubaname.com" class="text-decoration-none fw-bold text-dark hover-gold">project@yorubaname.com</a></p>
+                            <p class="mb-0 text-muted small"><em>Subject:</em> Licensing / Terms of Use Inquiry</p>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>

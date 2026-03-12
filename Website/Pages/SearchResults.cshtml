@@ -11,29 +11,67 @@
 
 <!-- main-content -->
 
-<section id="content">
+<section id="content" class="py-5 bg-light">
     <div class="container">
-        <div class="row">
+        <div class="row g-5">
 
-            <div class="col-sm-7 search-results">
-                <h4>
-                    @Localizer["entry-not-found.no-match"] <strong class="intonation"><i>@Model.Query</i></strong><br />
-                    @Localizer["entry-not-found.suggest-pretext"]
-                    <a href="/submitname?missing=@Model.Query">@Localizer["go-to-suggest-linktext"]</a>
-                </h4>
+            <div class="col-lg-8">
+                
+                <div class="text-center mb-5 p-5 bg-white rounded-3 shadow-sm border">
+                    <i class="bi bi-search display-1 text-muted opacity-25 mb-3"></i>
+                    
+                    <h3 class="fw-bold text-dark mb-3">
+                        @Localizer["entry-not-found.no-match"] 
+                        <span class="text-warning intonation fst-italic">"@Model.Query"</span>
+                    </h3>
+                    
+                    <p class="lead text-muted mb-4">
+                        @Localizer["entry-not-found.suggest-pretext"]
+                    </p>
+                    
+                    <a href="/submitname?missing=@Model.Query" class="btn btn-cta-gold btn-lg fw-bold px-4">
+                        <i class="bi bi-plus-circle me-2"></i> @Localizer["go-to-suggest-linktext"]
+                    </a>
+                </div>
 
                 @if (Model.Names != null && Model.Names.Any())
                 {
-                    <p>@Localizer["entry-not-found.similar-names"]</p>
-                    @foreach (var name in Model.Names)
-                    {
-                        <hr />
-                        <h4 class="strong-text intonation"><a href="/entries/@name.Name">@name.Name</a></h4>
-                        <p><strong>Brief Meaning: </strong> @name.Meaning </p>
-                    }
+                    <div class="mb-4">
+                        <h4 class="fw-bold text-secondary mb-3">
+                            <i class="bi bi-lightbulb me-2"></i> @Localizer["entry-not-found.similar-names"]
+                        </h4>
+                        
+                        <div class="list-group shadow-sm border-0">
+                            @foreach (var name in Model.Names)
+                            {
+                                <a href="/entries/@name.Name" class="list-group-item list-group-item-action p-4 border-0 border-bottom">
+                                    <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                                        <h5 class="mb-1 fw-bold text-primary intonation fs-4">@name.Name</h5>
+                                        <i class="bi bi-chevron-right text-muted"></i>
+                                    </div>
+                                    <p class="mb-1 text-muted">
+                                        <strong class="text-dark">Meaning:</strong> @name.Meaning
+                                    </p>
+                                </a>
+                            }
+                        </div>
+                    </div>
                 }
             </div>
-            @await Html.PartialAsync("Partials/_Alphabets", @Model.Letters)
+
+            <div class="col-lg-4">
+                <div class="sticky-top" style="top: 100px;">
+                    <div class="card bg-white border-0 shadow-sm p-3">
+                        <h5 class="fw-bold mb-3 border-bottom pb-2">Browse Dictionary</h5>
+                        @await Html.PartialAsync("Partials/_Alphabets", @Model.Letters)
+                    </div>
+                    
+                    <div class="mt-4 text-center text-muted small">
+                        <p>Can't find what you are looking for? <a href="/contact-us" class="text-warning fw-bold">Contact Us</a>.</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </section>
