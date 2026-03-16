@@ -1,0 +1,38 @@
+@page "/entries/multiple"
+@using Words.Website.Resources
+@using Words.Core.Dto.Response
+@model Words.Website.Pages.MultipleEntriesFoundModel
+@{
+    ViewData["Title"] = "Multiple Entries Found";
+}
+
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+
+@await Html.PartialAsync("Partials/_MiniSearchForm")
+
+<section id="content">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm-7 search-results">
+                <h4>
+                    Multiple entries found for
+                    <strong class="intonation"><i>@Model.Query</i></strong>
+                </h4>
+                <p>Select the exact word you meant from the options below.</p>
+
+                @foreach (WordEntryDto word in Model.Matches)
+                {
+                    DefinitionDto? firstDefinition = word.Definitions?.FirstOrDefault();
+
+                    <hr>
+                    <h4 class="strong-text intonation"><a href="/entries/@word.Word">@word.Word</a></h4>
+                    <p><strong>@Localizer["topDefinition"]: </strong> @(firstDefinition?.Content ?? "-")</p>
+                    <p><strong>@Localizer["english-translation"]: </strong> @(firstDefinition?.EnglishTranslation ?? "-")</p>
+                }
+            </div>
+
+            @await Html.PartialAsync("Partials/_Alphabets", Model.Letters)
+        </div>
+    </div>
+</section>

@@ -53,9 +53,9 @@ namespace Words.Website.Services
             }
         }
 
-        public Task<WordEntryDto?> GetWord(string wordEntry)
+        public Task<WordEntryDto[]?> GetWordsByTitle(string wordEntry)
         {
-            return GetApiResponse<WordEntryDto?>($"/words/search/{wordEntry}");
+            return GetApiResponse<WordEntryDto[]?>($"/words/search/{Uri.EscapeDataString(wordEntry)}");
         }
 
         public Task<WordEntryDto[]?> GetAllWordsByAlphabet(string letter)
