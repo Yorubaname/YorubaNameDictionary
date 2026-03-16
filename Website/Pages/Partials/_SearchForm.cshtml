@@ -18,8 +18,7 @@
     }
 }
 
-<section class="hero-section d-flex align-items-center">
-    
+<section class="hero-section d-flex align-items-center" style="background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.2)), url('@bgImagePath'); background-size: cover; background-position: center;">
     <div class="container text-center text-white">
         <div class="row justify-content-center">
             <div class="col-lg-10 col-xl-8">
@@ -32,7 +31,7 @@
                     @Localizer["jumbotron2", Model, LanguageService.LanguageDisplay]
                 </p>
 
-                <div class="mx-auto" style="max-width: 700px;">
+                <div class="mx-auto">
                     @await Html.PartialAsync("Partials/_SearchComponent")
                 </div>
 

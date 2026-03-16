@@ -9,86 +9,99 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 @inject ILanguageService LanguageService
 
-    <section class="hero-section">
-        <div class="container">
-            <h1 class="display-4 fw-bold mb-4">@Localizer["jumbotron1"] @Localizer["jumbotron2", Model.NameCount, LanguageService.LanguageDisplay]</h1>
-            @await Html.PartialAsync("Partials/_SearchComponent")
-            <div class="mb-5 pt-2">
-                <h5>@Localizer["jumboh31"]</h5>
-                <a href="/submitname" class="btn-submit-hero">
-                     <i class="bi bi-plus-circle-fill"></i> @Localizer["jumboh32"]
-                </a>
+@{
+    string bgImagePath = "";
+
+    if (LanguageService.IsYoruba)
+    {
+        bgImagePath = "/img/bg/yorubaname-bg.jpg";
+    }
+    else if (LanguageService.IsIgbo)
+    {
+        bgImagePath = "/img/bg/igboname-bg.jpg";
+    }
+}
+
+<section class="hero-section" style="background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.2)), url('@bgImagePath'); background-size: cover; background-position: center;">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4">@Localizer["jumbotron1"] @Localizer["jumbotron2", Model.NameCount, LanguageService.LanguageDisplay]</h1>
+        @await Html.PartialAsync("Partials/_SearchComponent")
+        <div class="mb-5">
+            <h5>@Localizer["jumboh31"]</h5>
+            <a href="/submitname" class="btn-submit-hero">
+                <i class="bi bi-plus-circle-fill"></i> @Localizer["jumboh32"]
+            </a>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                @if (LanguageService.IsYoruba)
+                {
+                    <div class="text-white fst-italic">
+                        @Localizer["oni-message"] <br>
+                        <span class="text-white fw-bold mt-2 d-inline-block">&mdash; Ọọ̀ni Adéyẹyè Ẹniìtàn Ògúnwùsì</span> <small>(Ọ̀jájá II, Ọọ̀ni of Ifẹ̀ Kingdom)</small>
+                    </div>
+                }
             </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    @if (LanguageService.IsYoruba)
+        </div>
+    </div>
+</section>
+
+<div class="container my-5" style="margin-top: -50px; position: relative; z-index: 10;">
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="custom-card">
+                <div class="list-title"><i class="bi bi-clock me-2"></i> @Localizer["latest-search"]</div>
+                <ul class="recent-list">
+                    @foreach (var search in Model.LatestSearches)
                     {
-                        <div class="text-white fst-italic">
-                            @Localizer["oni-message"] <br>
-                            <span class="text-white fw-bold mt-2 d-inline-block">&mdash; Ọọ̀ni Adéyẹyè Ẹniìtàn Ògúnwùsì</span> <small>(Ọ̀jájá II, Ọọ̀ni of Ifẹ̀ Kingdom)</small>
-                        </div>
+                        <li><a href="/entries/@search">@search</a></li>
                     }
-                </div>
+                </ul>
             </div>
         </div>
-    </section>
 
-    <div class="container my-5" style="margin-top: -50px; position: relative; z-index: 10;">
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <div class="custom-card">
-                    <div class="list-title"><i class="bi bi-clock me-2"></i> @Localizer["latest-search"]</div>
-                    <ul class="recent-list">
-                        @foreach (var search in Model.LatestSearches)
-                        {
-                            <li><a href="/entries/@search">@search</a></li>
-                        }
-                    </ul>
-                </div>
+        <div class="col-lg-4">
+            <div class="custom-card">
+                <div class="list-title"><i class="bi bi-plus-square me-2"></i> @Localizer["latest-add"]</div>
+                <ul class="recent-list">
+                    @foreach (var addition in Model.LatestAdditions)
+                    {
+                        <li><a href="/entries/@addition">@addition</a></li>
+                    }
+                </ul>
             </div>
+        </div>
 
-            <div class="col-lg-4">
-                <div class="custom-card">
-                    <div class="list-title"><i class="bi bi-plus-square me-2"></i> @Localizer["latest-add"]</div>
-                    <ul class="recent-list">
-                         @foreach (var addition in Model.LatestAdditions)
-                        {
-                            <li><a href="/entries/@addition">@addition</a></li>
-                        }
-                    </ul>
-                </div>
-            </div>
-
-            <div class="col-lg-4">
-                <div class="custom-card">
-                    <div class="list-title"><i class="bi bi-fire me-2"></i> @Localizer["most-popular"]</div>
-                    <ul class="recent-list">
-                        @foreach (var popular in Model.MostPopular)
-                        {
-                            <li><a href="/entries/@popular">@popular</a></li>
-                        }
-                    </ul>
-                </div>
+        <div class="col-lg-4">
+            <div class="custom-card">
+                <div class="list-title"><i class="bi bi-fire me-2"></i> @Localizer["most-popular"]</div>
+                <ul class="recent-list">
+                    @foreach (var popular in Model.MostPopular)
+                    {
+                        <li><a href="/entries/@popular">@popular</a></li>
+                    }
+                </ul>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="container mb-5 py-5">
-        <div class="text-center">
-            <h6 class="text-uppercase fw-bold text-muted tracking-wide">@Localizer["name-listed-by-alphabets"]</h6>
-            <div class="mb-5 pt-2">
-                @await Html.PartialAsync("Partials/_Alphabets", Model.Letters)
-            </div>
-            <div class="ad-container my-5 mx-auto" style="max-width: 900px; min-height: 100px; background: #f8f9fa;">
-                <ins class="adsbygoogle"
-                    style="display:block"
-                    data-ad-client="ca-pub-9086385957783523"
-                    data-ad-slot="2857515438"
-                    data-ad-format="auto"
-                    data-full-width-responsive="true"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
+<div class="container mb-5 py-5">
+    <div class="text-center">
+        <h6 class="text-uppercase fw-bold text-muted tracking-wide">@Localizer["name-listed-by-alphabets"]</h6>
+        <div class="mb-5 pt-2">
+            @await Html.PartialAsync("Partials/_Alphabets", Model.Letters)
+        </div>
+        <div class="ad-container my-5 mx-auto" style="max-width: 900px; min-height: 100px; background: #f8f9fa;">
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-client="ca-pub-9086385957783523"
+                data-ad-slot="2857515438"
+                data-ad-format="auto"
+                data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
     </div>
+</div>
