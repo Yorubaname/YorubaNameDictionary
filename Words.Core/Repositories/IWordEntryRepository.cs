@@ -11,6 +11,7 @@ namespace Words.Core.Repositories
         Task<List<WordEntry>> FindByStateAsync(State state);
         Task<WordEntry?> GetByIdAsync(string id);
         Task<bool> DeleteAsync(string id);
+        Task<string[]> DeleteSuggestedWordsBatchAsync(IEnumerable<string> words);
         Task<int> DeleteByStateAsync(State state);
     }
 }

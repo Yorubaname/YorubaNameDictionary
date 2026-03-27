@@ -74,4 +74,30 @@ public class SuggestionsController : ControllerBase
 
         return BadRequest($"Suggested name with id: {id} not found as a suggested name");
     }
+
+    [HttpDelete]
+    [Authorize(Policy = "AdminAndProLexicographers")]
+    [Route("batch")]
+    public async Task<IActionResult> DeleteBatch([FromBody] string[] names)
+    {
+        if (names is null || names.Length == 0)
+        {
+            return BadRequest("No deletion as no names were provided");
+        }
+
+        var deleteResult = await _suggestedNameService.DeleteSuggestedNamesBatchAsync(names);
+
+        if (deleteResult.DeletedItems.Length == 0)
+        {
+            return BadRequest("No deletion as none of the names were found as suggestions in the database");
+        }
+
+        string responseMessage = string.Join(", ", deleteResult.DeletedItems) + " deleted";
+        if (deleteResult.NotFoundItems.Length > 0)
+        {
+            responseMessage += Environment.NewLine + string.Join(", ", deleteResult.NotFoundItems) + " not deleted as they were not found in suggested names";
+        }
+
+        return Ok(new { Message = responseMessage });
+    }
 }

@@ -57,6 +57,40 @@ public class SuggestedNameRepository(IMongoDatabaseFactory databaseFactory, ITen
         return result.DeletedCount > 0;
     }
 
+    public async Task<string[]> DeleteSuggestedNamesBatchAsync(IEnumerable<string> names)
+    {
+        var requestedNames = names
+            .Where(n => !string.IsNullOrWhiteSpace(n))
+            .Select(n => n.Trim())
+            .Distinct(StringComparer.CurrentCultureIgnoreCase)
+            .ToArray();
+
+        if (requestedNames.Length == 0)
+        {
+            return [];
+        }
+
+        var matchingNamesFilter = Builders<SuggestedName>.Filter.In(n => n.Name, requestedNames);
+        var existingNames = (await RepoCollection
+                .Find(matchingNamesFilter)
+                .Project(n => n.Name)
+                .ToListAsync())
+            .OfType<string>()
+            .Where(n => !string.IsNullOrWhiteSpace(n))
+            .Distinct(StringComparer.CurrentCultureIgnoreCase)
+            .ToArray();
+
+        if (existingNames.Length == 0)
+        {
+            return [];
+        }
+
+        var deleteFilter = Builders<SuggestedName>.Filter.In(n => n.Name, existingNames);
+        await RepoCollection.DeleteManyAsync(deleteFilter);
+
+        return existingNames;
+    }
+
     public async Task<bool> DeleteAllSuggestionsAsync()
     {
         var result = await RepoCollection.DeleteManyAsync(_ => true);

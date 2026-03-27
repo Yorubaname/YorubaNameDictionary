@@ -72,5 +72,31 @@ namespace Api.Controllers.Words
 
             return BadRequest($"Suggested word with id: {id} not found as a suggested word");
         }
+
+        [HttpDelete]
+        [Authorize(Policy = "AdminAndProLexicographers")]
+        [Route("batch")]
+        public async Task<IActionResult> DeleteBatch([FromBody] string[] words)
+        {
+            if (words is null || words.Length == 0)
+            {
+                return BadRequest("No deletion as no words were provided");
+            }
+
+            var deleteResult = await _suggestedWordService.DeleteSuggestedWordsBatchAsync(words);
+
+            if (deleteResult.DeletedItems.Length == 0)
+            {
+                return BadRequest("No deletion as none of the words were found as suggestions in the database");
+            }
+
+            string responseMessage = string.Join(", ", deleteResult.DeletedItems) + " deleted";
+            if (deleteResult.NotFoundItems.Length > 0)
+            {
+                responseMessage += Environment.NewLine + string.Join(", ", deleteResult.NotFoundItems) + " not deleted as they were not found in suggested words";
+            }
+
+            return Ok(new { Message = responseMessage });
+        }
     }
 }
