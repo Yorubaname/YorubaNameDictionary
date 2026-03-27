@@ -9,5 +9,6 @@ public interface ISuggestedNameRepository
     Task<List<SuggestedName>> GetAllAsync();
     Task<SuggestedName> GetAsync(string id);
     Task<bool> DeleteSuggestedNameAsync(string id);
+    Task<string[]> DeleteSuggestedNamesBatchAsync(IEnumerable<string> names);
     Task<bool> DeleteAllSuggestionsAsync();
 }

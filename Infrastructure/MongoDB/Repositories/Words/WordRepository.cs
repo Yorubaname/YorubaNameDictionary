@@ -40,6 +40,44 @@ namespace Infrastructure.MongoDB.Repositories.Words
             return result.DeletedCount > 0;
         }
 
+        public async Task<string[]> DeleteSuggestedWordsBatchAsync(IEnumerable<string> words)
+        {
+            var requestedWords = words
+                .Where(w => !string.IsNullOrWhiteSpace(w))
+                .Select(w => w.Trim())
+                .Distinct(StringComparer.CurrentCultureIgnoreCase)
+                .ToArray();
+
+            if (requestedWords.Length == 0)
+            {
+                return [];
+            }
+
+            var matchingTitlesFilter = Builders<WordEntry>.Filter.In(w => w.Title, requestedWords)
+                & Builders<WordEntry>.Filter.Eq(w => w.State, State.SUGGESTED);
+
+            var existingWords = (await RepoCollection
+                    .Find(matchingTitlesFilter)
+                    .Project(w => w.Title)
+                    .ToListAsync())
+                .OfType<string>()
+                .Where(w => !string.IsNullOrWhiteSpace(w))
+                .Distinct(StringComparer.CurrentCultureIgnoreCase)
+                .ToArray();
+
+            if (existingWords.Length == 0)
+            {
+                return [];
+            }
+
+            var deleteFilter = Builders<WordEntry>.Filter.In(w => w.Title, existingWords)
+                & Builders<WordEntry>.Filter.Eq(w => w.State, State.SUGGESTED);
+
+            await RepoCollection.DeleteManyAsync(deleteFilter);
+
+            return existingWords;
+        }
+
         public async Task<int> DeleteByStateAsync(State state)
         {
             var filter = Builders<WordEntry>.Filter.Eq(ne => ne.State, state);
