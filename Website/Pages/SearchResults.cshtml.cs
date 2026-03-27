@@ -2,7 +2,6 @@ using Application.Services.MultiLanguage;
 using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using System.Globalization;
 using Website.Pages.Shared;
 using Website.Resources;
 using Website.Services;
@@ -25,29 +24,28 @@ namespace Website.Pages
 
         public async Task<IActionResult> OnGet()
         {
-            if (Query == null)
+            if (string.IsNullOrWhiteSpace(Query))
             {
                 // TODO: Create an event to indicate that this page was accessed without a query parameter.
                 return RedirectToPage("Index");
             }
 
-            Names = await _apiService.SearchNameAsync(Query);
-
-            if (Names.Length == 1 && IsEqualWithoutAccent(Names[0].Name, Query))
+            var exactMatches = await _apiService.GetNamesByTitle(Query);
+            if (exactMatches.Length == 1)
             {
-                // TODO: Pass this name to the other page
-                return RedirectToPage("SingleEntry", new { nameEntry = Query });
+                // TODO Hafiz: Pass the entire name entry instead of just the name to avoid another API call in the SingleEntry page.
+                return RedirectToPage("SingleEntry", new { nameEntry = exactMatches[0].Name });
             }
+
+            if (exactMatches.Length > 1)
+            {
+                return RedirectToPage("MultipleEntriesFound", new { q = Query });
+            }
+
+            Names = await _apiService.SearchNameAsync(Query);
 
             Letters = YorubaAlphabetService.YorubaAlphabet;
             return Page();
-        }
-
-        private static bool IsEqualWithoutAccent(string string1, string string2)
-        {
-            CompareInfo compareInfo = CultureInfo.InvariantCulture.CompareInfo;
-            int result = compareInfo.Compare(string1, string2, CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace);
-            return result == 0;
         }
     }
 }
