@@ -41,4 +41,30 @@ public class SuggestionsService
     {
         return await _suggestedNameRepository.DeleteAllSuggestionsAsync();
     }
+
+    public async Task<BatchDeleteSuggestionsResult> DeleteSuggestedNamesBatchAsync(IEnumerable<string> names)
+    {
+        var requestedNames = names
+            .Where(n => !string.IsNullOrWhiteSpace(n))
+            .Select(n => n.Trim())
+            .Distinct(StringComparer.CurrentCultureIgnoreCase)
+            .ToArray();
+
+        if (requestedNames.Length == 0)
+        {
+            return new BatchDeleteSuggestionsResult();
+        }
+
+        var deletedNames = await _suggestedNameRepository.DeleteSuggestedNamesBatchAsync(requestedNames);
+
+        var notFoundNames = requestedNames
+            .Except(deletedNames, StringComparer.CurrentCultureIgnoreCase)
+            .ToArray();
+
+        return new BatchDeleteSuggestionsResult
+        {
+            DeletedItems = deletedNames,
+            NotFoundItems = notFoundNames
+        };
+    }
 }

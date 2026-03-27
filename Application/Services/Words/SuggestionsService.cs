@@ -51,4 +51,30 @@ public class SuggestionsService
         var deletedCount = await _wordRepository.DeleteByStateAsync(State.SUGGESTED);
         return deletedCount > 0;
     }
+
+    public async Task<BatchDeleteSuggestionsResult> DeleteSuggestedWordsBatchAsync(IEnumerable<string> words)
+    {
+        var requestedWords = words
+            .Where(w => !string.IsNullOrWhiteSpace(w))
+            .Select(w => w.Trim())
+            .Distinct(StringComparer.CurrentCultureIgnoreCase)
+            .ToArray();
+
+        if (requestedWords.Length == 0)
+        {
+            return new BatchDeleteSuggestionsResult();
+        }
+
+        var deletedWords = await _wordRepository.DeleteSuggestedWordsBatchAsync(requestedWords);
+
+        var notFoundWords = requestedWords
+            .Except(deletedWords, StringComparer.CurrentCultureIgnoreCase)
+            .ToArray();
+
+        return new BatchDeleteSuggestionsResult
+        {
+            DeletedItems = deletedWords,
+            NotFoundItems = notFoundWords
+        };
+    }
 }
