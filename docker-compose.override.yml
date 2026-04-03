@@ -5,9 +5,9 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
     ports:
       - "9002:8080"
-#    volumes:
-#      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-#      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    volumes:
+      - ${APPDATA:-.}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA:-.}/ASP.NET/Https:/home/app/.aspnet/https:ro
   
   words-website:
     environment:
@@ -15,9 +15,9 @@ services:
       - ASPNETCORE_HTTP_PORTS=8082
     ports:
       - "9003:8082"
-#    volumes:
-#      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-#      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    volumes:
+      - ${APPDATA:-.}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA:-.}/ASP.NET/Https:/home/app/.aspnet/https:ro
   
   api:
     environment:
@@ -29,10 +29,9 @@ services:
       - Twitter__AccessTokenSecret=${YND_Twitter__AccessTokenSecret}
     ports:
       - "9001:80"
-#    volumes:
-#      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-#      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    volumes:
+      - ${APPDATA:-.}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA:-.}/ASP.NET/Https:/root/.aspnet/https:ro
   mongodb:
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-    
