@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker and local development
+.env
