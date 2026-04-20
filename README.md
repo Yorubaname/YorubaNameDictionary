@@ -1,13 +1,40 @@
 # Yoruba Name Dictionary
 
-Welcome to the Yoruba Name Dictionary! This repository contains two runnable projects: a Website and an API:
-- The Website (https://www.yorubaname.com/) interacts with the API to deliver its functionality 
-- The API is also used by [the dashboard](https://dashboard.yorubaname.com) in [another repo](https://github.com/Yorubaname/yorubaname-dashboard) to deliver its functionality
+Welcome to the Yoruba Name Dictionary! This repository contains the modern implementation of the Yoruba Name project, including a public Website, an API, and a Words dictionary.
+
+## Architecture Overview
+
+```mermaid
+graph TD
+    subgraph Web_Frontends [Web Frontends]
+        Website["Names Website (Port 9002)"]
+        Words["Words Website (Port 9003)"]
+    end
+
+    subgraph Backend_Services [Backend Services]
+        API[".NET Core API (Port 9001)"]
+        MongoDB[("MongoDB (Port 27020)")]
+        Redis[("Redis (Port 6379)")]
+    end
+
+    Website --> API
+    Words --> API
+    API --> MongoDB
+    API --> Redis
+```
+
+- The **Names Website** interacts with the API to deliver its functionality.
+- The **Words Website** provides a dictionary of Yoruba words.
+- The **API** is cross-platform (.NET 8) and supports multiple language collections beyond Yoruba (e.g., Igbo).
+- The **Admin Dashboard** (Legacy) is the primary tool for managing entries and is found in the [yorubaname-dashboard](https://github.com/Yorubaname/yorubaname-dashboard) repository.
 
 ## Table of Contents
 - [Projects](#projects)
 - [Prerequisites](#prerequisites)
 - [Setup and Running Locally](#setup-and-running-locally)
+- [Twitter Integration & Background Jobs](#twitter-integration-background-jobs)
+- [Testing](#testing)
+- [Migration Tools](#migration-tools)
 - [Contributing](#contributing)
 - [Contact Information](#contact-information)
 
@@ -23,33 +50,96 @@ The API project handles the backend logic and data management, providing endpoin
 
 To run this project locally, you will need to have installed:
 
-- [Visual Studio 2019 or later](https://visualstudio.microsoft.com/vs/)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- **Docker Desktop** (Recommended) or Docker Engine with Docker Compose.
+- **Visual Studio 2022** (.NET 8.0 support) - *Optional if using Docker CLI*.
 
 ## Setup and Running Locally
 
-To run the Website and API locally, follow these steps:
+There are two main ways to run the project locally.
 
-1. **Clone the repository:**
+### Option A: Using Docker CLI (Recommended)
 
-2. **Open the project in Visual Studio:**
+This is the fastest way to get the entire stack (API, Websites, DB, Cache) running without manual installation of dependencies.
+
+1. **Clone the repository.**
+2. **Navigate to the root directory.**
+3. **Run the startup command:**
+   ```bash
+   docker compose up --build -d
+   ```
+4. **Monitor logs:**
+   ```bash
+   docker compose logs -f api
+   ```
+
+### Option B: Using Visual Studio
+
+1. **Open the project in Visual Studio:**
     - Open Visual Studio.
     - Click on `Open a project or solution`.
     - Navigate to the cloned repository folder and select the `YorubaNameDictionary.sln` file.
 
-3. **Set Docker Compose as the Startup project:**
+2. **Set Docker Compose as the Startup project:**
     - In the Solution Explorer, locate the `docker-compose` project.
     - Right-click on the `docker-compose` project and select `Set as Startup Project`.
 
-4. **Run the Docker Compose project:**
+3. **Run the Docker Compose project:**
     - Click on the `Start` button (or press `F5`) to build and run the application.
-    - This setup uses Docker to containerize the Website, the API and the database (MongoDB), allowing you to run and debug the application locally without manual installation of dependencies. 
 
-5. **Access the Application:**
-    - Once the Docker containers are up and running, you can access the Website in your browser. The website should launch automatically as soon as all the containers are ready.
-    - If the Website does not launch automatically, it will be running at `http://localhost:{port}` (the actual port will be displayed in the output window of Visual Studio: "Container Tools").
-    - The API will also be running locally and accessible via a different URL. You can see its documentation and test the endpoints at `http://localhost:9001/swagger`. 
-      - You can login to the API with any username from [the database initialization script](./mongo-init.js) and password: **Password@135**.
+## Accessing the Application
+
+Once the Docker containers are up and running, you can access the following services:
+
+| Service | Local URL | Port |
+| :--- | :--- | :--- |
+| **Names Website** | [http://localhost:9002](http://localhost:9002) | 9002 |
+| **Words Website** | [http://localhost:9003](http://localhost:9003) | 9003 |
+| **Backend API (Swagger)** | [http://localhost:9001/swagger](http://localhost:9001/swagger) | 9001 |
+| **Hangfire Dashboard** | [http://localhost:9001/backJobMonitor](http://localhost:9001/backJobMonitor) | 9001 |
+
+- **API Authentication**: You can login to the API with any username from [the database initialization script](./mongo-init.js) and password: **Password@135**.
+
+## macOS & Linux Specifics
+
+If running on macOS or Linux, a `.env` file is required to provide default values for variables often provided by Visual Studio on Windows.
+
+1. Create a `.env` file in the root directory:
+   ```bash
+   APPDATA=.
+   YND_Twitter__ConsumerKey=
+   YND_Twitter__ConsumerSecret=
+   YND_Twitter__AccessToken=
+   YND_Twitter__AccessTokenSecret=
+   ```
+2. Volume mounts for `UserSecrets` and `Https` in `docker-compose.override.yml` should be commented out or adjusted for non-Windows paths.
+
+## Twitter Integration & Background Jobs
+
+The project uses **Hangfire** to manage background tasks, such as scheduled tweets for new name entries.
+
+- **Configuration**: Twitter API credentials should be added to your `.env` file (see above) or via environment variables.
+- **Monitoring**: Once the API is running, you can monitor background jobs at [http://localhost:9001/backJobMonitor](http://localhost:9001/backJobMonitor).
+
+## Testing
+
+The project includes a suite of unit and integration tests to ensure stability.
+
+### Running Tests via CLI
+To run all tests from the root of the repository:
+```bash
+dotnet test
+```
+
+### Running Tests in Visual Studio
+- Open the `Test Explorer` (`Test` > `Test Explorer`).
+- Click `Run All Tests` to execute the suite.
+
+## Migration Tools
+
+For developers moving data from the legacy MySQL-based system to the modern MongoDB architecture, a specialized toolkit is available:
+
+- **Folder**: [`Data-Migration-SQL-to-Json/`](./Data-Migration-SQL-to-Json/)
+- **Purpose**: Contains Python scripts and utilities to extract data from a SQL dump and transform it into the JSON format required for MongoDB ingestion.
 
 ## Contributing
 
