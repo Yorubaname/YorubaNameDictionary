@@ -1,15 +1,15 @@
 using Application.Services.MultiLanguage;
-using Words.Core.Dto.Response;
+using Core.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using Words.Website.Pages.Shared;
-using Words.Website.Resources;
-using Words.Website.Services;
+using Website.Pages.Shared;
+using Website.Resources;
+using Website.Services;
 using YorubaOrganization.Application.Services;
 
-namespace Words.Website.Pages
+namespace Website.Pages
 {
-    public class SearchResultsModel(
+    public class MultipleEntriesFoundModel(
         IStringLocalizer<Messages> localizer,
         ILanguageService languageService,
         ApiService apiService) : BasePageModel(localizer, languageService)
@@ -18,31 +18,28 @@ namespace Words.Website.Pages
 
         [BindProperty(SupportsGet = true)]
         [FromQuery(Name = "q")]
-        public string? Query { get; set; } = null;
-        public WordEntryDto[] Words { get; set; } = [];
+        public string? Query { get; set; }
+
+        public NameEntryDto[] Matches { get; private set; } = [];
         public List<string> Letters { get; private set; } = [];
 
         public async Task<IActionResult> OnGet()
         {
             if (string.IsNullOrWhiteSpace(Query))
             {
-                // TODO: Create an event to indicate that this page was accessed without a query parameter.
                 return RedirectToPage("Index");
             }
 
-            var exactMatches = await _apiService.GetWordsByTitle(Query) ?? [];
-            if (exactMatches.Length == 1)
+            Matches = await _apiService.GetNamesByTitle(Query);
+            if (Matches.Length == 0)
             {
-                return RedirectToPage("SingleEntry", new { wordEntry = exactMatches[0].Word });
+                return RedirectToPage("SearchResults", new { q = Query });
             }
 
-            if (exactMatches.Length > 1)
+            if (Matches.Length == 1)
             {
-                return RedirectToPage("MultipleEntriesFound", new { q = Query });
+                return RedirectToPage("SingleEntry", new { nameEntry = Matches[0].Name });
             }
-
-            var searchResult = await _apiService.SearchWordAsync(Query);
-            Words = searchResult ?? [];
 
             Letters = YorubaAlphabetService.YorubaAlphabet;
             return Page();
