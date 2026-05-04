@@ -61,9 +61,9 @@ namespace Website.Services
             return GetApiResponse<NameEntryDto[]>("/search/?q=" + query)!;
         }
 
-        public Task<NameEntryDto?> GetName(string nameEntry)
+        public Task<NameEntryDto[]> GetNamesByTitle(string nameEntry)
         {
-            return GetApiResponse<NameEntryDto?>($"/search/{nameEntry}");
+            return GetApiResponse<NameEntryDto[]>($"/search/{Uri.EscapeDataString(nameEntry)}")!;
         }
 
         public Task<NameEntryDto[]> GetAllNamesByAlphabet(string letter)

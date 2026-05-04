@@ -24,12 +24,19 @@ namespace Words.Website.Pages
         public async Task<IActionResult> OnGet(string wordEntry)
         {
             // Try to get word from API
-            WordEntryDto? word = await _apiService.GetWord(wordEntry);
+            var matches = await _apiService.GetWordsByTitle(wordEntry) ?? [];
 
-            if (word == null)
+            if (matches.Length == 0)
             {
                 return Redirect($"/entries?q={HttpUtility.UrlEncode(wordEntry)}");
             }
+
+            if (matches.Length > 1)
+            {
+                return RedirectToPage("MultipleEntriesFound", new { q = wordEntry });
+            }
+
+            var word = matches[0];
 
             ViewData["SocialTitle"] = word.Word;
             ViewData["SocialPath"] = $"/entries/{HttpUtility.UrlEncode(word.Word)}";

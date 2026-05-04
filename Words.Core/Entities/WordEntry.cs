@@ -8,7 +8,7 @@ namespace Words.Core.Entities
         public Style? Style { get; set; }
         public GrammaticalFeature? GrammaticalFeature { get; set; }
 
-        public List<Definition> Definitions { get; set; }
+        public List<Definition> Definitions { get; set; } = [];
 
         // TODO YDict Later: Fields to re-adopt: InOtherLanguages, TonalMark, Tags
 

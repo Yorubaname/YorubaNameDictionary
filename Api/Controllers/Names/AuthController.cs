@@ -44,11 +44,7 @@ namespace Api.Controllers.Names
         public async Task<IActionResult> Login()
         {
             var theUser = await _userService.GetUserByEmail(User.Identity!.Name!);
-            var userDetails = new UserDto
-            {
-                Roles = [.. theUser.Roles],
-                Username = theUser.Email,
-            };
+            var userDetails = new UserDto(theUser.Email!, theUser.Email, [.. theUser.Roles]);
 
             return Ok(userDetails);
         }
@@ -129,12 +125,7 @@ namespace Api.Controllers.Names
             var theUser = await _userService.GetUserByEmail(email);
             return theUser == null ?
                 NotFound(ResponseHelper.GetResponseDict("User was not found.")) :
-                Ok(new UserDto
-                {
-                    Email = theUser.Email!,
-                    Roles = theUser.Roles.ToArray(),
-                    Username = theUser.Username,
-                });
+                Ok(new UserDto(theUser.Email!, theUser.Username, theUser.Roles.ToArray()));
         }
     }
 }

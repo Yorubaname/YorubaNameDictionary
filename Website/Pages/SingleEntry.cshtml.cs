@@ -25,12 +25,19 @@ namespace Website.Pages
         public async Task<IActionResult> OnGet(string nameEntry)
         {
             // TODO: Try to get name from search page first.
-            NameEntryDto? name = await _apiService.GetName(nameEntry);
+            var matches = await _apiService.GetNamesByTitle(nameEntry);
 
-            if (name == null)
+            if (matches.Length == 0)
             {
                 return Redirect($"/entries?q={HttpUtility.UrlEncode(nameEntry)}");
             }
+
+            if (matches.Length > 1)
+            {
+                return RedirectToPage("MultipleEntriesFound", new { q = nameEntry });
+            }
+
+            var name = matches[0];
 
             ViewData["SocialTitle"] = name.Name;
             ViewData["SocialPath"] = $"/entries/{HttpUtility.UrlEncode(name.Name)}";

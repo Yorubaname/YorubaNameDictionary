@@ -36,8 +36,11 @@ jobs:
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
+    - name: Restore packages (locked mode)
+      run: dotnet restore ${{ inputs.project-name }} --locked-mode
+
     - name: Build project
-      run: dotnet publish ${{ inputs.project-name }} -c Release -o out
+      run: dotnet publish ${{ inputs.project-name }} -c Release -o out --no-restore
 
     - name: Deploy to EC2
       env:

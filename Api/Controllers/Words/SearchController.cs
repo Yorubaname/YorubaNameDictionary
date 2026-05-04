@@ -91,17 +91,18 @@ namespace Api.Controllers.Words
         }
 
         [HttpGet("{searchTerm}")]
-        [ProducesResponseType(typeof(WordEntryDto), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> SearchOne(string searchTerm)
+        [ProducesResponseType(typeof(IEnumerable<WordEntryDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> SearchByTitle(string searchTerm)
         {
-            var wordEntry = (await searchService.GetEntry(searchTerm))?.MapToDto();
+            var titleLookup = await searchService.GetEntry(searchTerm);
+            var matches = titleLookup.Matches.MapToDtoCollection();
 
-            if (wordEntry != null)
+            if (matches.Length == 1)
             {
-                await eventPubService.PublishEvent(new ExactEntrySearched(wordEntry.Word, languageService.CurrentTenant));
+                await eventPubService.PublishEvent(new ExactEntrySearched(matches[0].Word, languageService.CurrentTenant));
             }
 
-            return Ok(wordEntry);
+            return Ok(matches);
         }
 
         [HttpGet("activity")]

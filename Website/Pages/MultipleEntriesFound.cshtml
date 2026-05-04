@@ -1,0 +1,53 @@
+@page "/entries/multiple"
+@model MultipleEntriesFoundModel
+@{
+    ViewData["Title"] = $"Multiple entries found for {Model.Query}";
+}
+
+@using Website.Resources
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+
+@await Html.PartialAsync("Partials/_MiniSearchForm")
+
+<section id="content" class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-5">
+
+            <div class="col-lg-8">
+                <div class="text-center mb-4 p-4 bg-white rounded-3 shadow-sm border">
+                    <i class="bi bi-list-ul display-4 text-muted opacity-50 mb-3"></i>
+                    <h3 class="fw-bold text-dark mb-2">
+                        Multiple entries found for
+                        <span class="text-warning intonation fst-italic">"@Model.Query"</span>
+                    </h3>
+                    <p class="text-muted mb-0">Select the exact name you meant from the options below.</p>
+                </div>
+
+                <div class="list-group shadow-sm border-0">
+                    @foreach (var name in Model.Matches)
+                    {
+                        <a href="/entries/@name.Name" class="list-group-item list-group-item-action p-4 border-0 border-bottom">
+                            <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                                <h5 class="mb-1 fw-bold text-primary intonation fs-4">@name.Name</h5>
+                                <i class="bi bi-chevron-right text-muted"></i>
+                            </div>
+                            <p class="mb-1 text-muted">
+                                <strong class="text-dark">Meaning:</strong> @(string.IsNullOrWhiteSpace(name.Meaning) ? "-" : name.Meaning)
+                            </p>
+                        </a>
+                    }
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="sticky-top" style="top: 100px;">
+                    <div class="card bg-white border-0 shadow-sm p-3">
+                        <h5 class="fw-bold mb-3 border-bottom pb-2">Browse Dictionary</h5>
+                        @await Html.PartialAsync("Partials/_Alphabets", @Model.Letters)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

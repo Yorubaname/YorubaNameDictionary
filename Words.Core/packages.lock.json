@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net8.0": {
+      "YorubaOrganization.Core": {
+        "type": "Direct",
+        "requested": "[6.*, )",
+        "resolved": "6.0.5",
+        "contentHash": "wgAjujMO9tvv6KJ/xgeT4W+kXJi44aV3YE5TjnWyIhBrRTWRaZj4H6hmsvMEubr/ngmJL+NZC/2gmdRHAMjlXA==",
+        "dependencies": {
+          "MediatR.Contracts": "2.0.1"
+        }
+      },
+      "MediatR.Contracts": {
+        "type": "Transitive",
+        "resolved": "2.0.1",
+        "contentHash": "FYv95bNT4UwcNA+G/J1oX5OpRiSUxteXaUt2BJbRSdRNiIUNbggJF69wy6mnk2wYToaanpdXZdCwVylt96MpwQ=="
+      }
+    }
+  }
+}
