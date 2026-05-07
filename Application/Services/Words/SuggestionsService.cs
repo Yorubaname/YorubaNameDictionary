@@ -42,6 +42,11 @@ public class SuggestionsService
         return entry != null && entry.State == State.SUGGESTED ? entry : null;
     }
 
+    public async Task<WordEntry?> AcceptSuggestionAsync(string id)
+    {
+        return await _wordRepository.AcceptSuggestionAsync(id);
+    }
+
     public async Task<bool> DeleteSuggestedNameAsync(string id)
     {
         var entry = await _wordRepository.GetByIdAsync(id);

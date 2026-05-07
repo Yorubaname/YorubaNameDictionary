@@ -25,6 +25,14 @@ namespace Api.Controllers.Words
             _wordValidator = wordValidator;
         }
 
+        [HttpGet]
+        [ProducesResponseType(typeof(WordEntryDto[]), 200)]
+        public async Task<IActionResult> GetAll()
+        {
+            var data = await _suggestedWordService.GetAllAsync();
+            return Ok(data.MapToDtoCollection());
+        }
+
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
@@ -58,14 +66,6 @@ namespace Api.Controllers.Words
             return Ok(meta);
         }
 
-        [HttpGet]
-        [ProducesResponseType(typeof(WordEntryDto[]), 200)]
-        public async Task<IActionResult> GetAll()
-        {
-            var data = await _suggestedWordService.GetAllAsync();
-            return Ok(data.MapToDtoCollection());
-        }
-
         [HttpDelete]
         [Authorize(Policy = "AdminAndProLexicographers")]
         [Route("{id}")]
@@ -79,6 +79,22 @@ namespace Api.Controllers.Words
             }
 
             return BadRequest($"Suggested word with id: {id} not found as a suggested word");
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "AdminAndProLexicographers")]
+        [Route("{id}/accept")]
+        [ProducesResponseType(typeof(WordEntryDto), 200)]
+        public async Task<IActionResult> AcceptSuggestion(string id)
+        {
+            var acceptedWord = await _suggestedWordService.AcceptSuggestionAsync(id);
+
+            if (acceptedWord == null)
+            {
+                return BadRequest($"Suggested word with id: {id} not found as a suggested word");
+            }
+
+            return Ok(acceptedWord.MapToDto());
         }
 
         [HttpDelete]

@@ -16,6 +16,7 @@ namespace Application.Mappers.Words
         {
             return new WordEntryDto
             {
+                Id = wordEntry.Id,
                 Word = wordEntry.Title,
                 Pronunciation = wordEntry.Pronunciation,
                 PartOfSpeech = wordEntry.PartOfSpeech.ToString(),
