@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Words.Core.Dto.Request;
 using Words.Core.Dto.Response;
+using Words.Core.Entities;
 using Words.Website.Pages.Shared;
 using Words.Website.Resources;
 using Words.Website.Services;
@@ -23,6 +24,22 @@ namespace Words.Website.Pages
         [FromQuery(Name = "missing")]
         public string? MissingWord { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        [FromQuery(Name = "meaning")]
+        public string? SuggestedMeaning { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        [FromQuery(Name = "email")]
+        public string? SuggestedEmail { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        [FromQuery(Name = "pos")]
+        public int? SuggestedPartOfSpeech { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        [FromQuery(Name = "geo")]
+        public string[] SuggestedGeoLocation { get; set; } = [];
+
         public GeoLocationDto[] GeoLocations { get; private set; } = [];
 
         [TempData]
@@ -39,13 +56,34 @@ namespace Words.Website.Pages
         public async Task<IActionResult> OnPost(
             string word,
             string suggestedMeaning,
-            string suggestedEmail,
+            string? suggestedEmail,
+            int partOfSpeech,
             string[] suggestedGeoLocation)
         {
             if (!ModelState.IsValid)
             {
-                GeoLocations = await _apiService.GetGeoLocations() ?? [];
-                return Page();
+                ErrorMessage = "Please complete all required fields and try again.";
+                return RedirectToPage(new
+                {
+                    missing = word,
+                    meaning = suggestedMeaning,
+                    email = suggestedEmail,
+                    pos = partOfSpeech,
+                    geo = suggestedGeoLocation
+                });
+            }
+
+            if (!Enum.IsDefined(typeof(PartOfSpeech), partOfSpeech))
+            {
+                ErrorMessage = "Please select a valid part of speech.";
+                return RedirectToPage(new
+                {
+                    missing = word,
+                    meaning = suggestedMeaning,
+                    email = suggestedEmail,
+                    pos = partOfSpeech,
+                    geo = suggestedGeoLocation
+                });
             }
 
             try
@@ -53,7 +91,8 @@ namespace Words.Website.Pages
                 var dto = new CreateWordDto
                 {
                     Word = word,
-                    SubmittedBy = suggestedEmail,
+                    SubmittedBy = string.IsNullOrWhiteSpace(suggestedEmail) ? "Anonymous" : suggestedEmail,
+                    PartOfSpeech = (PartOfSpeech)partOfSpeech,
                 };
 
                 if (!string.IsNullOrWhiteSpace(suggestedMeaning))
@@ -71,14 +110,20 @@ namespace Words.Website.Pages
 
                 await _apiService.SuggestWordAsync(dto);
                 SuccessMessage = "Thank you! Your word has been submitted for review.";
-                return RedirectToPage(new { missing = string.Empty });
+                return RedirectToPage();
             }
             catch(Exception ex)
             {
                 ErrorMessage = "Something went wrong submitting your word. Please try again.";
                 logger.LogError(ex, ErrorMessage);
-                GeoLocations = await _apiService.GetGeoLocations() ?? [];
-                return Page();
+                return RedirectToPage(new
+                {
+                    missing = word,
+                    meaning = suggestedMeaning,
+                    email = suggestedEmail,
+                    pos = partOfSpeech,
+                    geo = suggestedGeoLocation
+                });
             }
         }
     }
