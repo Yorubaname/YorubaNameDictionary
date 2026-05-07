@@ -1,3 +1,4 @@
+using Application.Exceptions;
 using Application.Services.MultiLanguage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -111,6 +112,18 @@ namespace Words.Website.Pages
                 await _apiService.SuggestWordAsync(dto);
                 SuccessMessage = "Thank you! Your word has been submitted for review.";
                 return RedirectToPage();
+            }
+            catch (WordAlreadyExistsException)
+            {
+                ErrorMessage = $"'{word}' already exists in the dictionary or has already been submitted for review.";
+                return RedirectToPage(new
+                {
+                    missing = word,
+                    meaning = suggestedMeaning,
+                    email = suggestedEmail,
+                    pos = partOfSpeech,
+                    geo = suggestedGeoLocation
+                });
             }
             catch(Exception ex)
             {

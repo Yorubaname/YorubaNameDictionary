@@ -1,10 +1,12 @@
 using Microsoft.Extensions.Options;
+using System.Net;
 using System.Text.Json;
 using Application.Services.MultiLanguage;
 using Words.Core.Dto.Request;
 using Words.Core.Dto.Response;
 using Words.Website.Config;
 using YorubaOrganization.Core.Dto.Response;
+using Application.Exceptions;
 
 namespace Words.Website.Services
 {
@@ -95,6 +97,10 @@ namespace Words.Website.Services
             if (!response.IsSuccessStatusCode)
             {
                 _logger.LogError("POST '{Url}' failed with '{Status}'; Response: '{Content}'", url, response.StatusCode, rawContent);
+                if (response.StatusCode == HttpStatusCode.Conflict)
+                {
+                    throw new WordAlreadyExistsException(dto.Word);
+                }
                 throw new Exception("Error submitting word suggestion.");
             }
         }
