@@ -79,8 +79,18 @@ $(function () {
 
     /* Play Audio Sound */
     $("#tts-button").on("click", function () {
-        var host = $("#host").html(),
-            audio = new Audio("https://gentle-falls-68008.herokuapp.com/api/v1/names/" + $("#word-entry").text().trim());
+        var ttsBaseUrl = (window.appConfig && window.appConfig.ttsBaseUrl) || "";
+        var wordEntry = $("#word-entry").text().trim();
+
+        if (!ttsBaseUrl || !wordEntry) {
+            return;
+        }
+
+        if (!ttsBaseUrl.endsWith("/")) {
+            ttsBaseUrl += "/";
+        }
+
+        var audio = new Audio(ttsBaseUrl + encodeURIComponent(wordEntry));
         audio.play();
     });
 

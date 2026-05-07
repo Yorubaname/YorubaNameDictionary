@@ -37,7 +37,7 @@ namespace Application.Services.MultiLanguage
         public virtual string Website => _tenantToWebsiteMap[_tenant];
         public virtual string SocialName => _tenantToSocialNameMap[_tenant];
         public virtual string LanguageDisplay => _tenantToLanguageDisplayMap[_tenant];
-        public bool IsYoruba => _tenant == Tenants.YorubaNames;
+        public bool IsYoruba => _tenant == Tenants.YorubaNames || _tenant == Tenants.YorubaWord;
         public bool IsIgbo => _tenant == Tenants.IgboNames;
 
         public string CurrentTenant => _tenant;

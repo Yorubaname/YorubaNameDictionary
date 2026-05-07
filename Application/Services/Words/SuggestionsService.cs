@@ -1,4 +1,5 @@
-﻿using Words.Core.Entities;
+﻿using Application.Exceptions;
+using Words.Core.Entities;
 using Words.Core.Repositories;
 using YorubaOrganization.Core.Enums;
 
@@ -21,6 +22,11 @@ public class SuggestionsService
 
     public async Task CreateAsync(WordEntry wordEntry)
     {
+        if (await _wordRepository.FindByTitle(wordEntry.Title) != null)
+        {
+            throw new WordAlreadyExistsException(wordEntry.Title);
+        }
+
         wordEntry.State = State.SUGGESTED;
         await _wordRepository.Create(wordEntry);
     }
@@ -34,6 +40,11 @@ public class SuggestionsService
     {
         var entry = await _wordRepository.GetByIdAsync(id);
         return entry != null && entry.State == State.SUGGESTED ? entry : null;
+    }
+
+    public async Task<WordEntry?> AcceptSuggestionAsync(string id)
+    {
+        return await _wordRepository.AcceptSuggestionAsync(id);
     }
 
     public async Task<bool> DeleteSuggestedNameAsync(string id)

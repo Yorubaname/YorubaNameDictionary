@@ -1,0 +1,116 @@
+@page "/submit-word"
+@model Words.Website.Pages.SubmitWordModel
+@{
+    ViewData["Title"] = Localizer["submitname-heading"];
+}
+
+@using Application.Services.MultiLanguage
+@using Words.Website.Resources
+@using Words.Core.Entities
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+@inject ILanguageService LanguageService
+
+@await Html.PartialAsync("Partials/_MiniSearchForm")
+
+<section class="ryt">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-7">
+                <h3>@Localizer["submitname-heading"]</h3>
+                <hr />
+
+                @if (Model.SuccessMessage != null)
+                {
+                    <div class="alert alert-success" role="alert">@Model.SuccessMessage</div>
+                }
+
+                @if (Model.ErrorMessage != null)
+                {
+                    <div class="alert alert-danger" role="alert">@Model.ErrorMessage</div>
+                }
+
+                <form method="post" asp-page="/SubmitWord" id="submit-word-form">
+                    @Html.AntiForgeryToken()
+
+                    <div class="response"></div>
+
+                    <div class="form-group">
+                        <label class="required" for="word">@Localizer["submitname-entername"]</label>
+                        @if (LanguageService.IsYoruba)
+                        {
+                            <p class="small sec-color">@Localizer["entry-not-found-minikeyb-text"]</p>
+                        }
+                        <input type="text"
+                               class="form-control"
+                               id="word"
+                               name="word"
+                               placeholder="@Localizer["submitname-enternameplch"]"
+                               value="@Model.MissingWord"
+                               required />
+                    </div>
+                    <br />
+
+                    <div class="form-group">
+                        <label class="required" for="partOfSpeech">Part of speech:</label>
+                        <select name="partOfSpeech" id="partOfSpeech" class="form-control" required>
+                            <option value="">Select part of speech</option>
+                            @foreach (var partOfSpeech in Enum.GetValues<PartOfSpeech>().Take(7))
+                            {
+                                var partOfSpeechValue = (int)partOfSpeech;
+                                <option value="@partOfSpeechValue" selected="@(Model.SuggestedPartOfSpeech == partOfSpeechValue)">@partOfSpeech</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+                    <div class="form-group">
+                        <label class="required" for="suggestedMeaning">@Localizer["submitname-entermeaning"]:</label>
+                        <textarea name="suggestedMeaning" id="suggestedMeaning" class="form-control" rows="3" required>@Model.SuggestedMeaning</textarea>
+                    </div>
+                    <br />
+
+                    <div class="form-group">
+                        <label class="optional" for="suggestedGeoLocation">@Localizer["submitname-enterlocation"]:</label>
+                        <select name="suggestedGeoLocation" id="suggestedGeoLocation" multiple="multiple">
+                            @foreach (var geoLocation in Model.GeoLocations)
+                            {
+                                var geoValue = $"{geoLocation.Region}.{geoLocation.Place}";
+                                <option value="@geoValue" selected="@(Model.SuggestedGeoLocation.Contains(geoValue))">@geoLocation.Place</option>
+                            }
+                        </select>
+                    </div>
+                    <br />
+
+                    <div class="form-group">
+                        <label class="optional" for="suggestedEmail">@Localizer["submitname-enteremail"]:</label>
+                        <input type="email" name="suggestedEmail" class="form-control" id="suggestedEmail" placeholder="Your email (optional)" value="@Model.SuggestedEmail" />
+                    </div>
+
+                    <button type="submit" id="submit-word" class="btn btn-secondary" disabled>Submit New Word</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    (function () {
+        var form = document.getElementById("submit-word-form");
+        var submitButton = document.getElementById("submit-word");
+
+        if (!form || !submitButton) {
+            return;
+        }
+
+        var updateSubmitButtonState = function () {
+            var isValid = form.checkValidity();
+            submitButton.disabled = !isValid;
+            submitButton.classList.toggle("btn-success", isValid);
+            submitButton.classList.toggle("btn-secondary", !isValid);
+        };
+
+        form.addEventListener("input", updateSubmitButtonState);
+        form.addEventListener("change", updateSubmitButtonState);
+        updateSubmitButtonState();
+    })();
+</script>

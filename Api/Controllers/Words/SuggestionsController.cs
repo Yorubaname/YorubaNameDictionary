@@ -1,4 +1,5 @@
 using Api.Utilities;
+using Application.Exceptions;
 using Application.Mappers.Words;
 using Application.Services.Words;
 using FluentValidation;
@@ -24,6 +25,14 @@ namespace Api.Controllers.Words
             _wordValidator = wordValidator;
         }
 
+        [HttpGet]
+        [ProducesResponseType(typeof(WordEntryDto[]), 200)]
+        public async Task<IActionResult> GetAll()
+        {
+            var data = await _suggestedWordService.GetAllAsync();
+            return Ok(data.MapToDtoCollection());
+        }
+
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.Created)]
@@ -36,7 +45,14 @@ namespace Api.Controllers.Words
                 return BadRequest(ModelState);
             }
 
-            await _suggestedWordService.CreateAsync(request.MapToEntity());
+            try
+            {
+                await _suggestedWordService.CreateAsync(request.MapToEntity());
+            }
+            catch (WordAlreadyExistsException ex)
+            {
+                return Conflict(ResponseHelper.GetResponseDict(ex.Message));
+            }
 
             return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict("Suggested word successfully added"));
         }
@@ -48,14 +64,6 @@ namespace Api.Controllers.Words
         {
             var meta = await _suggestedWordService.CountAsync();
             return Ok(meta);
-        }
-
-        [HttpGet]
-        [ProducesResponseType(typeof(WordEntryDto[]), 200)]
-        public async Task<IActionResult> GetAll()
-        {
-            var data = await _suggestedWordService.GetAllAsync();
-            return Ok(data.MapToDtoCollection());
         }
 
         [HttpDelete]
@@ -71,6 +79,22 @@ namespace Api.Controllers.Words
             }
 
             return BadRequest($"Suggested word with id: {id} not found as a suggested word");
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "AdminAndProLexicographers")]
+        [Route("{id}/accept")]
+        [ProducesResponseType(typeof(WordEntryDto), 200)]
+        public async Task<IActionResult> AcceptSuggestion(string id)
+        {
+            var acceptedWord = await _suggestedWordService.AcceptSuggestionAsync(id);
+
+            if (acceptedWord == null)
+            {
+                return BadRequest($"Suggested word with id: {id} not found as a suggested word");
+            }
+
+            return Ok(acceptedWord.MapToDto());
         }
 
         [HttpDelete]
