@@ -1,6 +1,8 @@
+using Api.Configuration;
 using Api.Utilities;
 using Application.Mappers.Words;
 using Application.Services.Words;
+using Microsoft.Extensions.Options;
 using Core.Dto.Request;
 using Core.Dto.Response;
 using FluentValidation;
@@ -17,11 +19,11 @@ namespace Api.Controllers.Words
     [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize(Policy = "AdminAndLexicographers")]
-    public class WordsController(WordEntryService entryService, IValidator<WordDto> createWordValidator) : ControllerBase
+    public class WordsController(WordEntryService entryService, IValidator<WordDto> createWordValidator, IOptions<WordsConfig> wordsConfig) : ControllerBase
     {
         private const int DefaultPage = 1;
         private const int DefaultListCount = 50;
-        private const int MaxListCount = 100; //TODO Later: Make configurable
+        private readonly int _maxListCount = wordsConfig.Value.MaxListCount;
 
         /// <summary>
         /// Create a new Word entry. Updates are not possible through this endpoint.
@@ -88,7 +90,7 @@ namespace Api.Controllers.Words
             }
 
             page ??= DefaultPage;
-            count = Math.Min(count ?? DefaultListCount, MaxListCount);
+            count = Math.Min(count ?? DefaultListCount, _maxListCount);
             words = await entryService.List(state, submittedBy, page.Value, count.Value);
             return Ok(words.MapToDtoCollection());
         }
