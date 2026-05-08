@@ -158,11 +158,35 @@
 
                 <div id="dictionary-entry-1">
 
-                    <div class="row vg-header">
+                    <div class="row vg-header align-items-center">
 
                         <div class="col">
 
-                            <h2 class="ptm">Definition of <em>@Model.Word.Word&nbsp;</em></h2>
+                            <h2 class="ptm definition-heading-inline">
+                                <span>Definition of <em>@Model.Word.Word&nbsp;</em></span>
+                                <button type="button"
+                                        id="toggle-english-equivalents"
+                                        class="btn btn-sm btn-outline-secondary english-toggle-button"
+                                        aria-pressed="false"
+                                        aria-label="Show English equivalents"
+                                        title="Show English equivalents">
+                                    <span class="english-flag" aria-hidden="true">
+                                        <svg viewBox="0 0 60 30" width="18" height="12" role="img" aria-hidden="true" focusable="false">
+                                            <clipPath id="uk-clip">
+                                                <path d="M0,0 v30 h60 v-30 z" />
+                                            </clipPath>
+                                            <g clip-path="url(#uk-clip)">
+                                                <path d="M0,0 v30 h60 v-30 z" fill="#012169" />
+                                                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6" />
+                                                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4" />
+                                                <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10" />
+                                                <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6" />
+                                            </g>
+                                        </svg>
+                                    </span>
+                                    <span id="english-toggle-text" class="english-toggle-text">Show English</span>
+                                </button>
+                            </h2>
                             <p class="entryNumbers"></p>
                         </div>
 
@@ -190,16 +214,31 @@
                                                     <strong class="mw_t_bc">: </strong>@definition.Content<strong
                                                         class="mw_t_bc">:</strong>
 
-                                                    @if (definition.Examples?.Any() == true)
+                                                    @if (!string.IsNullOrWhiteSpace(definition.EnglishTranslation))
                                                     {
-
-                                                        <span class="ex-sent t no-aq sents">
-                                                            @definition.Examples.First().Content
+                                                        <span class="english-equivalent english-equivalent-definition english-hidden">
+                                                            @definition.EnglishTranslation
                                                         </span>
-
                                                     }
 
                                                 </span>
+
+                                                @if (definition.Examples?.Any() == true)
+                                                {
+                                                    foreach (var example in definition.Examples)
+                                                    {
+                                                        <span class="ex-sent t no-aq sents inline-example">
+                                                            <strong class="example-prefix">f.a.:</strong>
+                                                            <span class="example-content">@example.Content</span>
+                                                            @if (!string.IsNullOrWhiteSpace(example.EnglishTranslation))
+                                                            {
+                                                                <span class="english-equivalent english-equivalent-example english-hidden">
+                                                                    @example.EnglishTranslation
+                                                                </span>
+                                                            }
+                                                        </span>
+                                                    }
+                                                }
 
                                             </span>
                                         </p>
@@ -209,27 +248,6 @@
                                 </div>
                             }
                         }
-
-                    </div>
-
-                    <div id="first-known-anchor" class="row widget">
-
-                        <h2 class="ptm">English Translation</h2>
-
-                        <p class="ety-sl">
-                            @if (Model.Word.Definitions?.Any() == true)
-                            {
-                                @for (int i = 0; i < Model.Word.Definitions.Count; i++)
-                                {
-                                    var definition = Model.Word.Definitions[i];
-                                    @definition.EnglishTranslation
-                                    @if (i < Model.Word.Definitions.Count - 1)
-                                    {
-                                        <span>,&nbsp;</span>
-                                    }
-                                }
-                            }
-                        </p>
 
                     </div>
 
@@ -254,67 +272,6 @@
                     *@
 
                 </div>
-
-                @{
-                    // Check if there are any examples in the word definitions (similar to Handlebars {{#if word.examples}})
-                    var hasExamples = Model.Word.Definitions?.Any(d => d.Examples?.Any() == true) == true;
-                }
-                @if (hasExamples)
-                {
-                    <div id="dictionary-entry-1">
-
-                        <div class="row vg-header">
-
-                            <div class="col">
-
-                                <h2 class="ptm">Example of <em>@Model.Word.Word&nbsp;</em></h2>
-                                <p class="entryNumbers"></p>
-
-                            </div>
-
-                        </div>
-
-                        <div class="vg">
-
-                            <div class="sb has-num">
-
-                                <div class="sb-0">
-
-                                    <p class="sense has-num-only">
-
-                                        <span class="sn sense-1"><span class="num">a.</span></span>
-
-                                        <span class="dt ">
-
-                                            <span class="dtText">
-                                                <strong class="mw_t_bc"> </strong>
-                                                @{
-                                                    var firstExampleDefinition = Model.Word.Definitions?.FirstOrDefault(d => d.Examples?.Any() == true);
-                                                    var firstExample = firstExampleDefinition?.Examples?.FirstOrDefault();
-                                                }
-                                                @if (firstExample != null)
-                                                {
-                                                    @firstExample.Content
-                                                }
-                                                else
-                                                {
-                                                    <text>hard to do, make, or carry out</text>
-                                                }
-
-                                            </span>
-
-                                        </span>
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                }
-
                 @if (!string.IsNullOrEmpty(Model.Word.Morphology?.ToString()))
                 {
 
@@ -356,7 +313,15 @@
                         <ul>
                             @foreach (var variant in Model.Word.Variants)
                             {
-                                <li>@variant.Word</li>
+                                <li>
+                                    <span>@variant.Word</span>
+                                    @if (!string.IsNullOrWhiteSpace(variant.Geolocation?.Place))
+                                    {
+                                        <small style="margin-left: 6px; color: #6c757d; font-size: 0.72em; font-weight: 400; letter-spacing: 0; text-transform: none;">
+                                            @variant.Geolocation.Place
+                                        </small>
+                                    }
+                                </li>
                             }
                         </ul>
 
@@ -405,6 +370,107 @@
         </div>
     </div>
 </section>
+
+<style>
+    .definition-heading-inline {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .english-toggle-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        min-width: 7.8rem;
+        height: 2rem;
+        padding: 0.2rem 0.55rem;
+        line-height: 1;
+        vertical-align: middle;
+    }
+
+    .english-equivalent {
+        display: inline-block;
+        margin-left: 0.45rem;
+        color: #6c757d;
+        font-size: 0.88em;
+        font-style: italic;
+    }
+
+    .english-equivalent-definition::before {
+        content: "- ";
+    }
+
+    .english-equivalent-example {
+        margin-left: 0.35rem;
+        font-size: 0.84em;
+        color: #5b7fa6;
+    }
+
+    .english-equivalent-example::before {
+        content: "- ";
+    }
+
+    .english-hidden {
+        display: none;
+    }
+
+    .inline-example {
+        display: block;
+        margin-top: 0.5rem;
+    }
+
+    .example-prefix {
+        display: inline-block;
+        margin-right: 0.35rem;
+        font-size: 0.86em;
+        letter-spacing: 0.02em;
+    }
+
+    .english-flag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .english-toggle-text {
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+    }
+</style>
+
+<script>
+    (function () {
+        var toggleButton = document.getElementById('toggle-english-equivalents');
+        var toggleText = document.getElementById('english-toggle-text');
+        if (!toggleButton) {
+            return;
+        }
+
+        toggleButton.addEventListener('click', function () {
+            var showingEnglish = toggleButton.getAttribute('aria-pressed') === 'true';
+            var nextState = !showingEnglish;
+            var englishEquivalents = document.querySelectorAll('.english-equivalent');
+
+            englishEquivalents.forEach(function (element) {
+                if (nextState) {
+                    element.classList.remove('english-hidden');
+                } else {
+                    element.classList.add('english-hidden');
+                }
+            });
+
+            toggleButton.setAttribute('aria-pressed', String(nextState));
+            toggleButton.setAttribute('aria-label', nextState ? 'Hide English equivalents' : 'Show English equivalents');
+            toggleButton.setAttribute('title', nextState ? 'Hide English equivalents' : 'Show English equivalents');
+
+            if (toggleText) {
+                toggleText.textContent = nextState ? 'Yoruba Only' : 'Show English';
+            }
+        });
+    })();
+</script>
 
 <br>
 

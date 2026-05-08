@@ -3,6 +3,7 @@
 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 @inject ILanguageService LanguageService
+@inject Microsoft.Extensions.Options.IOptions<Words.Website.Config.ApiSettings> ApiSettingsOptions
 
 @{
     string smallLogoUrl = $"{ViewData["BaseURL"]}/img/yw-logo-small.png";
@@ -34,6 +35,7 @@
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <link href="~/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/css/jquery-ui.min.css" rel="stylesheet">
+    <link href="~/css/multiple-select.css" rel="stylesheet">
     <link href="~/css/font-awesome.min.css" rel="stylesheet">
     <link href="~/css/themify-icons.css" rel="stylesheet">
     <link href="~/css/simple-line-icons.css" rel="stylesheet">
@@ -54,6 +56,11 @@
     <script src="~/js/multiple-select.js" defer></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"
         defer></script>
+
+    <script>
+        window.appConfig = window.appConfig || {};
+        window.appConfig.ttsBaseUrl = "@ApiSettingsOptions.Value.TtsBaseUrl";
+    </script>
 
     <script src="~/js/scripts.js" defer></script>
     <script>

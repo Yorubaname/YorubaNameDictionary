@@ -33,6 +33,28 @@ namespace Infrastructure.MongoDB.Repositories.Words
             return await RepoCollection.Find(filter).FirstOrDefaultAsync();
         }
 
+        public async Task<WordEntry?> AcceptSuggestionAsync(string id)
+        {
+            var suggestedFilter = Builders<WordEntry>.Filter.Eq(w => w.Id, id)
+                & Builders<WordEntry>.Filter.Eq(w => w.State, State.SUGGESTED);
+
+            var suggestedWord = await RepoCollection.Find(suggestedFilter).FirstOrDefaultAsync();
+            if (suggestedWord == null)
+            {
+                return null;
+            }
+
+            suggestedWord.State = State.NEW;
+
+            var replaceResult = await RepoCollection.ReplaceOneAsync(suggestedFilter, suggestedWord);
+            if (replaceResult.MatchedCount == 0)
+            {
+                return null;
+            }
+
+            return suggestedWord;
+        }
+
         public async Task<bool> DeleteAsync(string id)
         {
             var filter = Builders<WordEntry>.Filter.Eq(ne => ne.Id, id);
