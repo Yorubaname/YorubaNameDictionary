@@ -15,6 +15,28 @@ public sealed class NameEntryRepository(IMongoDatabaseFactory databaseFactory, I
 {
     private const string CollectionName = "NameEntries";
 
+    public async Task<List<NameEntry>> GetPublishedWithEtymologyPageAsync(int page, int count)
+    {
+        page = Math.Max(1, page);
+        count = Math.Max(1, count);
+        var skip = (page - 1) * count;
+
+        var filter = Builders<NameEntry>.Filter.Eq(ne => ne.State, State.PUBLISHED);
+
+        return await RepoCollection
+            .Find(filter)
+            .SortBy(ne => ne.Id)
+            .Skip(skip)
+            .Limit(count)
+            .Project(ne => new NameEntry
+            {
+                Id = ne.Id,
+                Title = ne.Title,
+                Etymology = ne.Etymology
+            })
+            .ToListAsync();
+    }
+
     public async Task<HashSet<NameEntry>> FindEntryByMeaningContainingAndState(string title, State state)
     {
         var filter = Builders<NameEntry>.Filter.Regex(ne => ne.Meaning,

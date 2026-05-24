@@ -8,5 +8,6 @@ namespace Core.Repositories
     {
         Task<HashSet<NameEntry>> FindEntryByMeaningContainingAndState(string title, State state);
         Task<HashSet<NameEntry>> FindEntryByExtendedMeaningContainingAndState(string title, State state);
+        Task<List<NameEntry>> GetPublishedWithEtymologyPageAsync(int page, int count);
     }
 }

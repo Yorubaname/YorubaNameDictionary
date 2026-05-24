@@ -19,13 +19,24 @@ namespace Application.Services.Words
         private readonly IEventPubService _eventPubService = eventPubService;
         private readonly IWordEntryRepository _wordEntryRepository = wordEntryRepository;
         private readonly string _currentTenant = tenantProvider.GetCurrentTenant();
+        public const string SystemUser = "SYSTEM";
 
         public Task<IDictionary<string, string[]>> GetEnglishDefinitionsOf(IEnumerable<string> words)
         {
             return _wordEntryRepository.GetEnglishDefinitionsOfAsync(words);
         }
 
+        public Task<List<WordEntry>> GetPublishedWithEtymologyPageAsync(int page, int count)
+        {
+            return _wordEntryRepository.GetPublishedWithEtymologyPageAsync(page, count);
+        }
+
         public Task<IDictionary<string, string>> AddEnglishDefinitionsAsync(IDictionary<string, string> definitionsByWord, string? currentUser = null)
+        {
+            return _wordEntryRepository.AddEnglishDefinitionsAsync(definitionsByWord, currentUser);
+        }
+
+        public Task<IDictionary<string, string>> AddEnglishDefinitionsAsync(IDictionary<string, string[]> definitionsByWord, string? currentUser = SystemUser)
         {
             return _wordEntryRepository.AddEnglishDefinitionsAsync(definitionsByWord, currentUser);
         }

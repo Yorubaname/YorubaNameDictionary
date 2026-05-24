@@ -16,6 +16,11 @@ namespace Infrastructure.MongoDB.Repositories.Words
     {
         private const string CollectionName = "Words";
         private const string YorubaDefinitionPlaceholder = "{{YORUBA-DEFINITION-PLACEHOLDER}}";
+        private const string StatusCreated = "created";
+        private const string StatusAllDefinitionsAdded = "all-definitions-added";
+        private const string StatusSomeDefinitionsAdded = "some-definitions-added";
+        private const string StatusSkippedDuplicate = "skipped-duplicate";
+        private const string StatusNoValidDefinition = "no-valid-definition";
         private const string DefinitionsNeedsReviewStateIndexName = "idx_words_definitions_needsreview_state";
         private static readonly object IndexCreationLock = new();
         private static bool _DoesWordDefinitionsNeedingReviewIndexExist;
@@ -135,6 +140,29 @@ namespace Infrastructure.MongoDB.Repositories.Words
             return [.. result];
         }
 
+        public async Task<List<WordEntry>> GetPublishedWithEtymologyPageAsync(int page, int count)
+        {
+            page = Math.Max(1, page);
+            count = Math.Max(1, count);
+            var skip = (page - 1) * count;
+
+            var filter = Builders<WordEntry>.Filter.Eq(ne => ne.State, State.PUBLISHED);
+
+            return await RepoCollection
+                .Find(filter)
+                .SortBy(ne => ne.Id)
+                .Skip(skip)
+                .Limit(count)
+                .Project(ne => new WordEntry
+                {
+                    Id = ne.Id,
+                    Title = ne.Title,
+                    Etymology = ne.Etymology,
+                    Definitions = ne.Definitions
+                })
+                .ToListAsync();
+        }
+
         public async Task<IDictionary<string, string[]>> GetEnglishDefinitionsOfAsync(IEnumerable<string> words)
         {
             var requestedWords = words
@@ -177,12 +205,29 @@ namespace Infrastructure.MongoDB.Repositories.Words
 
         public async Task<IDictionary<string, string>> AddEnglishDefinitionsAsync(IDictionary<string, string> definitionsByWord, string? currentUser = null)
         {
+            var requestWithManyMeanings = definitionsByWord
+                .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Key))
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => new[] { kvp.Value },
+                    StringComparer.CurrentCultureIgnoreCase);
+
+            return await AddEnglishDefinitionsAsync(requestWithManyMeanings, currentUser);
+        }
+
+        public async Task<IDictionary<string, string>> AddEnglishDefinitionsAsync(IDictionary<string, string[]> definitionsByWord, string? currentUser = null)
+        {
             var requests = definitionsByWord
-                .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Key) && !string.IsNullOrWhiteSpace(kvp.Value))
+                .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Key))
                 .GroupBy(kvp => kvp.Key.Trim(), StringComparer.CurrentCultureIgnoreCase)
                 .ToDictionary(
                     g => g.Key,
-                    g => g.Last().Value.Trim(),
+                    g => g
+                        .SelectMany(kvp => kvp.Value ?? [])
+                        .Where(value => !string.IsNullOrWhiteSpace(value))
+                        .Select(value => value.Trim())
+                        .Distinct(StringComparer.CurrentCultureIgnoreCase)
+                        .ToArray(),
                     StringComparer.CurrentCultureIgnoreCase);
 
             var statuses = new Dictionary<string, string>();
@@ -201,29 +246,52 @@ namespace Infrastructure.MongoDB.Repositories.Words
 
             foreach (var request in requests)
             {
+                var meanings = request.Value;
+                if (meanings.Length == 0)
+                {
+                    statuses[request.Key] = StatusNoValidDefinition;
+                    continue;
+                }
+
                 if (!existingByTitle.TryGetValue(request.Key, out var wordEntry))
                 {
-                    await CreateWord(request, currentUser);
-                    statuses[request.Key] = "created";
+                    await CreateWord(request.Key, meanings, currentUser);
+                    statuses[request.Key] = StatusCreated;
                     continue;
                 }
 
-                var definitionExists = wordEntry.Definitions.Any(d =>
-                    !string.IsNullOrWhiteSpace(d.EnglishTranslation)
-                    && string.Equals(d.EnglishTranslation.Trim(), request.Value, StringComparison.CurrentCultureIgnoreCase));
+                var existingTranslations = wordEntry.Definitions
+                    .Where(d => !string.IsNullOrWhiteSpace(d.EnglishTranslation))
+                    .Select(d => d.EnglishTranslation!.Trim())
+                    .ToHashSet(StringComparer.CurrentCultureIgnoreCase);
 
-                if (definitionExists)
+                var createdCount = 0;
+                var skippedCount = 0;
+
+                foreach (var meaning in meanings)
                 {
-                    statuses[request.Key] = "skipped-duplicate";
-                    continue;
+                    if (existingTranslations.Contains(meaning))
+                    {
+                        skippedCount++;
+                        continue;
+                    }
+
+                    wordEntry.Definitions.Add(new Definition
+                    {
+                        Content = YorubaDefinitionPlaceholder,
+                        EnglishTranslation = meaning,
+                        NeedsReview = true
+                    });
+
+                    existingTranslations.Add(meaning);
+                    createdCount++;
                 }
 
-                wordEntry.Definitions.Add(new Definition
+                if (createdCount == 0)
                 {
-                    Content = YorubaDefinitionPlaceholder,
-                    EnglishTranslation = request.Value,
-                    NeedsReview = true
-                });
+                    statuses[request.Key] = StatusSkippedDuplicate;
+                    continue;
+                }
 
                 if (!string.IsNullOrWhiteSpace(currentUser))
                 {
@@ -234,7 +302,7 @@ namespace Infrastructure.MongoDB.Repositories.Words
                     Builders<WordEntry>.Filter.Eq(w => w.Id, wordEntry.Id),
                     wordEntry);
 
-                statuses[request.Key] = "created";
+                statuses[request.Key] = skippedCount == 0 ? StatusAllDefinitionsAdded : StatusSomeDefinitionsAdded;
             }
 
             return statuses;
@@ -265,18 +333,23 @@ namespace Infrastructure.MongoDB.Repositories.Words
             return aggregated;
         }
 
-        private async Task CreateWord(KeyValuePair<string, string> request, string? currentUser)
+        private async Task CreateWord(string title, IEnumerable<string> meanings, string? currentUser)
         {
             var newWordEntry = new WordEntry
             {
-                Title = request.Key,
+                Title = title,
                 State = State.NEW,
-                Definitions = [new Definition
-                {
-                    Content = YorubaDefinitionPlaceholder,
-                    EnglishTranslation = request.Value,
-                    NeedsReview = true
-                }]
+                Definitions = meanings
+                    .Where(value => !string.IsNullOrWhiteSpace(value))
+                    .Select(value => value.Trim())
+                    .Distinct(StringComparer.CurrentCultureIgnoreCase)
+                    .Select(value => new Definition
+                    {
+                        Content = YorubaDefinitionPlaceholder,
+                        EnglishTranslation = value,
+                        NeedsReview = true
+                    })
+                    .ToList()
             };
 
             if (!string.IsNullOrWhiteSpace(currentUser))
