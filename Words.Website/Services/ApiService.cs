@@ -58,17 +58,17 @@ namespace Words.Website.Services
 
         public Task<WordEntryDto[]?> GetWordsByTitle(string wordEntry)
         {
-            return GetApiResponse<WordEntryDto[]?>($"/words/search/{Uri.EscapeDataString(wordEntry)}");
+            return GetFilteredWordsResponse($"/words/search/{Uri.EscapeDataString(wordEntry)}");
         }
 
         public Task<WordEntryDto[]?> GetAllWordsByAlphabet(string letter)
         {
-            return GetApiResponse<WordEntryDto[]?>($"/words/search/alphabet/{letter}");
+            return GetFilteredWordsResponse($"/words/search/alphabet/{letter}");
         }
 
         public Task<WordEntryDto[]?> SearchWordAsync(string query)
         {
-            return GetApiResponse<WordEntryDto[]?>($"/words/search?q={Uri.EscapeDataString(query)}");
+            return GetFilteredWordsResponse($"/words/search?q={Uri.EscapeDataString(query)}");
         }
 
         public Task<WordsMetadataDto?> GetIndexedWordCount()
@@ -103,6 +103,17 @@ namespace Words.Website.Services
                 }
                 throw new Exception("Error submitting word suggestion.");
             }
+        }
+
+        private async Task<WordEntryDto[]?> GetFilteredWordsResponse(string endpoint)
+        {
+            var words = await GetApiResponse<WordEntryDto[]?>(endpoint);
+            if (words == null)
+            {
+                return null;
+            }
+
+            return WordDefinitionFilter.KeepOnlyReviewedDefinitions(words);
         }
     }
 }

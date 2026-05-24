@@ -53,7 +53,8 @@ namespace Application.Mappers.Words
                         .Select(example =>
                         new DefinitionExampleDto(example.Content, example.EnglishTranslation, example.Type)
                         )],
-                definition.CreatedAt
+                definition.CreatedAt,
+                definition.NeedsReview
             );
         }
 
@@ -78,6 +79,7 @@ namespace Application.Mappers.Words
                 {
                     Content = d.Content,
                     EnglishTranslation = d.EnglishTranslation,
+                    NeedsReview = d.NeedsReview,
                     Examples = d.Examples?.Select(ex => new DefinitionExample
                     {
                         Content = ex.Content,
@@ -110,7 +112,8 @@ namespace Application.Mappers.Words
                                         d.Content,
                                         d.EnglishTranslation,
                                         [.. d.Examples.Select(ex => new DefinitionExampleDto(ex.Content, ex.EnglishTranslation, ex.Type))],
-                                        d.CreatedAt)
+                                        d.CreatedAt,
+                                        d.NeedsReview)
                                     )],
             })];
         }

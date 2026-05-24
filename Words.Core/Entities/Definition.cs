@@ -6,6 +6,7 @@ namespace Words.Core.Entities
     {
         public required string Content { get; set; }
         public string? EnglishTranslation { get; set; }
+        public bool? NeedsReview { get; set; }
         public List<DefinitionExample> Examples { get; set; } = [];
     }
 }

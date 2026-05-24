@@ -29,6 +29,7 @@ using Core.Entities;
 using Words.Core.Entities;
 using SuggestedNamesService = Application.Services.Names.SuggestionsService;
 using SuggestedWordsService = Application.Services.Words.SuggestionsService;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -131,6 +132,19 @@ services
 
 // Words
 services.Configure<WordsConfig>(configuration.GetSection("Words"));
+services.Configure<WordsApiConfig>(configuration.GetSection("WordsApi"));
+services.AddHttpClient("WordsApiClient", (serviceProvider, client) =>
+{
+    var wordsApiConfig = serviceProvider.GetRequiredService<IOptions<WordsApiConfig>>().Value;
+    var baseUrl = wordsApiConfig.BaseUrl?.TrimEnd('/') ?? string.Empty;
+
+    if (baseUrl.EndsWith("/api", StringComparison.CurrentCultureIgnoreCase))
+    {
+        baseUrl = baseUrl[..^4];
+    }
+
+    client.BaseAddress = new Uri(baseUrl);
+});
 services
     .AddScoped<EntryFeedbackService<WordEntry>>()
     .AddScoped<WordFeedbackService>()

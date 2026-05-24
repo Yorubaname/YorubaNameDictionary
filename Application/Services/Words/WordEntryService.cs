@@ -1,5 +1,6 @@
 using Core.Events;
 using Microsoft.Extensions.Logging;
+using Words.Core.Dto.Response;
 using Words.Core.Entities;
 using Words.Core.Repositories;
 using YorubaOrganization.Application.Services;
@@ -16,7 +17,23 @@ namespace Application.Services.Words
         DictionaryEntryService<WordEntry>(wordEntryRepository, eventPubService, tenantProvider, logger)
     {
         private readonly IEventPubService _eventPubService = eventPubService;
+        private readonly IWordEntryRepository _wordEntryRepository = wordEntryRepository;
         private readonly string _currentTenant = tenantProvider.GetCurrentTenant();
+
+        public Task<IDictionary<string, string[]>> GetEnglishDefinitionsOf(IEnumerable<string> words)
+        {
+            return _wordEntryRepository.GetEnglishDefinitionsOfAsync(words);
+        }
+
+        public Task<IDictionary<string, string>> AddEnglishDefinitionsAsync(IDictionary<string, string> definitionsByWord, string? currentUser = null)
+        {
+            return _wordEntryRepository.AddEnglishDefinitionsAsync(definitionsByWord, currentUser);
+        }
+
+        public Task<List<WordDefinitionNeedsReviewDto>> GetWordsWithDefinitionsNeedingReviewAsync(int page, int count)
+        {
+            return _wordEntryRepository.GetWordsWithDefinitionsNeedingReviewAsync(page, count);
+        }
 
         public async Task<List<WordEntry>> BulkUpdateWords(List<WordEntry> wordEntries)
         {
