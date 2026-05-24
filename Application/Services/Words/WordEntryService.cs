@@ -41,7 +41,7 @@ namespace Application.Services.Words
             return _wordEntryRepository.AddEnglishDefinitionsAsync(definitionsByWord, currentUser);
         }
 
-        public Task<List<WordDefinitionNeedsReviewDto>> GetWordsWithDefinitionsNeedingReviewAsync(int page, int count)
+        public Task<WordDefinitionsNeedingReviewPageDto> GetWordsWithDefinitionsNeedingReviewAsync(int page, int count)
         {
             return _wordEntryRepository.GetWordsWithDefinitionsNeedingReviewAsync(page, count);
         }

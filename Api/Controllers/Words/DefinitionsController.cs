@@ -62,7 +62,7 @@ namespace Api.Controllers.Words
         /// Lists words that contain at least one definition needing review.
         /// </summary>
         [HttpGet("needs-review")]
-        [ProducesResponseType(typeof(List<WordDefinitionNeedsReviewDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(WordDefinitionsNeedingReviewPageDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetWordsWithDefinitionsNeedingReview([FromQuery] int? page, [FromQuery] int? count)
         {

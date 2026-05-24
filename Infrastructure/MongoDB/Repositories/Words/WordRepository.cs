@@ -308,13 +308,13 @@ namespace Infrastructure.MongoDB.Repositories.Words
             return statuses;
         }
 
-        public async Task<List<WordDefinitionNeedsReviewDto>> GetWordsWithDefinitionsNeedingReviewAsync(int page, int count)
+        public async Task<WordDefinitionsNeedingReviewPageDto> GetWordsWithDefinitionsNeedingReviewAsync(int page, int count)
         {
             page = Math.Max(1, page);
             count = Math.Max(1, count);
             var skip = (page - 1) * count;
 
-            var aggregated = await RepoCollection
+            var groupedDefinitionsNeedingReview = RepoCollection
                 .Aggregate(SetCollationSecondary<AggregateOptions>(new AggregateOptions()))
                 .Unwind<WordEntry, UnwoundWordDefinition>(w => w.Definitions)
                 .Match(x => x.Definitions.NeedsReview == true)
@@ -324,13 +324,25 @@ namespace Infrastructure.MongoDB.Repositories.Words
                         g.Key.State,
                         g.Key.Title,
                         g.Max(x => x.Definitions.CreatedAt),
-                        g.Count()))
-                .SortByDescending(x => x.LastDefinitionAddedAt)
+                        g.Count()));
+
+            var totalItemsTask = groupedDefinitionsNeedingReview
+                .Count()
+                .FirstOrDefaultAsync();
+
+            var itemsTask = groupedDefinitionsNeedingReview
+                .SortBy(x => x.WordTitle)
                 .Skip(skip)
                 .Limit(count)
                 .ToListAsync();
 
-            return aggregated;
+            await Task.WhenAll(totalItemsTask, itemsTask);
+
+            return new WordDefinitionsNeedingReviewPageDto(
+                page,
+                count,
+                totalItemsTask.Result?.Count ?? 0,
+                itemsTask.Result);
         }
 
         private async Task CreateWord(string title, IEnumerable<string> meanings, string? currentUser)
