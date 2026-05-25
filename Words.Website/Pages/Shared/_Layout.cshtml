@@ -197,7 +197,8 @@
                     console.warn('Skipping universal-nav link with invalid URL', link.href, error);
                     return;
                 }
-                link.classList.toggle('current-site', linkHost === currentHost);
+                var isCurrentSite = currentHost === linkHost || currentHost.endsWith('.' + linkHost);
+                link.classList.toggle('current-site', isCurrentSite);
             });
         })();
     </script>
