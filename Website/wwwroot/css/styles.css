@@ -38,6 +38,11 @@ body {
     justify-content: flex-end;
 }
 
+.universal-nav-links {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
 @media (max-width: 991px) {
     .universal-nav .container {
         justify-content: flex-start;

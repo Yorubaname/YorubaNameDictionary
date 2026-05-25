@@ -77,6 +77,18 @@
 <body>
     <!-- Header -->
     <header>
+        <div class="universal-nav">
+            <div class="container">
+                <div class="universal-nav-links">
+                    <a href="https://www.yorubaword.com">YorubaWord.com</a>
+                    <a href="https://www.yorubaname.com">YorubaName.com</a>
+                    <a href="https://www.igbonames.com">IgboNames.com</a>
+                    <a href="https://www.ttsyoruba.com">TTSYoruba.com</a>
+                    <a href="https://www.writeyoruba.com">WriteYoruba.com</a>
+                </div>
+            </div>
+        </div>
+
         <div class="container">
             <div class="navbar-brand hcolor">
                 <a href="/">
@@ -171,6 +183,25 @@
             </div>
         </div>
     </footer>
+    <script>
+        (function () {
+            var normalizeHost = function (host) {
+                return host.replace(/^www\./i, '').toLowerCase();
+            };
+            var currentHost = normalizeHost(window.location.hostname);
+            document.querySelectorAll('.universal-nav .universal-nav-links a').forEach(function (link) {
+                var linkHost = '';
+                try {
+                    linkHost = normalizeHost(new URL(link.href).hostname);
+                } catch (error) {
+                    console.warn('Skipping universal-nav link with invalid URL', link.href, error);
+                    return;
+                }
+                var isCurrentSite = currentHost === linkHost || currentHost.endsWith('.' + linkHost);
+                link.classList.toggle('current-site', isCurrentSite);
+            });
+        })();
+    </script>
 </body>
 
 </html>
