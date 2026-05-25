@@ -227,7 +227,12 @@
             };
             var currentHost = normalizeHost(window.location.hostname);
             document.querySelectorAll('.universal-nav .universal-nav-links a').forEach(function (link) {
-                var linkHost = normalizeHost(new URL(link.href).hostname);
+                var linkHost = '';
+                try {
+                    linkHost = normalizeHost(new URL(link.href).hostname);
+                } catch (error) {
+                    return;
+                }
                 link.classList.toggle('current-site', linkHost === currentHost);
             });
         })();
