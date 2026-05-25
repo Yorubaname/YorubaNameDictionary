@@ -44,18 +44,21 @@ body {
 }
 
 .universal-nav-track {
-    display: inline-flex;
-    white-space: nowrap;
-    min-width: max-content;
+    display: flex;
+    width: max-content;
     animation: universal-nav-scroll 20s linear infinite;
+}
+
+.universal-nav-links {
+    display: inline-flex;
 }
 
 @keyframes universal-nav-scroll {
     0% {
-        transform: translateX(100%);
+        transform: translateX(0);
     }
     100% {
-        transform: translateX(-100%);
+        transform: translateX(-50%);
     }
 }
 
