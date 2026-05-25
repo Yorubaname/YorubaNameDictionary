@@ -194,6 +194,7 @@
                 try {
                     linkHost = normalizeHost(new URL(link.href).hostname);
                 } catch (error) {
+                    console.warn('Skipping universal-nav link with invalid URL', link.href, error);
                     return;
                 }
                 link.classList.toggle('current-site', linkHost === currentHost);
