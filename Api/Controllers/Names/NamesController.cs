@@ -126,7 +126,9 @@ namespace Api.Controllers.Names
             nameToReturn.CreatedAt = nameEntry.CreatedAt;
             nameToReturn.UpdatedAt = nameEntry.UpdatedAt;
 
-            return Ok(nameToReturn.MapToDto());
+            var nameDto = nameToReturn.MapToDto();
+            nameDto.Key = nameEntry.Title;
+            return Ok(nameDto);
         }
 
         /// <summary>
