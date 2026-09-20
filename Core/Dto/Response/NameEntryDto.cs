@@ -7,6 +7,7 @@ namespace Core.Dto.Response
 {
     public record NameEntryDto
     {
+        public string Key { get; set; }
         public string Name { get; set; }
         public string Meaning { get; set; }
         public string? Pronunciation { get; set; }
