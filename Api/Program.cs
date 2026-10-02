@@ -16,6 +16,7 @@ using YorubaOrganization.Core.Cache;
 using Application.EventHandlers;
 using Infrastructure.MongoDB;
 using Api.Middleware;
+using Api.Filters;
 using YorubaOrganization.Core.Tenants;
 using Api.Tenants;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -68,12 +69,15 @@ services.AddAuthorization(options =>
         ));
 });
 
-services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new CommaSeparatedStringConverter());
-    options.JsonSerializerOptions.Converters.Add(new HyphenSeparatedStringConverter());
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
+services.AddScoped<InvalidModelStateLoggingFilter>();
+services
+    .AddControllers(options => options.Filters.AddService<InvalidModelStateLoggingFilter>())
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new CommaSeparatedStringConverter());
+        options.JsonSerializerOptions.Converters.Add(new HyphenSeparatedStringConverter());
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen(c =>
