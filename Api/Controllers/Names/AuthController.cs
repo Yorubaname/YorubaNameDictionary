@@ -1,4 +1,5 @@
-﻿using Api.Utilities;
+using Api.Utilities;
+using Api.Filters;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ namespace Api.Controllers.Names
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+    [SkipInvalidModelStateLogging]
     [Authorize(Policy = "AdminAndLexicographers")]
     public class AuthController : ControllerBase
     {
