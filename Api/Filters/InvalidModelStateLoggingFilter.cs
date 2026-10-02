@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Text.Json;
 
 namespace Api.Filters;
 
@@ -7,6 +8,8 @@ public sealed class SkipInvalidModelStateLoggingAttribute : Attribute, IFilterMe
 
 public sealed class InvalidModelStateLoggingFilter(ILogger<InvalidModelStateLoggingFilter> logger) : IAsyncResourceFilter, IAsyncActionFilter, IOrderedFilter
 {
+    private static readonly JsonSerializerOptions IndentedJsonOptions = new() { WriteIndented = true };
+
     public int Order => int.MinValue;
 
     public async Task OnResourceExecutionAsync(ResourceExecutingContext context, ResourceExecutionDelegate next)
@@ -52,6 +55,7 @@ public sealed class InvalidModelStateLoggingFilter(ILogger<InvalidModelStateLogg
         using var reader = new StreamReader(request.Body, leaveOpen: true);
         var body = await reader.ReadToEndAsync();
         request.Body.Position = 0;
+        body = FormatJsonBody(body, request.ContentType);
 
         var validationErrors = string.Join(
             "; ",
@@ -65,5 +69,26 @@ public sealed class InvalidModelStateLoggingFilter(ILogger<InvalidModelStateLogg
             request.Path,
             body,
             validationErrors);
+    }
+
+    private static string FormatJsonBody(string body, string? contentType)
+    {
+        var mediaType = contentType?.Split(';', 2)[0].Trim();
+        if (mediaType is null ||
+            !(mediaType.Equals("application/json", StringComparison.OrdinalIgnoreCase) ||
+              mediaType.EndsWith("+json", StringComparison.OrdinalIgnoreCase)))
+        {
+            return body;
+        }
+
+        try
+        {
+            using var document = JsonDocument.Parse(body);
+            return JsonSerializer.Serialize(document.RootElement, IndentedJsonOptions);
+        }
+        catch (JsonException)
+        {
+            return body;
+        }
     }
 }
