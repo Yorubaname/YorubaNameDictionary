@@ -2,18 +2,31 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Api.Filters;
 
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+public sealed class SkipInvalidModelStateLoggingAttribute : Attribute, IFilterMetadata;
+
 public sealed class InvalidModelStateLoggingFilter(ILogger<InvalidModelStateLoggingFilter> logger) : IAsyncResourceFilter, IAsyncActionFilter, IOrderedFilter
 {
     public int Order => int.MinValue;
 
     public async Task OnResourceExecutionAsync(ResourceExecutingContext context, ResourceExecutionDelegate next)
     {
-        context.HttpContext.Request.EnableBuffering();
+        if (!ShouldSkip(context.Filters))
+        {
+            context.HttpContext.Request.EnableBuffering();
+        }
+
         await next();
     }
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
+        if (ShouldSkip(context.Filters))
+        {
+            await next();
+            return;
+        }
+
         var loggedInvalidModelState = false;
         if (!context.ModelState.IsValid)
         {
@@ -28,6 +41,9 @@ public sealed class InvalidModelStateLoggingFilter(ILogger<InvalidModelStateLogg
             await LogInvalidModelStateAsync(context);
         }
     }
+
+    private static bool ShouldSkip(IList<IFilterMetadata> filters) =>
+        filters.Any(filter => filter is SkipInvalidModelStateLoggingAttribute);
 
     private async Task LogInvalidModelStateAsync(ActionExecutingContext context)
     {
