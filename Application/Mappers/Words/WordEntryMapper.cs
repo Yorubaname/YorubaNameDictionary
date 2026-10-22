@@ -1,4 +1,5 @@
 ﻿using Core.Dto.Response;
+using System.Text;
 using Words.Core.Dto.Request;
 using Words.Core.Dto.Response;
 using Words.Core.Entities;
@@ -62,7 +63,7 @@ namespace Application.Mappers.Words
         {
             var wordEntry = new WordEntry
             {
-                Title = dto.Word,
+                Title = NormalizeTitle(dto.Word),
                 Pronunciation = dto.Pronunciation,
                 PartOfSpeech = dto.PartOfSpeech,
                 Style = dto.Style,
@@ -93,6 +94,31 @@ namespace Application.Mappers.Words
             };
 
             return wordEntry;
+        }
+
+        /// <summary>
+        /// Trims a title and lowercases its first letter, preserving the remaining characters.
+        /// </summary>
+        /// <param name="title">The title to normalize.</param>
+        /// <returns>The trimmed title with its first letter lowercased.</returns>
+        private static string NormalizeTitle(string title)
+        {
+            var trimmedTitle = title.Trim();
+
+            for (var index = 0; index < trimmedTitle.Length;)
+            {
+                var rune = Rune.GetRuneAt(trimmedTitle, index);
+                if (Rune.IsLetter(rune))
+                {
+                    return trimmedTitle[..index]
+                        + Rune.ToLowerInvariant(rune).ToString()
+                        + trimmedTitle[(index + rune.Utf16SequenceLength)..];
+                }
+
+                index += rune.Utf16SequenceLength;
+            }
+
+            return trimmedTitle;
         }
 
 
