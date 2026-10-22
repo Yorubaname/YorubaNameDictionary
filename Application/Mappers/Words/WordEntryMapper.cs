@@ -96,6 +96,11 @@ namespace Application.Mappers.Words
             return wordEntry;
         }
 
+        /// <summary>
+        /// Trims a title and lowercases its first letter, preserving the remaining characters.
+        /// </summary>
+        /// <param name="title">The title to normalize.</param>
+        /// <returns>The trimmed title with its first letter lowercased.</returns>
         private static string NormalizeTitle(string title)
         {
             var trimmedTitle = title.Trim();
