@@ -9,6 +9,7 @@ using YorubaOrganization.Core.Utilities;
 using MongoDB.Bson;
 using Words.Core.Repositories;
 using Words.Core.Dto.Response;
+using Words.Core.Utilities;
 
 namespace Infrastructure.MongoDB.Repositories.Words
 {
@@ -207,9 +208,10 @@ namespace Infrastructure.MongoDB.Repositories.Words
         {
             var requestWithManyMeanings = definitionsByWord
                 .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Key))
+                .GroupBy(kvp => WordTitleNormalizer.Normalize(kvp.Key), StringComparer.CurrentCultureIgnoreCase)
                 .ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => new[] { kvp.Value },
+                    group => group.Key,
+                    group => group.Select(kvp => kvp.Value).ToArray(),
                     StringComparer.CurrentCultureIgnoreCase);
 
             return await AddEnglishDefinitionsAsync(requestWithManyMeanings, currentUser);
@@ -219,7 +221,7 @@ namespace Infrastructure.MongoDB.Repositories.Words
         {
             var requests = definitionsByWord
                 .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Key))
-                .GroupBy(kvp => kvp.Key.Trim(), StringComparer.CurrentCultureIgnoreCase)
+                .GroupBy(kvp => WordTitleNormalizer.Normalize(kvp.Key), StringComparer.CurrentCultureIgnoreCase)
                 .ToDictionary(
                     g => g.Key,
                     g => g
