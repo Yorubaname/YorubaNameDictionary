@@ -45,8 +45,6 @@
 
                         <span class="prs">
 
-                            <span class="first-slash">\</span>
-
                             @if (!string.IsNullOrEmpty(Model.Word.IpaNotation))
                             {
                                 <span class="pr">@Model.Word.IpaNotation</span>
@@ -100,7 +98,7 @@
                                 </svg>
                             </a>
 
-                            <span class="last-slash">\</span><span class="syl-break"> |</span>
+                            <span class="syl-break"> |</span>
 
                             @if (Model.Word.GeoLocation?.Any() == true)
                             {

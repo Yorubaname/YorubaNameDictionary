@@ -2,6 +2,7 @@
 using Words.Core.Dto.Request;
 using Words.Core.Dto.Response;
 using Words.Core.Entities;
+using Words.Core.Utilities;
 using YorubaOrganization.Core.Dto;
 using YorubaOrganization.Core.Dto.Request;
 using YorubaOrganization.Core.Dto.Response;
@@ -62,7 +63,7 @@ namespace Application.Mappers.Words
         {
             var wordEntry = new WordEntry
             {
-                Title = dto.Word,
+                Title = WordTitleNormalizer.Normalize(dto.Word),
                 Pronunciation = dto.Pronunciation,
                 PartOfSpeech = dto.PartOfSpeech,
                 Style = dto.Style,
@@ -94,7 +95,6 @@ namespace Application.Mappers.Words
 
             return wordEntry;
         }
-
 
         public static WordEntryDto[] MapToDtoCollection(this IEnumerable<WordEntry> wordEntries)
         {
