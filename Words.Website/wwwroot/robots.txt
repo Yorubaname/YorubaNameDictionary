@@ -1,0 +1,41 @@
+﻿# Block OpenAI (ChatGPT) training data scraper
+User-agent: GPTBot
+Disallow: /
+
+
+# Block Common Crawl (The massive dataset used by almost all LLMs)
+# Note: This is the most important one to block for general AI protection.
+User-agent: CCBot
+Disallow: /
+
+
+# Block Google's AI training (Bard/Gemini)
+# This blocks the AI training but allows Google Search to still find you.
+User-agent: Google-Extended
+Disallow: /
+
+
+# Block Anthropic (Claude)
+User-agent: anthropic-ai
+Disallow: /
+User-agent: Claude-Web
+Disallow: /
+
+
+# Block Meta (Facebook/Llama)
+User-agent: FacebookBot
+Disallow: /
+
+
+# Block Apple's AI scraper
+User-agent: Applebot-Extended
+Disallow: /
+
+
+# Allow everyone else (Standard Search Engines)
+User-agent: *
+Allow: /
+
+
+# Sitemap location (Good for SEO)
+Sitemap: https://www.yorubaname.com/sitemap.xml
