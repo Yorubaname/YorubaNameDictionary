@@ -208,11 +208,9 @@ namespace Infrastructure.MongoDB.Repositories.Words
         {
             var requestWithManyMeanings = definitionsByWord
                 .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Key))
-                .GroupBy(kvp => WordTitleNormalizer.Normalize(kvp.Key), StringComparer.CurrentCultureIgnoreCase)
                 .ToDictionary(
-                    group => group.Key,
-                    group => group.Select(kvp => kvp.Value).ToArray(),
-                    StringComparer.CurrentCultureIgnoreCase);
+                    kvp => kvp.Key,
+                    kvp => new[] { kvp.Value });
 
             return await AddEnglishDefinitionsAsync(requestWithManyMeanings, currentUser);
         }
