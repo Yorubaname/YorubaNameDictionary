@@ -244,7 +244,7 @@ header .container img.logo {
 .search-input { 
 	position: relative;
   	display: inline-block;
-  	margin: 10px 0px 70px 0px;
+  	margin: 10px 0 145px;
 }
 
 .search-background {
