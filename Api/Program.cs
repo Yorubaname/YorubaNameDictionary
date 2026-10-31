@@ -70,7 +70,7 @@ services.AddAuthorization(options =>
 
 services.AddScoped<InvalidModelStateLoggingFilter>();
 services
-    .AddControllers(options => options.Filters.AddService<InvalidModelStateLoggingFilter>())
+    .AddControllers(options => options.Filters.AddService<InvalidModelStateLoggingFilter>(int.MinValue))
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new CommaSeparatedStringConverter());
