@@ -7,6 +7,7 @@ namespace Words.Core.Dto.Response
 {
     public record WordEntryDto
     {
+        public string Key { get; set; }
         public string Id { get; set; }
         public string Word { get; set; }
         public string? Pronunciation { get; set; }
