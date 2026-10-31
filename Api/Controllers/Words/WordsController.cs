@@ -116,7 +116,9 @@ namespace Api.Controllers.Words
             wordToReturn.CreatedAt = wordEntry.CreatedAt;
             wordToReturn.UpdatedAt = wordEntry.UpdatedAt;
 
-            return Ok(wordToReturn.MapToDto());
+            var wordDto = wordToReturn.MapToDto();
+            wordDto.Key = wordEntry.Title;
+            return Ok(wordDto);
         }
 
         /// <summary>
