@@ -16,7 +16,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="StackExchange.Redis" Version="2.8.16" />
     <PackageReference Include="TweetinviAPI" Version="5.0.4" />
-    <PackageReference Include="YorubaOrganization.Infrastructure" Version="6.*" />
+    <PackageReference Include="YorubaOrganization.Infrastructure" Version="7.*" />
   </ItemGroup>
 
   <ItemGroup>
