@@ -92,13 +92,13 @@
       },
       "YorubaOrganization.Infrastructure": {
         "type": "Direct",
-        "requested": "[6.*, )",
-        "resolved": "6.0.5",
-        "contentHash": "LzJzDPCveuBC8sMShIoMr34ibaU2NEdn2yFpo0B06+voaQ5Ru0/gUvCRHsmChqMgJ3qZ7feHY9oEOfFyNx/aJA==",
+        "requested": "[7.*, )",
+        "resolved": "7.0.0",
+        "contentHash": "otFervaXbO0VmnHIJD8ymwDn6bYUc6BbuPfd5Q9NBtkn2FvaT/AdXCKS+du3GR1UlF0FI0Plzno92qOhH4tPHw==",
         "dependencies": {
-          "Microsoft.Extensions.Options": "9.0.15",
-          "MongoDB.Driver": "3.8.0",
-          "YorubaOrganization.Core": "6.0.5"
+          "Microsoft.Extensions.Options": "10.0.14",
+          "MongoDB.Driver": "3.13.0",
+          "YorubaOrganization.Core": "7.0.0"
         }
       },
       "Autofac": {
@@ -108,8 +108,8 @@
       },
       "BCrypt.Net-Next": {
         "type": "Transitive",
-        "resolved": "4.0.3",
-        "contentHash": "W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA=="
+        "resolved": "4.2.0",
+        "contentHash": "gwLD2KfCuwQesP17aVh4h6lpiMPEVt5Lbpndo0ej903hNUUTtyxt3ARdDjmuydBRTAUICc7OVKVbaOvc6SQYXA=="
       },
       "DnsClient": {
         "type": "Transitive",
@@ -255,19 +255,19 @@
       },
       "YorubaOrganization.Application": {
         "type": "Transitive",
-        "resolved": "6.0.5",
-        "contentHash": "6OWJ34fh9v5CamkUQeeok96iNd26Z2Gsg5asaSFeiZt7H4p/nkRwkOsakBFygCb7iSW0nuiIl9UXKIo5TNAjtQ==",
+        "resolved": "7.0.0",
+        "contentHash": "hadZu48XFWFJnlowWvpii9oqbiieVIKhw3qr0hctGZW7iI4Age0u+SGLmO5Cg0MyRKzTNp5//A/h0cPuLRwurA==",
         "dependencies": {
           "Ardalis.GuardClauses": "5.0.0",
-          "BCrypt.Net-Next": "4.0.3",
+          "BCrypt.Net-Next": "4.2.0",
           "MediatR": "12.5.0",
-          "YorubaOrganization.Core": "6.0.5"
+          "YorubaOrganization.Core": "7.0.0"
         }
       },
       "YorubaOrganization.Core": {
         "type": "Transitive",
-        "resolved": "6.0.5",
-        "contentHash": "wgAjujMO9tvv6KJ/xgeT4W+kXJi44aV3YE5TjnWyIhBrRTWRaZj4H6hmsvMEubr/ngmJL+NZC/2gmdRHAMjlXA==",
+        "resolved": "7.0.0",
+        "contentHash": "vaU5TqIjsdz9h8pukRhYWyuLiDzf5kF5PSSMj/fsKOcLWjbw2HJ3CQDhi1gOSB0fXUYPOfS/IMqV4UysU9MmsA==",
         "dependencies": {
           "MediatR.Contracts": "2.0.1"
         }
@@ -280,25 +280,24 @@
       "application": {
         "type": "Project",
         "dependencies": {
-          "BCrypt.Net-Next": "[4.0.3, )",
           "Core": "[1.0.0, )",
           "FluentValidation": "[11.9.1, )",
           "MongoDB.Driver": "[3.13.0, )",
           "Words.Core": "[1.0.0, )",
-          "YorubaOrganization.Application": "[6.*, )"
+          "YorubaOrganization.Application": "[7.*, )"
         }
       },
       "core": {
         "type": "Project",
         "dependencies": {
           "Words.Core": "[1.0.0, )",
-          "YorubaOrganization.Core": "[6.*, )"
+          "YorubaOrganization.Core": "[7.*, )"
         }
       },
       "words.core": {
         "type": "Project",
         "dependencies": {
-          "YorubaOrganization.Core": "[6.*, )"
+          "YorubaOrganization.Core": "[7.*, )"
         }
       }
     }
