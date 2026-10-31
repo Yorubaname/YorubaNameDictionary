@@ -8,12 +8,6 @@
         "resolved": "4.0.3",
         "contentHash": "W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA=="
       },
-      "Dapper": {
-        "type": "Direct",
-        "requested": "[2.1.35, )",
-        "resolved": "2.1.35",
-        "contentHash": "YKRwjVfrG7GYOovlGyQoMvr1/IJdn+7QzNXJxyMh0YfFF5yvDmTYaJOVYWsckreNjGsGSEtrMTpnzxTUq/tZQw=="
-      },
       "FluentValidation": {
         "type": "Direct",
         "requested": "[11.9.1, )",
@@ -30,15 +24,6 @@
           "MongoDB.Bson": "2.23.1",
           "MongoDB.Driver.Core": "2.23.1",
           "MongoDB.Libmongocrypt": "1.8.0"
-        }
-      },
-      "MySqlConnector": {
-        "type": "Direct",
-        "requested": "[2.3.7, )",
-        "resolved": "2.3.7",
-        "contentHash": "YiVOxvJ+vAYW8NT9gHv8RxKCDFCSXAObF3z0Ou/8WRv8Lsn2QsxaPW5xEwPE+xCcAq6BGkrI8GTOC09Xg09blQ==",
-        "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "7.0.1"
         }
       },
       "YorubaOrganization.Application": {
@@ -100,8 +85,8 @@
       },
       "Microsoft.Extensions.Logging.Abstractions": {
         "type": "Transitive",
-        "resolved": "7.0.1",
-        "contentHash": "pkeBFx0vqMW/A3aUVHh7MPu3WkBhaVlezhSZeb1c9XD0vUReYH1TLFSy5MxJgZfmz5LZzYoErMorlYZiwpOoNA=="
+        "resolved": "2.0.0",
+        "contentHash": "6ZCllUYGFukkymSTx3Yr0G/ajRxoNJp7/FqSxSB4fGISST54ifBhgu4Nc0ItGi3i6DqwuNd8SUyObmiC++AO2Q=="
       },
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",

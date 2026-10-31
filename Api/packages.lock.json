@@ -49,11 +49,6 @@
         "resolved": "4.0.3",
         "contentHash": "W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA=="
       },
-      "Dapper": {
-        "type": "Transitive",
-        "resolved": "2.1.35",
-        "contentHash": "YKRwjVfrG7GYOovlGyQoMvr1/IJdn+7QzNXJxyMh0YfFF5yvDmTYaJOVYWsckreNjGsGSEtrMTpnzxTUq/tZQw=="
-      },
       "DnsClient": {
         "type": "Transitive",
         "resolved": "1.6.1",
@@ -251,14 +246,6 @@
           "Snappier": "1.0.0",
           "System.Buffers": "4.5.1",
           "ZstdSharp.Port": "0.7.3"
-        }
-      },
-      "MySqlConnector": {
-        "type": "Transitive",
-        "resolved": "2.3.7",
-        "contentHash": "YiVOxvJ+vAYW8NT9gHv8RxKCDFCSXAObF3z0Ou/8WRv8Lsn2QsxaPW5xEwPE+xCcAq6BGkrI8GTOC09Xg09blQ==",
-        "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "7.0.1"
         }
       },
       "Newtonsoft.Json": {
@@ -946,10 +933,8 @@
         "dependencies": {
           "BCrypt.Net-Next": "[4.0.3, )",
           "Core": "[1.0.0, )",
-          "Dapper": "[2.1.35, )",
           "FluentValidation": "[11.9.1, )",
           "MongoDB.Driver": "[2.23.1, )",
-          "MySqlConnector": "[2.3.7, )",
           "Words.Core": "[1.0.0, )",
           "YorubaOrganization.Application": "[6.*, )"
         }
