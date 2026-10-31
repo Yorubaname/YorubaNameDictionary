@@ -2,6 +2,7 @@
 {
     public enum Style
     {
-        Colloquial = 1
+        Colloquial = 1,
+        Formal = 2
     }
 }

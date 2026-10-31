@@ -1,4 +1,5 @@
-﻿using YorubaOrganization.Core.Dto;
+﻿using System.Text.Json.Serialization;
+using YorubaOrganization.Core.Dto;
 using YorubaOrganization.Core.Dto.Request;
 using YorubaOrganization.Core.Enums;
 using Words.Core.Entities;
@@ -24,6 +25,7 @@ namespace Words.Core.Dto.Request
 
         // Word-specific fields (from WordEntry)
         public PartOfSpeech PartOfSpeech { get; set; }
+        [JsonConverter(typeof(StyleJsonConverter))]
         public Style? Style { get; set; }
         public GrammaticalFeature? GrammaticalFeature { get; set; }
         public List<DefinitionDto> Definitions { get; set; }

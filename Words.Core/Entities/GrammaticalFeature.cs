@@ -2,6 +2,7 @@
 {
     public enum GrammaticalFeature
     {
-        Intransitive = 1
+        Intransitive = 1,
+        Transitive = 2
     }
 }
