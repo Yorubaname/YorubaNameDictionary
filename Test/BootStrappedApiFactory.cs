@@ -35,8 +35,7 @@ public class BootStrappedApiFactory : WebApplicationFactory<IApiMarker>, IAsyncL
     }
 
     private readonly IContainer _testDbContainer =
-        new ContainerBuilder()
-            .WithImage("mongo:latest")
+        new ContainerBuilder("mongo:latest")
             .WithEnvironment(new Dictionary<string, string>
             {
                 {"MONGO_INITDB_ROOT_USERNAME", MongoDbUsername},
@@ -44,7 +43,7 @@ public class BootStrappedApiFactory : WebApplicationFactory<IApiMarker>, IAsyncL
                 {"MONGO_INITDB_DATABASE", MongoDbDatabaseName}
             })
             .WithPortBinding(HostPort, ContainerPort)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(ContainerPort))
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilInternalTcpPortIsAvailable(ContainerPort))
             .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
