@@ -4,7 +4,6 @@ using FluentValidation;
 using Infrastructure.Twitter;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.OpenApi.Models;
-using MySqlConnector;
 using System.Text.Json.Serialization;
 using Hangfire;
 using Infrastructure.Hangfire;
@@ -119,9 +118,6 @@ services.AddScoped<ITenantProvider, HttpTenantProvider>();
 services.AddHttpContextAccessor();
 
 services.InitializeDatabase(configuration);
-
-builder.Services.AddTransient(x =>
-  new MySqlConnection(Guard.Against.NullOrEmpty(configuration.GetSection("MySQL:ConnectionString").Value)));
 
 services.AddScoped<GeoLocationsService>();
 services.AddScoped<IEventPubService, EventPubService>();
