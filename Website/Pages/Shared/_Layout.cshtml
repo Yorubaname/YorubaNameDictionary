@@ -1,10 +1,12 @@
 ﻿@using Application.Services.MultiLanguage
+@using System.Globalization
 @using Website.Resources
 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
 @inject ILanguageService LanguageService
 
 @{
+    bool isYorubaDisplayLanguage = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "yo";
     string smallLogoUrl = "";
     string logoUrl = "";
 
@@ -20,7 +22,7 @@
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@CultureInfo.CurrentUICulture.Name">
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
     <meta name="description" content="@ViewData["Description"]">
@@ -119,10 +121,10 @@
                     <div class="offcanvas-body">
                         <div class="d-flex align-items-center mb-4 mb-lg-0 me-auto">
                             <div class="btn-group btn-group-sm" role="group">
-                                <a href="?lang=en" class="btn btn-outline-secondary active fw-bold">EN</a>
+                                <a href="?lang=en" class="btn btn-outline-secondary @(isYorubaDisplayLanguage ? "" : "active") fw-bold">EN</a>
                                 @if (LanguageService.IsYoruba)
                                 {
-                                    <a href="?lang=yo" class="btn btn-outline-secondary fw-bold">YOR</a>
+                                    <a href="?lang=yo" class="btn btn-outline-secondary @(isYorubaDisplayLanguage ? "active" : "") fw-bold">YOR</a>
                                 }
                             </div>
                         </div>
