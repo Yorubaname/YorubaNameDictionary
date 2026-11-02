@@ -312,7 +312,7 @@
                             @foreach (var variant in Model.Word.Variants)
                             {
                                 <li>
-                                    <span>@variant.Word</span>
+                                    <a href="/entries/@Uri.EscapeDataString(variant.Word)">@variant.Word</a>
                                     @if (!string.IsNullOrWhiteSpace(variant.Geolocation?.Place))
                                     {
                                         <small style="margin-left: 6px; color: #6c757d; font-size: 0.72em; font-weight: 400; letter-spacing: 0; text-transform: none;">
