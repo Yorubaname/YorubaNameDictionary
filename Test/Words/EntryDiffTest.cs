@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using YorubaOrganization.Core.Entities.Partials;
 using Words.Core.Entities;
-using YorubaOrganization.Application.Services;
+using YorubaOrganization.Core.Utilities;
 using YorubaOrganization.Core.Entities;
 using YorubaOrganization.Core.Enums;
 using Xunit;
@@ -97,6 +97,13 @@ namespace Test.Words
         }
 
         [Fact]
+        public void NewEntry_CountsAllItsValues()
+        {
+            // Title, Pronunciation, PartOfSpeech (always set), 2 syllables, definition Content + EnglishTranslation
+            Assert.Equal(7, EntryDiff.CountChangedFields(null, Word()));
+        }
+
+        [Fact]
         public void BookkeepingFields_AreIgnored()
         {
             var before = Word();
@@ -109,6 +116,7 @@ namespace Test.Words
             after.Publishers.Add(new AuditStamp("someone"));
             after.Feedbacks.Add(new Feedback { Content = "nice" });
             after.Definitions[0].CreatedAt = DateTime.UtcNow.AddDays(-1);
+            after.CreatedFieldsCount = 6;
 
             Assert.Equal(0, EntryDiff.CountChangedFields(before, after));
         }
