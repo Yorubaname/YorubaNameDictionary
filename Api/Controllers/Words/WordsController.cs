@@ -115,6 +115,10 @@ namespace Api.Controllers.Words
             wordToReturn.State = wordEntry.State;
             wordToReturn.CreatedAt = wordEntry.CreatedAt;
             wordToReturn.UpdatedAt = wordEntry.UpdatedAt;
+            // The audit trail lives on the root entry, not on the staged version.
+            wordToReturn.Publishers = wordEntry.Publishers;
+            wordToReturn.Modifiers = wordEntry.Modifiers;
+            wordToReturn.Unpublishers = wordEntry.Unpublishers;
 
             var wordDto = wordToReturn.MapToDto();
             wordDto.Key = wordEntry.Title;
