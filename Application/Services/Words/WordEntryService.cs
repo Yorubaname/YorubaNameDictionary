@@ -5,6 +5,7 @@ using Words.Core.Entities;
 using Words.Core.Repositories;
 using YorubaOrganization.Application.Services;
 using YorubaOrganization.Core.Events;
+using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Tenants;
 
 namespace Application.Services.Words
@@ -29,6 +30,21 @@ namespace Application.Services.Words
         public Task<List<WordEntry>> GetPublishedWithEtymologyPageAsync(int page, int count)
         {
             return _wordEntryRepository.GetPublishedWithEtymologyPageAsync(page, count);
+        }
+
+        public Task<List<WordEntry>> ListWordsAsync(int pageNumber, int pageSize, State? state, string? submittedBy, string? lastUpdatedBy, string? orderBy)
+        {
+            return _wordEntryRepository.ListWordsAsync(pageNumber, pageSize, state, submittedBy, lastUpdatedBy, orderBy);
+        }
+
+        public Task<IEnumerable<WordEntry>> GetAllWordsAsync(State? state, string? submittedBy, string? lastUpdatedBy, string? orderBy)
+        {
+            return _wordEntryRepository.GetAllWordsAsync(state, submittedBy, lastUpdatedBy, orderBy);
+        }
+
+        public Task<long> CountWordsAsync(State? state, string? submittedBy, string? lastUpdatedBy)
+        {
+            return _wordEntryRepository.CountWordsAsync(state, submittedBy, lastUpdatedBy);
         }
 
         public Task<IDictionary<string, string>> AddEnglishDefinitionsAsync(IDictionary<string, string> definitionsByWord, string? currentUser = null)

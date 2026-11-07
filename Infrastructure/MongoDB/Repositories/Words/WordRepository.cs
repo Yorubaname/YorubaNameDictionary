@@ -7,6 +7,7 @@ using Words.Core.Entities;
 using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Utilities;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using YorubaOrganization.Application.Services;
 using YorubaOrganization.Core.Entities;
 using Words.Core.Repositories;
@@ -30,6 +31,108 @@ namespace Infrastructure.MongoDB.Repositories.Words
         private const string DefinitionsNeedsReviewStateIndexName = "idx_words_definitions_needsreview_state";
         private static readonly object IndexCreationLock = new();
         private static bool _DoesWordDefinitionsNeedingReviewIndexExist;
+
+        public async Task<List<WordEntry>> ListWordsAsync(
+            int pageNumber,
+            int pageSize,
+            State? state,
+            string? submittedBy,
+            string? lastUpdatedBy,
+            string? orderBy)
+        {
+            var filter = CreateWordsListFilter(state, submittedBy, lastUpdatedBy);
+            return await RepoCollection
+                .Find(filter)
+                .Sort(GetWordsSort(orderBy))
+                .Skip((Math.Max(1, pageNumber) - 1) * Math.Max(1, pageSize))
+                .Limit(Math.Max(1, pageSize))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<WordEntry>> GetAllWordsAsync(
+            State? state,
+            string? submittedBy,
+            string? lastUpdatedBy,
+            string? orderBy)
+        {
+            var projection = Builders<WordEntry>.Projection
+                .Include(word => word.Title)
+                .Exclude(word => word.Id);
+
+            return await RepoCollection
+                .Find(CreateWordsListFilter(state, submittedBy, lastUpdatedBy))
+                .Sort(GetWordsSort(orderBy))
+                .Project<WordEntry>(projection)
+                .ToListAsync();
+        }
+
+        public Task<long> CountWordsAsync(State? state, string? submittedBy, string? lastUpdatedBy)
+        {
+            return RepoCollection.CountDocumentsAsync(CreateWordsListFilter(state, submittedBy, lastUpdatedBy));
+        }
+
+        private static FilterDefinition<WordEntry> CreateWordsListFilter(
+            State? state,
+            string? submittedBy,
+            string? lastUpdatedBy)
+        {
+            var filterBuilder = Builders<WordEntry>.Filter;
+            var filter = filterBuilder.Empty;
+
+            if (state.HasValue)
+            {
+                filter &= filterBuilder.Eq(word => word.State, state.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(submittedBy))
+            {
+                filter &= filterBuilder.Eq(word => word.CreatedBy, submittedBy.Trim());
+            }
+
+            if (!string.IsNullOrWhiteSpace(lastUpdatedBy))
+            {
+                var wordClassMap = BsonClassMap.LookupClassMap(typeof(WordEntry));
+                var auditClassMap = BsonClassMap.LookupClassMap(typeof(AuditStamp));
+                var modifiersField = wordClassMap.GetMemberMap(nameof(WordEntry.Modifiers)).ElementName;
+                var updatedByField = wordClassMap.GetMemberMap(nameof(WordEntry.UpdatedBy)).ElementName;
+                var modifierByField = auditClassMap.GetMemberMap(nameof(AuditStamp.By)).ElementName;
+                var latestModifierBy = new BsonDocument("$let", new BsonDocument
+                {
+                    {
+                        "vars",
+                        new BsonDocument("latestModifier", new BsonDocument("$arrayElemAt", new BsonArray
+                        {
+                            "$" + modifiersField,
+                            -1
+                        }))
+                    },
+                    {
+                        "in",
+                        new BsonDocument("$ifNull", new BsonArray
+                        {
+                            "$$latestModifier." + modifierByField,
+                            "$" + updatedByField
+                        })
+                    }
+                });
+                var lastUpdatedByFilter = new BsonDocument("$expr", new BsonDocument("$eq", new BsonArray
+                {
+                    latestModifierBy,
+                    lastUpdatedBy.Trim()
+                }));
+
+                filter &= new BsonDocumentFilterDefinition<WordEntry>(lastUpdatedByFilter);
+            }
+
+            return filter;
+        }
+
+        private static SortDefinition<WordEntry> GetWordsSort(string? orderBy)
+        {
+            return string.Equals(orderBy, nameof(WordEntry.CreatedAt), StringComparison.OrdinalIgnoreCase)
+                ? Builders<WordEntry>.Sort.Descending(word => word.CreatedAt)
+                : Builders<WordEntry>.Sort.Descending(word => word.UpdatedAt);
+        }
 
         public WordRepository(IMongoDatabaseFactory databaseFactory, ITenantProvider tenantProvider, IEventPubService eventPubService)
             : base(CollectionName, databaseFactory, tenantProvider, eventPubService)
