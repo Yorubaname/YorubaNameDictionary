@@ -1,4 +1,4 @@
-using Api.Utilities;
+﻿using Api.Utilities;
 using Application.Exceptions;
 using Application.Mappers.Words;
 using Application.Services.Words;
@@ -87,7 +87,7 @@ namespace Api.Controllers.Words
         [ProducesResponseType(typeof(WordEntryDto), 200)]
         public async Task<IActionResult> AcceptSuggestion(string id)
         {
-            var acceptedWord = await _suggestedWordService.AcceptSuggestionAsync(id);
+            var acceptedWord = await _suggestedWordService.AcceptSuggestionAsync(id, User?.Identity?.Name);
 
             if (acceptedWord == null)
             {

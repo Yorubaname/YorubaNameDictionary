@@ -1,6 +1,7 @@
 ﻿using YorubaOrganization.Core.Dto;
 using YorubaOrganization.Core.Dto.Request;
 using YorubaOrganization.Core.Dto.Response;
+using YorubaOrganization.Core.Entities;
 using YorubaOrganization.Core.Enums;
 
 namespace Words.Core.Dto.Response
@@ -26,5 +27,9 @@ namespace Words.Core.Dto.Response
         public State State { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public int? CreatedFieldsCount { get; set; }
+        public List<AuditStamp> Publishers { get; set; } = [];
+        public List<AuditStamp> Modifiers { get; set; } = [];
+        public List<AuditStamp> Unpublishers { get; set; } = [];
     }
 }
