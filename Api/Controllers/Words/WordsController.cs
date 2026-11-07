@@ -1,4 +1,4 @@
-using Api.Configuration;
+﻿using Api.Configuration;
 using Api.Utilities;
 using Application.Mappers.Words;
 using Application.Services.Words;
@@ -115,6 +115,12 @@ namespace Api.Controllers.Words
             wordToReturn.State = wordEntry.State;
             wordToReturn.CreatedAt = wordEntry.CreatedAt;
             wordToReturn.UpdatedAt = wordEntry.UpdatedAt;
+            // Creation details and the audit trail live on the root entry, not on the staged version.
+            wordToReturn.CreatedBy = wordEntry.CreatedBy;
+            wordToReturn.CreatedFieldsCount = wordEntry.CreatedFieldsCount;
+            wordToReturn.Publishers = wordEntry.Publishers;
+            wordToReturn.Modifiers = wordEntry.Modifiers;
+            wordToReturn.Unpublishers = wordEntry.Unpublishers;
 
             var wordDto = wordToReturn.MapToDto();
             wordDto.Key = wordEntry.Title;
@@ -139,7 +145,7 @@ namespace Api.Controllers.Words
                 return NotFound($"{word} not in database");
             }
 
-            _ = await entryService.Update(oldWordEntry, updated.MapToEntity());
+            _ = await entryService.Update(oldWordEntry, updated.MapToEntity(), User?.Identity?.Name);
             return Ok(new { Message = "Word successfully updated" });
         }
 

@@ -7,6 +7,8 @@ using Words.Core.Entities;
 using YorubaOrganization.Core.Enums;
 using YorubaOrganization.Core.Utilities;
 using MongoDB.Bson;
+using YorubaOrganization.Application.Services;
+using YorubaOrganization.Core.Entities;
 using Words.Core.Repositories;
 using Words.Core.Dto.Response;
 using Words.Core.Utilities;
@@ -22,6 +24,9 @@ namespace Infrastructure.MongoDB.Repositories.Words
         private const string StatusSomeDefinitionsAdded = "some-definitions-added";
         private const string StatusSkippedDuplicate = "skipped-duplicate";
         private const string StatusNoValidDefinition = "no-valid-definition";
+        private static string AuditUser(string? user) =>
+            string.IsNullOrWhiteSpace(user) ? DictionaryEntryService<WordEntry>.SystemUserName : user;
+
         private const string DefinitionsNeedsReviewStateIndexName = "idx_words_definitions_needsreview_state";
         private static readonly object IndexCreationLock = new();
         private static bool _DoesWordDefinitionsNeedingReviewIndexExist;
@@ -57,7 +62,7 @@ namespace Infrastructure.MongoDB.Repositories.Words
             return await RepoCollection.Find(filter).FirstOrDefaultAsync();
         }
 
-        public async Task<WordEntry?> AcceptSuggestionAsync(string id)
+        public async Task<WordEntry?> AcceptSuggestionAsync(string id, string? acceptedBy = null)
         {
             var suggestedFilter = Builders<WordEntry>.Filter.Eq(w => w.Id, id)
                 & Builders<WordEntry>.Filter.Eq(w => w.State, State.SUGGESTED);
@@ -75,6 +80,8 @@ namespace Infrastructure.MongoDB.Repositories.Words
             {
                 return null;
             }
+
+            await AppendAudit(suggestedWord.Id, AuditKind.Modify, new AuditStamp(AuditUser(acceptedBy)));
 
             return suggestedWord;
         }
@@ -265,6 +272,7 @@ namespace Infrastructure.MongoDB.Repositories.Words
                     .Select(d => d.EnglishTranslation!.Trim())
                     .ToHashSet(StringComparer.CurrentCultureIgnoreCase);
 
+                var definitionsBefore = wordEntry.Definitions.ToList();
                 var createdCount = 0;
                 var skippedCount = 0;
 
@@ -301,6 +309,9 @@ namespace Infrastructure.MongoDB.Repositories.Words
                 await RepoCollection.ReplaceOneAsync(
                     Builders<WordEntry>.Filter.Eq(w => w.Id, wordEntry.Id),
                     wordEntry);
+
+                await AppendAudit(wordEntry.Id, AuditKind.Modify,
+                    new AuditStamp(AuditUser(currentUser), EntryDiff.CountChangedFields(definitionsBefore, wordEntry.Definitions)));
 
                 statuses[request.Key] = skippedCount == 0 ? StatusAllDefinitionsAdded : StatusSomeDefinitionsAdded;
             }
