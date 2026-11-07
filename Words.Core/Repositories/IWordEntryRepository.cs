@@ -15,6 +15,9 @@ namespace Words.Core.Repositories
         Task<WordDefinitionsNeedingReviewPageDto> GetWordsWithDefinitionsNeedingReviewAsync(int page, int count);
         Task<int> CountByStateAsync(State state);
         Task<List<WordEntry>> FindByStateAsync(State state);
+        Task<List<WordEntry>> ListWordsAsync(int pageNumber, int pageSize, State? state, string? submittedBy, string? lastUpdatedBy, string? orderBy);
+        Task<IEnumerable<WordEntry>> GetAllWordsAsync(State? state, string? submittedBy, string? lastUpdatedBy, string? orderBy);
+        Task<long> CountWordsAsync(State? state, string? submittedBy, string? lastUpdatedBy);
         Task<WordEntry?> GetByIdAsync(string id);
         Task<WordEntry?> AcceptSuggestionAsync(string id, string? acceptedBy = null);
         Task<bool> DeleteAsync(string id);

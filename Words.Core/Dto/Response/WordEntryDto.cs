@@ -21,6 +21,7 @@ namespace Words.Core.Dto.Response
         public CommaSeparatedString Morphology { get; set; }
         public List<GeoLocationDto> GeoLocation { get; set; }
         public string? SubmittedBy { get; set; }
+        public string? UpdatedBy { get; set; }
         public List<EtymologyDto> Etymology { get; set; }
         public List<MediaLinkDto> MediaLinks { get; set; }
         public List<DefinitionDto> Definitions { get; set; }

@@ -1,5 +1,6 @@
 using Application.Mappers.Words;
 using Core.Dto.Request;
+using Words.Core.Entities;
 using Words.Core.Dto.Request;
 using Xunit;
 
@@ -37,6 +38,22 @@ namespace Test.Words
             var entry = new CreateWordDto { Word = title }.MapToEntity();
 
             Assert.Equal(expectedTitle, entry.Title);
+        }
+
+        [Fact]
+        public void MapToDto_MapsRootUpdatedByAndModifiers()
+        {
+            var entry = new WordEntry
+            {
+                Title = "word",
+                UpdatedBy = "root-editor",
+                Modifiers = [new YorubaOrganization.Core.Entities.AuditStamp("modifier")]
+            };
+
+            var dto = entry.MapToDto();
+
+            Assert.Equal("root-editor", dto.UpdatedBy);
+            Assert.Equal("modifier", Assert.Single(dto.Modifiers).By);
         }
     }
 }
