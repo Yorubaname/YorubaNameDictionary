@@ -93,8 +93,12 @@ namespace Infrastructure.MongoDB.Repositories.Words
             {
                 var wordClassMap = BsonClassMap.LookupClassMap(typeof(WordEntry));
                 var auditClassMap = BsonClassMap.LookupClassMap(typeof(AuditStamp));
-                var modifiersField = wordClassMap.GetMemberMap(nameof(WordEntry.Modifiers)).ElementName;
-                var updatedByField = wordClassMap.GetMemberMap(nameof(WordEntry.UpdatedBy)).ElementName;
+                var modifiersField = wordClassMap.AllMemberMaps
+                    .Single(member => member.MemberName == nameof(WordEntry.Modifiers))
+                    .ElementName;
+                var updatedByField = wordClassMap.AllMemberMaps
+                    .Single(member => member.MemberName == nameof(WordEntry.UpdatedBy))
+                    .ElementName;
                 var modifierByField = auditClassMap.GetMemberMap(nameof(AuditStamp.By)).ElementName;
                 var latestModifierBy = new BsonDocument("$let", new BsonDocument
                 {
