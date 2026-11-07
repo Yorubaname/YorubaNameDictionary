@@ -40,7 +40,11 @@ namespace Application.Mappers.Words
 
                 SubmittedBy = wordEntry.CreatedBy,
                 CreatedAt = wordEntry.CreatedAt,
-                UpdatedAt = wordEntry.UpdatedAt
+                UpdatedAt = wordEntry.UpdatedAt,
+                CreatedFieldsCount = wordEntry.CreatedFieldsCount,
+                Publishers = wordEntry.Publishers ?? [],
+                Modifiers = wordEntry.Modifiers ?? [],
+                Unpublishers = wordEntry.Unpublishers ?? []
             };
         }
 

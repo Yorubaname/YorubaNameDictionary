@@ -1,4 +1,4 @@
-using Api.Utilities;
+﻿using Api.Utilities;
 using Application.Services.MultiLanguage;
 using Application.Services.Words;
 using Words.Core.Entities;
@@ -211,8 +211,7 @@ namespace Api.Controllers.Words
                 return StatusCode((int)HttpStatusCode.BadRequest, ResponseHelper.GetResponseDict("Published word not found."));
             }
 
-            entry.State = State.NEW;
-            await wordEntryService.Update(entry);
+            await wordEntryService.Unpublish(entry, State.NEW, User?.Identity?.Name);
             return Ok(ResponseHelper.GetResponseDict($"{word} removed from index."));
         }
 
@@ -233,8 +232,7 @@ namespace Api.Controllers.Words
                 }
                 else
                 {
-                    entry.State = State.UNPUBLISHED;
-                    await wordEntryService.Update(entry);
+                    await wordEntryService.Unpublish(entry, State.UNPUBLISHED, User?.Identity?.Name);
                     unpublishedWords.Add(entry.Title);
                 }
             }
