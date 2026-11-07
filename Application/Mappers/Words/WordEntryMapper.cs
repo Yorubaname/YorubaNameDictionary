@@ -39,6 +39,7 @@ namespace Application.Mappers.Words
                 State = wordEntry.State,
 
                 SubmittedBy = wordEntry.CreatedBy,
+                UpdatedBy = wordEntry.UpdatedBy,
                 CreatedAt = wordEntry.CreatedAt,
                 UpdatedAt = wordEntry.UpdatedAt,
                 CreatedFieldsCount = wordEntry.CreatedFieldsCount,

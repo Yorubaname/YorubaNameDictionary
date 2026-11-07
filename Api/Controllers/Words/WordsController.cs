@@ -80,19 +80,40 @@ namespace Api.Controllers.Words
             [FromQuery] int? count,
             [FromQuery] bool? all,
             [FromQuery] string? submittedBy,
+            [FromQuery] string? lastUpdatedBy,
+            [FromQuery] string? orderBy,
             [FromQuery] State? state)
         {
+            if (!string.IsNullOrWhiteSpace(orderBy)
+                && !string.Equals(orderBy, "createdAt", StringComparison.OrdinalIgnoreCase)
+                && !string.Equals(orderBy, "updatedAt", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("orderBy must be either createdAt or updatedAt.");
+            }
+
             IEnumerable<WordEntry> words;
             if (all.HasValue && all.Value)
             {
-                words = await entryService.GetAllEntries(state, submittedBy);
+                words = await entryService.GetAllWordsAsync(state, submittedBy, lastUpdatedBy, orderBy);
                 return Ok(words.MapToDtoCollectionMini());
             }
 
             page ??= DefaultPage;
             count = Math.Min(count ?? DefaultListCount, _maxListCount);
-            words = await entryService.List(state, submittedBy, page.Value, count.Value);
+            words = await entryService.ListWordsAsync(page.Value, count.Value, state, submittedBy, lastUpdatedBy, orderBy);
             return Ok(words.MapToDtoCollection());
+        }
+
+        [HttpGet("count")]
+        [ProducesResponseType(typeof(object), (int)HttpStatusCode.OK)]
+        [AllowAnonymous]
+        public async Task<IActionResult> CountWords(
+            [FromQuery] string? submittedBy,
+            [FromQuery] string? lastUpdatedBy,
+            [FromQuery] State? state)
+        {
+            var totalCount = await entryService.CountWordsAsync(state, submittedBy, lastUpdatedBy);
+            return Ok(new { totalCount });
         }
 
         /// <summary>
@@ -117,6 +138,7 @@ namespace Api.Controllers.Words
             wordToReturn.UpdatedAt = wordEntry.UpdatedAt;
             // Creation details and the audit trail live on the root entry, not on the staged version.
             wordToReturn.CreatedBy = wordEntry.CreatedBy;
+            wordToReturn.UpdatedBy = wordEntry.UpdatedBy;
             wordToReturn.CreatedFieldsCount = wordEntry.CreatedFieldsCount;
             wordToReturn.Publishers = wordEntry.Publishers;
             wordToReturn.Modifiers = wordEntry.Modifiers;
