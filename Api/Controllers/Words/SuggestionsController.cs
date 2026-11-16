@@ -1,10 +1,12 @@
-﻿using Api.Utilities;
+﻿using Api.Configuration;
+using Api.Utilities;
 using Application.Exceptions;
 using Application.Mappers.Words;
 using Application.Services.Words;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Net;
 using Words.Core.Dto.Request;
 using Words.Core.Dto.Response;
@@ -16,20 +18,31 @@ namespace Api.Controllers.Words
     [Authorize(Policy = "AdminAndLexicographers")]
     public class SuggestionsController : ControllerBase
     {
+        private const int DefaultPage = 1;
+        private const int DefaultListCount = 50;
+
         private readonly SuggestionsService _suggestedWordService;
         private readonly IValidator<WordDto> _wordValidator;
+        private readonly int _maxListCount;
 
-        public SuggestionsController(SuggestionsService suggestedWordService, IValidator<WordDto> wordValidator)
+        public SuggestionsController(SuggestionsService suggestedWordService, IValidator<WordDto> wordValidator, IOptions<WordsConfig> wordsConfig)
         {
             _suggestedWordService = suggestedWordService;
             _wordValidator = wordValidator;
+            _maxListCount = wordsConfig.Value.MaxListCount;
         }
 
+        /// <summary>
+        /// List one page of suggested words, newest first. Always paged: defaults to page 1 of 50,
+        /// and count is capped at the configured Words:MaxListCount.
+        /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(WordEntryDto[]), 200)]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> List([FromQuery] int? page, [FromQuery] int? count)
         {
-            var data = await _suggestedWordService.GetAllAsync();
+            var pageNumber = Math.Max(1, page ?? DefaultPage);
+            var pageSize = Math.Clamp(count ?? DefaultListCount, 1, _maxListCount);
+            var data = await _suggestedWordService.ListAsync(pageNumber, pageSize);
             return Ok(data.MapToDtoCollection());
         }
 
