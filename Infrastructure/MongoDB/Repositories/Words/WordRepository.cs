@@ -133,9 +133,11 @@ namespace Infrastructure.MongoDB.Repositories.Words
 
         private static SortDefinition<WordEntry> GetWordsSort(string? orderBy)
         {
+            // Id is a tiebreaker so skip/limit paging is stable when timestamps collide (e.g. bulk imports).
+            var sort = Builders<WordEntry>.Sort;
             return string.Equals(orderBy, nameof(WordEntry.CreatedAt), StringComparison.OrdinalIgnoreCase)
-                ? Builders<WordEntry>.Sort.Descending(word => word.CreatedAt)
-                : Builders<WordEntry>.Sort.Descending(word => word.UpdatedAt);
+                ? sort.Combine(sort.Descending(word => word.CreatedAt), sort.Descending(word => word.Id))
+                : sort.Combine(sort.Descending(word => word.UpdatedAt), sort.Descending(word => word.Id));
         }
 
         public WordRepository(IMongoDatabaseFactory databaseFactory, ITenantProvider tenantProvider, IEventPubService eventPubService)

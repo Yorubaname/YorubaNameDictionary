@@ -31,9 +31,9 @@ public class SuggestionsService
         await _wordRepository.Create(wordEntry);
     }
 
-    public async Task<List<WordEntry>> GetAllAsync()
+    public async Task<List<WordEntry>> ListAsync(int pageNumber, int pageSize)
     {
-        return await _wordRepository.FindByStateAsync(State.SUGGESTED);
+        return await _wordRepository.ListWordsAsync(pageNumber, pageSize, State.SUGGESTED, null, null, "createdAt");
     }
 
     public async Task<WordEntry?> GetAsync(string id)
