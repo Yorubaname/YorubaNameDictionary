@@ -138,12 +138,16 @@ $(function () {
 
         <!-- Typeahead -->
 
+        var maxSuggestions = 4;
         var names = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
                 url: '/api/v1/words/search/autocomplete?q=%QUERY',
-                wildcard: '%QUERY'
+                wildcard: '%QUERY',
+                transform: function (suggestions) {
+                    return suggestions.slice(0, maxSuggestions);
+                }
             }
         });
 
@@ -156,7 +160,8 @@ $(function () {
             {
                 name: 'searchname',
                 source: names,
-                limit: 4
+                // Typeahead 0.11.1 drops async results when the dataset limit equals the result count.
+                limit: maxSuggestions * 2
             }
         );
         searchInputs.on('typeahead:select', function (event, entry) {
