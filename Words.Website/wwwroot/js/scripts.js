@@ -154,7 +154,8 @@ $(function () {
             },
             {
                 name: 'searchname',
-                source: names
+                source: names,
+                limit: 4
             }
         );
 
