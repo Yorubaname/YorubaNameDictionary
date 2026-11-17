@@ -147,7 +147,8 @@ $(function () {
             }
         });
 
-        $('#search-tph .th').typeahead({
+        var searchInputs = $('#search-tph .th');
+        searchInputs.typeahead({
                 hint: true,
                 highlight: true,
                 minLength: 1
@@ -158,6 +159,9 @@ $(function () {
                 limit: 4
             }
         );
+        searchInputs.on('typeahead:select', function (event, entry) {
+            window.location.href = '/entries/' + encodeURIComponent(entry);
+        });
 
     });
 
