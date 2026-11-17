@@ -427,4 +427,7 @@
   <data name="about-us" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="terms-of-use" xml:space="preserve">
+    <value>Terms of Use</value>
+  </data>
 </root>

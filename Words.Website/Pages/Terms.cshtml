@@ -4,12 +4,14 @@
     ViewData["Title"] = "Terms of Use";
 }
 
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
+
 <section class="terms-of-use">
     <div class="container">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div class="text-center">
-                    <h1>Terms of Use</h1>
+                    <h1>@Localizer["terms-of-use"]</h1>
                     <p class="text-muted small">Last Updated: January 4, 2025</p>
                 </div>
 
