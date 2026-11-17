@@ -138,25 +138,35 @@ $(function () {
 
         <!-- Typeahead -->
 
+        var maxSuggestions = 4;
         var names = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
                 url: '/api/v1/words/search/autocomplete?q=%QUERY',
-                wildcard: '%QUERY'
+                wildcard: '%QUERY',
+                transform: function (suggestions) {
+                    return suggestions.slice(0, maxSuggestions);
+                }
             }
         });
 
-        $('#search-tph .th').typeahead({
+        var searchInputs = $('#search-tph .th');
+        searchInputs.typeahead({
                 hint: true,
                 highlight: true,
                 minLength: 1
             },
             {
                 name: 'searchname',
-                source: names
+                source: names,
+                // Typeahead 0.11.1 drops async results when the dataset limit equals the result count.
+                limit: maxSuggestions * 2
             }
         );
+        searchInputs.on('typeahead:select', function (event, entry) {
+            window.location.href = '/entries/' + encodeURIComponent(entry);
+        });
 
     });
 
