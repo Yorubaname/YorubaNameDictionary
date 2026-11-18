@@ -76,19 +76,19 @@
       },
       "YorubaOrganization.Application": {
         "type": "Transitive",
-        "resolved": "7.1.0",
-        "contentHash": "+Y4rT3j8Fm9B+S5ifIHscMYSSWq3KjcgPlgaQThGjLTNsZ9eBta1RA2dzv+8TmzamXWoooYdhridG1a/gV4dIA==",
+        "resolved": "7.1.1",
+        "contentHash": "5CC2bXTZ3bFvkOMPMwHsBuiAp/BsMYOgJRLl2wxIiJ3z1/lip+Wiz+tzdK3kMgnlWDMRd18ipDWQ1JzmRDRsmA==",
         "dependencies": {
           "Ardalis.GuardClauses": "5.0.0",
           "BCrypt.Net-Next": "4.2.0",
           "MediatR": "12.5.0",
-          "YorubaOrganization.Core": "7.1.0"
+          "YorubaOrganization.Core": "7.1.1"
         }
       },
       "YorubaOrganization.Core": {
         "type": "Transitive",
-        "resolved": "7.1.0",
-        "contentHash": "3g+4cHufIJ3E+tlOxE+hxUoue7yYby10a5ShlzcErtOkAyc9HTq73e7+KO6odGHBWFz842Bf2gyE7XZ7mM8dww==",
+        "resolved": "7.1.1",
+        "contentHash": "yKiCT19mzN2XvSyYxfxv3tPnMz05fyGW9DefE0XrayW5VjddYYAJOkSErfLq9uWmHqsnFBq1q57rYFH25cOLSQ==",
         "dependencies": {
           "MediatR.Contracts": "2.0.1"
         }
