@@ -25,13 +25,13 @@
       "YorubaOrganization.Application": {
         "type": "Direct",
         "requested": "[7.*, )",
-        "resolved": "7.1.1",
-        "contentHash": "5CC2bXTZ3bFvkOMPMwHsBuiAp/BsMYOgJRLl2wxIiJ3z1/lip+Wiz+tzdK3kMgnlWDMRd18ipDWQ1JzmRDRsmA==",
+        "resolved": "7.2.0",
+        "contentHash": "qomfG2kyNayaaSjO8GRtd/CbrPlWBsihzr9eur5Bl3a1iih5KZUA/KwrRU166CUMtvCvq+5TGN3XwWgfPi+TAg==",
         "dependencies": {
           "Ardalis.GuardClauses": "5.0.0",
           "BCrypt.Net-Next": "4.2.0",
           "MediatR": "12.5.0",
-          "YorubaOrganization.Core": "7.1.1"
+          "YorubaOrganization.Core": "7.2.0"
         }
       },
       "Ardalis.GuardClauses": {
@@ -90,8 +90,8 @@
       },
       "YorubaOrganization.Core": {
         "type": "Transitive",
-        "resolved": "7.1.1",
-        "contentHash": "yKiCT19mzN2XvSyYxfxv3tPnMz05fyGW9DefE0XrayW5VjddYYAJOkSErfLq9uWmHqsnFBq1q57rYFH25cOLSQ==",
+        "resolved": "7.2.0",
+        "contentHash": "MrjflVDcbfQI2Xnq995GXzpf1KhekRf2gA+VHop8LjV1sFznf6k2NSz5iynstDRRUgW3/n88zUWOkq2EFbcv0Q==",
         "dependencies": {
           "MediatR.Contracts": "2.0.1"
         }

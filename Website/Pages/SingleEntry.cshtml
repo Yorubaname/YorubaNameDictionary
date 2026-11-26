@@ -122,13 +122,17 @@
                     </div>
                 }
 
-                @if (Model.Name.GeoLocation?.Count > 0)
+                @{
+                    // Locations an admin flagged "Hide on website" are not shown.
+                    var visibleLocations = Model.Name.GeoLocation?.Where(g => !g.HideOnWebsite).ToList();
+                }
+                @if (visibleLocations?.Count > 0)
                 {
                     <div class="mb-5">
                         <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">@Localizer["geolocation"]</h5>
                         <p class="mb-2">@Localizer["commonin"]:</p>
                         <div class="d-flex flex-wrap gap-2">
-                            @foreach (var place in Model.Name.GeoLocation)
+                            @foreach (var place in visibleLocations)
                             {
                                 <span class="badge bg-warning text-dark">@place</span>
                             }

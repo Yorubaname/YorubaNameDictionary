@@ -5,8 +5,8 @@
       "YorubaOrganization.Core": {
         "type": "Direct",
         "requested": "[7.*, )",
-        "resolved": "7.1.1",
-        "contentHash": "yKiCT19mzN2XvSyYxfxv3tPnMz05fyGW9DefE0XrayW5VjddYYAJOkSErfLq9uWmHqsnFBq1q57rYFH25cOLSQ==",
+        "resolved": "7.2.0",
+        "contentHash": "MrjflVDcbfQI2Xnq995GXzpf1KhekRf2gA+VHop8LjV1sFznf6k2NSz5iynstDRRUgW3/n88zUWOkq2EFbcv0Q==",
         "dependencies": {
           "MediatR.Contracts": "2.0.1"
         }
