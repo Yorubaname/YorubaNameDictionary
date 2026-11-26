@@ -20,7 +20,7 @@ namespace Application.Mappers.Words
                 Id = wordEntry.Id,
                 Word = wordEntry.Title,
                 Pronunciation = wordEntry.Pronunciation,
-                PartOfSpeech = wordEntry.PartOfSpeech.ToString(),
+                PartOfSpeech = wordEntry.PartOfSpeech?.ToString(),
                 Style = wordEntry.Style?.ToString(),
                 GrammaticalFeature = wordEntry.GrammaticalFeature?.ToString(),
                 IpaNotation = wordEntry.IpaNotation,
@@ -34,7 +34,7 @@ namespace Application.Mappers.Words
                 GeoLocation = [.. wordEntry.GeoLocation.Select(ge => new GeoLocationDto(ge.Id, ge.Place, ge.Region))],
                 Etymology = [.. wordEntry.Etymology.Select(et => new EtymologyDto(et.Part, et.Meaning))],
                 MediaLinks = [.. wordEntry.MediaLinks.Select(m => new MediaLinkDto(m.Url, m.Description, m.Type))],
-                Definitions = [.. wordEntry.Definitions.Select(d => d.MapToDto())],
+                Definitions = [.. wordEntry.Definitions.Select(d => d.MapToDto(wordEntry))],
 
                 State = wordEntry.State,
 
@@ -49,7 +49,8 @@ namespace Application.Mappers.Words
             };
         }
 
-        public static DefinitionDto MapToDto(this Definition definition)
+        // A definition without its own part of speech or grammatical feature takes the word's, so old records need no migration.
+        public static DefinitionDto MapToDto(this Definition definition, WordEntry word)
         {
             return new DefinitionDto(
                 definition.Content,
@@ -60,7 +61,9 @@ namespace Application.Mappers.Words
                         new DefinitionExampleDto(example.Content, example.EnglishTranslation, example.Type)
                         )],
                 definition.CreatedAt,
-                definition.NeedsReview
+                definition.NeedsReview,
+                definition.PartOfSpeech ?? word.PartOfSpeech,
+                definition.GrammaticalFeature ?? word.GrammaticalFeature
             );
         }
 
@@ -86,6 +89,8 @@ namespace Application.Mappers.Words
                     Content = d.Content,
                     EnglishTranslation = d.EnglishTranslation,
                     NeedsReview = d.NeedsReview,
+                    PartOfSpeech = d.PartOfSpeech,
+                    GrammaticalFeature = d.GrammaticalFeature,
                     Examples = d.Examples?.Select(ex => new DefinitionExample
                     {
                         Content = ex.Content,
@@ -118,7 +123,9 @@ namespace Application.Mappers.Words
                                         d.EnglishTranslation,
                                         [.. d.Examples.Select(ex => new DefinitionExampleDto(ex.Content, ex.EnglishTranslation, ex.Type))],
                                         d.CreatedAt,
-                                        d.NeedsReview)
+                                        d.NeedsReview,
+                                        d.PartOfSpeech ?? w.PartOfSpeech,
+                                        d.GrammaticalFeature ?? w.GrammaticalFeature)
                                     )],
             })];
         }

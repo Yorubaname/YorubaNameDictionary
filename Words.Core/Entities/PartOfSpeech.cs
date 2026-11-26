@@ -15,6 +15,7 @@
         Numeral,
         AuxiliaryVerb,
         ModalVerb,
-        Particle
+        Particle,
+        Idiom
     }
 }

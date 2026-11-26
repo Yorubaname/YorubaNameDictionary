@@ -24,7 +24,7 @@ namespace Words.Core.Dto.Request
         public virtual string SubmittedBy { get; set; }
 
         // Word-specific fields (from WordEntry)
-        public PartOfSpeech PartOfSpeech { get; set; }
+        public PartOfSpeech? PartOfSpeech { get; set; }
         [JsonConverter(typeof(StyleJsonConverter))]
         public Style? Style { get; set; }
         public GrammaticalFeature? GrammaticalFeature { get; set; }

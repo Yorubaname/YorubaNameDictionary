@@ -4,7 +4,7 @@ namespace Words.Core.Entities
 {
     public class WordEntry : DictionaryEntry<WordEntry>
     {
-        public PartOfSpeech PartOfSpeech { get; set; }
+        public PartOfSpeech? PartOfSpeech { get; set; }
         public Style? Style { get; set; }
         public GrammaticalFeature? GrammaticalFeature { get; set; }
 
