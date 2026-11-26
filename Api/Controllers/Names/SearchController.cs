@@ -5,6 +5,7 @@ using Application.Services.MultiLanguage;
 using Application.Services.Names;
 using Core.Dto.Response;
 using Core.Entities;
+using YorubaOrganization.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -24,7 +25,8 @@ namespace Api.Controllers.Names
         IRecentSearchesCache recentSearchesCache,
         IRecentIndexesCache recentIndexesCache,
         NameEntryService nameEntryService,
-        ILanguageService languageService) : ControllerBase
+        ILanguageService languageService,
+        GeoLocationsService geoLocationsService) : ControllerBase
     {
         private const string SearchActivity = "search", IndexActivity = "index", PopularActivity = "popular";
 
@@ -82,6 +84,13 @@ namespace Api.Controllers.Names
         {
             var titleLookup = await searchService.GetEntry(searchTerm);
             var matches = titleLookup.Matches.MapToDtoCollection();
+
+            // The entry page reads its locations from here, so mark the ones an admin hid.
+            var locations = await geoLocationsService.GetAll();
+            foreach (var match in matches)
+            {
+                match.GeoLocation = GeoLocationHider.Apply(match.GeoLocation, locations);
+            }
 
             if (matches.Length == 1)
             {
