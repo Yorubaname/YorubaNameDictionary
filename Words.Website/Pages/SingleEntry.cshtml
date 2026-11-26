@@ -132,6 +132,12 @@
                                 <span class="syl-break"> |</span>
                             }
 
+                            @if (!string.IsNullOrEmpty(Model.Word.Style))
+                            {
+                                <span class="word-syllables" title="Style"><em>@Model.Word.Style</em></span>
+                                <span class="syl-break"> |</span>
+                            }
+
                             <span class="smd">
 
                                 <a href="http://www.facebook.com/sharer.php?u=@ViewData["BaseURL"]/entries/@Model.Word.Word"
@@ -146,24 +152,6 @@
 
                         </span>
 
-                    </div>
-
-                </div>
-
-                <div class="row vg-header" style="padding-top: 20px; padding-bottom: 20px;">
-
-                    <div class="col">
-
-                        <h5 class="ptw">
-                            <em>
-
-                                @if (!string.IsNullOrEmpty(Model.Word.Style))
-                                {
-                                    <span class="ety-sl" data-entry-id="1" title="Style">@Model.Word.Style</span>
-                                }
-                            </em>
-
-                        </h5>
                     </div>
 
                 </div>
