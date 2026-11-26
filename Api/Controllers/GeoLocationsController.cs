@@ -9,6 +9,8 @@ using YorubaOrganization.Core.Entities;
 
 namespace Api.Controllers
 {
+    public record UpdateGeoLocationDto(bool HideOnWebsite);
+
     [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize(Policy = "AdminAndProLexicographers")]
@@ -31,7 +33,7 @@ namespace Api.Controllers
         [ProducesResponseType(typeof(GeoLocationDto[]), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ListGeoLocations()
         {
-            var result = (await _geoLocationsService.GetAll()).Select(g => new GeoLocationDto(g.Id, g.Place, g.Region));
+            var result = (await _geoLocationsService.GetAll()).Select(g => new GeoLocationDto(g.Id, g.Place, g.Region, g.HideOnWebsite));
             return Ok(result);
         }
 
@@ -41,10 +43,24 @@ namespace Api.Controllers
         {
             var geoLocation = new GeoLocation(geo.Place, geo.Region)
             {
-                CreatedBy = User!.Identity!.Name!
+                CreatedBy = User!.Identity!.Name!,
+                HideOnWebsite = geo.HideOnWebsite
             };
             await _geoLocationsService.Create(geoLocation);
             return StatusCode((int)HttpStatusCode.Created, ResponseHelper.GetResponseDict("Geolocation successfully added"));
+        }
+
+        /// <summary>
+        /// Sets whether the websites hide this location.
+        /// </summary>
+        [HttpPatch("{id}")]
+        [ProducesResponseType(typeof(Dictionary<string, string>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> UpdateHideOnWebsite(string id, [FromBody] UpdateGeoLocationDto request)
+        {
+            await _geoLocationsService.SetHideOnWebsite(id, request.HideOnWebsite);
+            return Ok(ResponseHelper.GetResponseDict(request.HideOnWebsite
+                ? "Geolocation is now hidden on the website"
+                : "Geolocation is now shown on the website"));
         }
 
         [HttpDelete("{id}/{place}")]
