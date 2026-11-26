@@ -4,6 +4,8 @@ namespace Words.Core.Entities
     {
         Other,
         Proverb,
-        Song
+        Song,
+        Scripture,
+        Literature
     }
 }
