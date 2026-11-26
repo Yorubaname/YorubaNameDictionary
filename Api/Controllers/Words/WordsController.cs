@@ -1,5 +1,6 @@
 ﻿using Api.Configuration;
 using Api.Utilities;
+using Application.Mappers;
 using Application.Mappers.Words;
 using Application.Services.Words;
 using Microsoft.Extensions.Options;
@@ -12,6 +13,7 @@ using System.Net;
 using Words.Core.Dto.Request;
 using Words.Core.Dto.Response;
 using Words.Core.Entities;
+using YorubaOrganization.Application.Services;
 using YorubaOrganization.Core.Enums;
 
 namespace Api.Controllers.Words
@@ -19,7 +21,7 @@ namespace Api.Controllers.Words
     [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize(Policy = "AdminAndLexicographers")]
-    public class WordsController(WordEntryService entryService, IValidator<WordDto> createWordValidator, IOptions<WordsConfig> wordsConfig) : ControllerBase
+    public class WordsController(WordEntryService entryService, IValidator<WordDto> createWordValidator, IOptions<WordsConfig> wordsConfig, GeoLocationsService geoLocationsService) : ControllerBase
     {
         private const int DefaultPage = 1;
         private const int DefaultListCount = 50;
@@ -145,6 +147,7 @@ namespace Api.Controllers.Words
             wordToReturn.Unpublishers = wordEntry.Unpublishers;
 
             var wordDto = wordToReturn.MapToDto();
+            wordDto.GeoLocation = GeoLocationHider.Apply(wordDto.GeoLocation, await geoLocationsService.GetAll());
             wordDto.Key = wordEntry.Title;
             return Ok(wordDto);
         }

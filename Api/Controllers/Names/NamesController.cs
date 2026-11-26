@@ -1,4 +1,5 @@
 ﻿using Api.Utilities;
+using Application.Mappers;
 using Application.Mappers.Names;
 using Application.Services.Names;
 using Core.Dto.Request;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using System.Net;
+using YorubaOrganization.Application.Services;
 using YorubaOrganization.Core.Enums;
 
 namespace Api.Controllers.Names
@@ -16,7 +18,7 @@ namespace Api.Controllers.Names
     [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize(Policy = "AdminAndLexicographers")]
-    public class NamesController(NameEntryService entryService, IValidator<NameDto> createNameValidator) : ControllerBase
+    public class NamesController(NameEntryService entryService, IValidator<NameDto> createNameValidator, GeoLocationsService geoLocationsService) : ControllerBase
     {
         private const int DefaultPage = 1;
         private const int DefaultListCount = 50;
@@ -127,6 +129,7 @@ namespace Api.Controllers.Names
             nameToReturn.UpdatedAt = nameEntry.UpdatedAt;
 
             var nameDto = nameToReturn.MapToDto();
+            nameDto.GeoLocation = GeoLocationHider.Apply(nameDto.GeoLocation, await geoLocationsService.GetAll());
             nameDto.Key = nameEntry.Title;
             return Ok(nameDto);
         }

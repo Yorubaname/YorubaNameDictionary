@@ -18,7 +18,12 @@ namespace Application.Validation
                 .Length(2, 50).WithMessage("Word must be 2 to 50 characters.");
 
             RuleFor(x => x.PartOfSpeech)
-                .IsInEnum().WithMessage("Part of Speech is required.");
+                .IsInEnum().When(x => x.PartOfSpeech.HasValue).WithMessage("Part of Speech is invalid.");
+                
+                // Each definition needs its own part of speech, or the word\'s to fall back on.
+                RuleFor(x => x.Definitions)
+                .Must((word, definitions) => word.PartOfSpeech.HasValue || definitions.All(d => d.PartOfSpeech.HasValue))
+                .WithMessage("Every definition needs a part of speech.");
 
             RuleForEach(x => x.Etymology)
                 .SetValidator(etymologyValidator);

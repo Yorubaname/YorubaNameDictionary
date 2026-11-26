@@ -99,8 +99,19 @@ namespace Test.Words
         [Fact]
         public void NewEntry_CountsAllItsValues()
         {
-            // Title, Pronunciation, PartOfSpeech (always set), 2 syllables, definition Content + EnglishTranslation
-            Assert.Equal(7, EntryDiff.CountChangedFields(null, Word()));
+            // Title, Pronunciation, 2 syllables, definition Content + EnglishTranslation.
+            // The word-level PartOfSpeech is optional now (YDICT-57), so a null one is not counted.
+            Assert.Equal(6, EntryDiff.CountChangedFields(null, Word()));
+        }
+
+        [Fact]
+        public void NewEntry_CountsDefinitionPartOfSpeechAndGrammaticalFeature()
+        {
+            var entry = Word();
+            entry.Definitions[0].PartOfSpeech = PartOfSpeech.Verb;
+            entry.Definitions[0].GrammaticalFeature = GrammaticalFeature.Transitive;
+
+            Assert.Equal(8, EntryDiff.CountChangedFields(null, entry));
         }
 
         [Fact]

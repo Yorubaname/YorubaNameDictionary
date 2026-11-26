@@ -1,4 +1,6 @@
 ﻿using Api.Utilities;
+using Application.Mappers;
+using YorubaOrganization.Application.Services;
 using Application.Services.MultiLanguage;
 using Application.Services.Words;
 using Words.Core.Entities;
@@ -26,14 +28,16 @@ namespace Api.Controllers.Words
         private readonly IRecentIndexesCache recentIndexesCache;
         private readonly WordEntryService wordEntryService;
         private readonly ILanguageService languageService;
-        
+        private readonly GeoLocationsService geoLocationsService;
+
         public SearchController(
             WordSearchService searchService,
             IEventPubService eventPubService,
             IRecentSearchesCache recentSearchesCache,
             IRecentIndexesCache recentIndexesCache,
             WordEntryService wordEntryService,
-            ILanguageService languageService)
+            ILanguageService languageService,
+            GeoLocationsService geoLocationsService)
         {
             this.searchService = searchService;
             this.eventPubService = eventPubService;
@@ -41,6 +45,7 @@ namespace Api.Controllers.Words
             this.recentIndexesCache = recentIndexesCache;
             this.wordEntryService = wordEntryService;
             this.languageService = languageService;
+            this.geoLocationsService = geoLocationsService;
         }
 
         [HttpGet("meta")]
@@ -96,6 +101,13 @@ namespace Api.Controllers.Words
         {
             var titleLookup = await searchService.GetEntry(searchTerm);
             var matches = titleLookup.Matches.MapToDtoCollection();
+
+            // The entry page reads its locations from here, so mark the ones an admin hid.
+            var locations = await geoLocationsService.GetAll();
+            foreach (var match in matches)
+            {
+                match.GeoLocation = GeoLocationHider.Apply(match.GeoLocation, locations);
+            }
 
             if (matches.Length == 1)
             {

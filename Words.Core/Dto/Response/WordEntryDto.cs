@@ -12,7 +12,7 @@ namespace Words.Core.Dto.Response
         public string Id { get; set; }
         public string Word { get; set; }
         public string? Pronunciation { get; set; }
-        public string PartOfSpeech { get; set; }
+        public string? PartOfSpeech { get; set; }
         public string? Style { get; set; }
         public string? GrammaticalFeature { get; set; }
         public string? IpaNotation { get; set; }

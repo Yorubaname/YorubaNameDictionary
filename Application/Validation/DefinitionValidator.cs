@@ -17,7 +17,15 @@ namespace Application.Validation
                 .MaximumLength(500).When(x => x.EnglishTranslation != null)
                 .WithMessage("English translation must be at most 500 characters.");
 
-            RuleForEach(x => x.Examples)
+            RuleFor(x => x.PartOfSpeech)
+                .IsInEnum().When(x => x.PartOfSpeech.HasValue)
+                .WithMessage("Definition part of speech is invalid.");
+                
+                RuleFor(x => x.GrammaticalFeature)
+                .IsInEnum().When(x => x.GrammaticalFeature.HasValue)
+                .WithMessage("Definition grammatical feature is invalid.");
+                
+                RuleForEach(x => x.Examples)
                 .SetValidator(new DefinitionExampleValidator());
         }
     }
