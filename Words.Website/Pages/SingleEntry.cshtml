@@ -126,9 +126,13 @@
 
                             <span class="syl-break"> |</span>
 
-                            @if (Model.Word.GeoLocation?.Any() == true)
+                            @{
+                                // Locations an admin flagged "Hide on website" (GENERAL, I DO NOT KNOW...) are skipped.
+                                var shownLocation = Model.Word.GeoLocation?.FirstOrDefault(g => !g.HideOnWebsite);
+                            }
+                            @if (shownLocation != null)
                             {
-                                <span class="word-syllables" title="Geolocation: where this word is used">@Model.Word.GeoLocation.First().Place</span>
+                                <span class="word-syllables" title="Geolocation: where this word is used">@shownLocation.Place</span>
                                 <span class="syl-break"> |</span>
                             }
 
