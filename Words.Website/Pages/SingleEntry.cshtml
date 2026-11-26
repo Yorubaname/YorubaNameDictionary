@@ -38,7 +38,7 @@
                             var singlePartOfSpeech = groups.FirstOrDefault()?.PartOfSpeech?.ToString() ?? Model.Word.PartOfSpeech;
                             if (!string.IsNullOrEmpty(singlePartOfSpeech))
                             {
-                                <span class="fl"><span class="important-blue-link">@singlePartOfSpeech</span></span>
+                                <span class="fl"><span class="important-blue-link" title="Part of speech">@singlePartOfSpeech</span></span>
                             }
                         }
                         else
@@ -46,11 +46,11 @@
                             <span class="fl pos-chips">
                                 @foreach (var group in groups.Take(3))
                                 {
-                                    <a class="pos-chip" href="#pos-@PosName(group)">@PosName(group)</a>
+                                    <a class="pos-chip" href="#pos-@PosName(group)" title="Part of speech: @PosName(group)">@PosName(group)</a>
                                 }
                                 @if (groups.Count > 3)
                                 {
-                                    <a class="pos-chip" href="#pos-@PosName(groups[3])">+@(groups.Count - 3)</a>
+                                    <a class="pos-chip" href="#pos-@PosName(groups[3])" title="More parts of speech: @string.Join(", ", groups.Skip(3).Select(PosName))">+@(groups.Count - 3)</a>
                                 }
                             </span>
                         }
@@ -65,7 +65,7 @@
 
                         @if (!string.IsNullOrEmpty(Model.Word.Syllables?.ToString()))
                         {
-                            <span class="word-syllables">@Model.Word.Syllables</span>
+                            <span class="word-syllables" title="Syllables">@Model.Word.Syllables</span>
                             <span class="syl-break"> |</span>
                         }
 
@@ -73,7 +73,7 @@
 
                             @if (!string.IsNullOrEmpty(Model.Word.IpaNotation))
                             {
-                                <span class="pr">@Model.Word.IpaNotation</span>
+                                <span class="pr" title="IPA notation">@Model.Word.IpaNotation</span>
                             }
 
                             <a class="play-pron hw-play-pron hoverable converted pointer" id="tts-button">
@@ -128,8 +128,7 @@
 
                             @if (Model.Word.GeoLocation?.Any() == true)
                             {
-                                <span class="word-syllables"><a href="#"
-                                        style="text-decoration: underline;">@Model.Word.GeoLocation.First().Place</a></span>
+                                <span class="word-syllables" title="Geolocation: where this word is used">@Model.Word.GeoLocation.First().Place</span>
                                 <span class="syl-break"> |</span>
                             }
 
@@ -160,7 +159,7 @@
 
                                 @if (!string.IsNullOrEmpty(Model.Word.Style))
                                 {
-                                    <span class="ety-sl" data-entry-id="1">@Model.Word.Style</span>
+                                    <span class="ety-sl" data-entry-id="1" title="Style">@Model.Word.Style</span>
                                 }
                             </em>
 
@@ -229,11 +228,10 @@
                                             <span class="dt ">
 
                                                 <span class="dtText">
-                                                    <strong class="mw_t_bc">: </strong>@if (definition.GrammaticalFeature.HasValue)
+                                                    @if (definition.GrammaticalFeature.HasValue)
                                                     {
-                                                        <span class="gf-badge">@definition.GrammaticalFeature</span>
-                                                    }@definition.Content<strong
-                                                        class="mw_t_bc">:</strong>
+                                                        <span class="gf-badge" title="Grammatical feature">@definition.GrammaticalFeature</span>
+                                                    }@definition.Content
 
                                                     @if (!string.IsNullOrWhiteSpace(definition.EnglishTranslation))
                                                     {
