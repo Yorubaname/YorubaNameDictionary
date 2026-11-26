@@ -1,9 +1,15 @@
 @page "/entries/{wordEntry}"
 @using Application.Services.MultiLanguage
+@using Words.Core.Utilities
 @using Words.Website.Resources
 @model SingleEntryModel
 @{
     ViewData["Title"] = $"Definition of {Model.Word.Word}";
+
+    // Definitions grouped by part of speech (first appearance order). One group keeps the classic layout.
+    var groups = DefinitionGrouper.Group(Model.Word.Definitions ?? []);
+    var hasSeveralPartsOfSpeech = groups.Count > 1;
+    string PosName(PartOfSpeechGroup group) => group.PartOfSpeech?.ToString() ?? "Other";
 }
 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Messages> Localizer
@@ -27,7 +33,27 @@
 
                         <h1 class="hword" id="word-entry">@Model.Word.Word</h1>
 
-                        <span class="fl"><a class="important-blue-link" href="#">@Model.Word.PartOfSpeech</a></span>
+                        @if (!hasSeveralPartsOfSpeech)
+                        {
+                            var singlePartOfSpeech = groups.FirstOrDefault()?.PartOfSpeech?.ToString() ?? Model.Word.PartOfSpeech;
+                            if (!string.IsNullOrEmpty(singlePartOfSpeech))
+                            {
+                                <span class="fl"><span class="important-blue-link" title="Part of speech">@singlePartOfSpeech</span></span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="fl pos-chips">
+                                @foreach (var group in groups.Take(3))
+                                {
+                                    <a class="pos-chip" href="#pos-@PosName(group)" title="Part of speech: @PosName(group)">@PosName(group)</a>
+                                }
+                                @if (groups.Count > 3)
+                                {
+                                    <a class="pos-chip" href="#pos-@PosName(groups[3])" title="More parts of speech: @string.Join(", ", groups.Skip(3).Select(PosName))">+@(groups.Count - 3)</a>
+                                }
+                            </span>
+                        }
 
                     </div>
 
@@ -39,7 +65,7 @@
 
                         @if (!string.IsNullOrEmpty(Model.Word.Syllables?.ToString()))
                         {
-                            <span class="word-syllables">@Model.Word.Syllables</span>
+                            <span class="word-syllables" title="Syllables">@Model.Word.Syllables</span>
                             <span class="syl-break"> |</span>
                         }
 
@@ -47,7 +73,7 @@
 
                             @if (!string.IsNullOrEmpty(Model.Word.IpaNotation))
                             {
-                                <span class="pr">@Model.Word.IpaNotation</span>
+                                <span class="pr" title="IPA notation">@Model.Word.IpaNotation</span>
                             }
 
                             <a class="play-pron hw-play-pron hoverable converted pointer" id="tts-button">
@@ -102,8 +128,7 @@
 
                             @if (Model.Word.GeoLocation?.Any() == true)
                             {
-                                <span class="word-syllables"><a href="#"
-                                        style="text-decoration: underline;">@Model.Word.GeoLocation.First().Place</a></span>
+                                <span class="word-syllables" title="Geolocation: where this word is used">@Model.Word.GeoLocation.First().Place</span>
                                 <span class="syl-break"> |</span>
                             }
 
@@ -132,20 +157,9 @@
                         <h5 class="ptw">
                             <em>
 
-                                @if (!string.IsNullOrEmpty(Model.Word.GrammaticalFeature))
-                                {
-                                    <span class="ety-sl" data-entry-id="1"> <a href="#"
-                                            style="text-decoration: underline;">@Model.Word.GrammaticalFeature</a></span>
-                                    @if (!string.IsNullOrEmpty(Model.Word.Style))
-                                    {
-                                        <text> | </text>
-                                    }
-                                }
-
                                 @if (!string.IsNullOrEmpty(Model.Word.Style))
                                 {
-                                    <span class="ety-sl" data-entry-id="1"><a href="#"
-                                            style="text-decoration: underline;">@Model.Word.Style</a></span>
+                                    <span class="ety-sl" data-entry-id="1" title="Style">@Model.Word.Style</span>
                                 }
                             </em>
 
@@ -192,11 +206,16 @@
 
                     <div class="vg">
 
-                        @if (Model.Word.Definitions?.Any() == true)
+                        @foreach (var group in groups)
                         {
-                            @for (int i = 0; i < Model.Word.Definitions.Count; i++)
+                            <div class="pos-section" id="@(hasSeveralPartsOfSpeech ? "pos-" + PosName(group) : null)">
+                            @if (hasSeveralPartsOfSpeech)
                             {
-                                var definition = Model.Word.Definitions[i];
+                                <h3 class="pos-head">@PosName(group)</h3>
+                            }
+                            @for (int i = 0; i < group.Definitions.Count; i++)
+                            {
+                                var definition = group.Definitions[i];
 
                                 <div class="sb has-num has-let">
 
@@ -209,8 +228,10 @@
                                             <span class="dt ">
 
                                                 <span class="dtText">
-                                                    <strong class="mw_t_bc">: </strong>@definition.Content<strong
-                                                        class="mw_t_bc">:</strong>
+                                                    @if (definition.GrammaticalFeature.HasValue)
+                                                    {
+                                                        <span class="gf-badge" title="Grammatical feature">@definition.GrammaticalFeature</span>
+                                                    }@definition.Content
 
                                                     @if (!string.IsNullOrWhiteSpace(definition.EnglishTranslation))
                                                     {
@@ -245,6 +266,7 @@
 
                                 </div>
                             }
+                            </div>
                         }
 
                     </div>
@@ -411,6 +433,55 @@
 
     .english-hidden {
         display: none;
+    }
+
+    .pos-chips {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        vertical-align: middle;
+    }
+
+    .pos-chip {
+        display: inline-block;
+        padding: 0.1rem 0.7rem;
+        border-radius: 999px;
+        background: #e3edf9;
+        color: #1f5290;
+        font-weight: 700;
+        font-size: 0.8em;
+        text-decoration: none;
+    }
+
+    .pos-chip:hover {
+        background: #cfe0f5;
+        color: #17407a;
+    }
+
+    .pos-section + .pos-section {
+        margin-top: 1.5rem;
+    }
+
+    .pos-head {
+        margin: 0 0 1rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 2px solid #1f5290;
+        color: #1f5290;
+        font-size: 1.8rem;
+        font-weight: 700;
+        scroll-margin-top: 1rem;
+    }
+
+    .gf-badge {
+        display: inline-block;
+        margin-right: 0.4rem;
+        padding: 0 0.45rem;
+        border-radius: 4px;
+        background: #fdecc8;
+        color: #6b4500;
+        font-size: 0.75em;
+        font-weight: 700;
+        vertical-align: 1px;
     }
 
     .inline-example {
