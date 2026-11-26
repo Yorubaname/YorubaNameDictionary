@@ -563,17 +563,17 @@
       },
       "MongoDB.Bson": {
         "type": "Transitive",
-        "resolved": "3.14.1",
-        "contentHash": "ljmATiszGAAQC1nYudvdCTBJF96x2nOy1c4CBDw7vfUggDTL9NOdO93b2C8t7IAycerWNveDLwsfeELYRDxhjw=="
+        "resolved": "3.14.0",
+        "contentHash": "JrfJx2od1ly90rECMNC8z58NQtnOd76nzp8osX3nkI/F8DUjf6sp6CtFJhIIMrrNR6qxuRvn1yly6f45GiJZqQ=="
       },
       "MongoDB.Driver": {
         "type": "Transitive",
-        "resolved": "3.14.1",
-        "contentHash": "cQcNL4H5XxIPEjkkSvPMl/LBEjqt4mUpaoodwpQq3Z/yxyVjqR6SbFa3ISKeanLfWVgOr50OgJZghOVlOyOMvg==",
+        "resolved": "3.14.0",
+        "contentHash": "fQjD3gFTQqEWplOZ66/jCXxvixFEZjlHgDuziPXK7CxMla7n+O9LTxW3KqfN0/mWWYKsBv1vxmsm0qm07smPzA==",
         "dependencies": {
           "DnsClient": "1.6.1",
           "Microsoft.Extensions.Logging.Abstractions": "2.0.0",
-          "MongoDB.Bson": "3.14.1",
+          "MongoDB.Bson": "3.14.0",
           "SharpCompress": "0.48.1",
           "Snappier": "1.3.1",
           "ZstdSharp.Port": "0.7.3"
@@ -755,31 +755,31 @@
       },
       "YorubaOrganization.Application": {
         "type": "Transitive",
-        "resolved": "7.9999.0",
-        "contentHash": "TBbXswdGFNLm7vFmdVyRLEUoRcgpMhnjgbngrQ/nA39SzMHIfN/gQPOmXlinmOU8+Yl6AUisM3EnRdOOj53GGA==",
+        "resolved": "7.1.1",
+        "contentHash": "5CC2bXTZ3bFvkOMPMwHsBuiAp/BsMYOgJRLl2wxIiJ3z1/lip+Wiz+tzdK3kMgnlWDMRd18ipDWQ1JzmRDRsmA==",
         "dependencies": {
           "Ardalis.GuardClauses": "5.0.0",
           "BCrypt.Net-Next": "4.2.0",
           "MediatR": "12.5.0",
-          "YorubaOrganization.Core": "7.9999.0"
+          "YorubaOrganization.Core": "7.1.1"
         }
       },
       "YorubaOrganization.Core": {
         "type": "Transitive",
-        "resolved": "7.9999.0",
-        "contentHash": "VzHHai2m17uLSrvu+TpNcIGR3rSCVpJfVFltWZpOvGcyAbp8rhUbJIT1o2fvuPUQlNT4s9q2WfQiqXLgRAzYrw==",
+        "resolved": "7.1.1",
+        "contentHash": "yKiCT19mzN2XvSyYxfxv3tPnMz05fyGW9DefE0XrayW5VjddYYAJOkSErfLq9uWmHqsnFBq1q57rYFH25cOLSQ==",
         "dependencies": {
           "MediatR.Contracts": "2.0.1"
         }
       },
       "YorubaOrganization.Infrastructure": {
         "type": "Transitive",
-        "resolved": "7.9999.0",
-        "contentHash": "qDdNiuYz6ImTAtT4rjDCBR3LiWqiIyhVUwWV3Uxgh3J8L3ggtTPzYIl29WFAWzgxqhOl1Sd4XuFLDDo1pb8NeQ==",
+        "resolved": "7.1.1",
+        "contentHash": "Nj9pkX8Xevn3+HxVEi0n2ekjR7DEwdwlTK01uF8MHoYuhKirMUOodzLmcHnD6QFy7X3agfqGMuPSlCqwH+juJw==",
         "dependencies": {
           "Microsoft.Extensions.Options": "10.0.14",
-          "MongoDB.Driver": "3.14.1",
-          "YorubaOrganization.Core": "7.9999.0"
+          "MongoDB.Driver": "3.14.0",
+          "YorubaOrganization.Core": "7.1.1"
         }
       },
       "ZstdSharp.Port": {
